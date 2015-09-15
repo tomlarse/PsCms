@@ -179,4 +179,58 @@ Will return information on the member user
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$coSpaceUserID,        [parameter(Mandatory=$true)]
-        [string]$coSpaceID    )    return (Acano-GET -NodeLocation "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$coSpaceUserID").coSpaceUser}
+        [string]$coSpaceID    )    return (Acano-GET -NodeLocation "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$coSpaceUserID").coSpaceUser}function Get-AcanocoSpaceAccessMethods {<#
+.SYNOPSIS
+
+Returns all access methods of a given coSpace
+.DESCRIPTION
+
+Use this Cmdlet to get all access methods configured for the queried coSpace
+.PARAMETER Filter
+
+Returns access methods that matches the filter text
+.PARAMETER CallLegProfileFilter <callLegProfileID>
+
+Returns access methods using just that call leg profile
+
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of access methods beginning
+at the user in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-Get-AcanocoSpaceAccessMethods -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd
+
+Will return all access methods of the provided coSpaceID
+.EXAMPLE
+Get-Get-AcanocoSpaceAccessMethods -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd -Filter "Greg"
+
+Will return all coSpace access methods who matches "Greg"
+#>[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]        [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]        [string]$coSpaceID,
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallLegProfileFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )        $nodeLocation = "api/v1/coSpaces/$coSpaceID/accessMethods"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($CallLegProfileFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"        } else {            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Acano-GET -NodeLocation $nodeLocation).accessMethods.accessMethod | fl}function Get-AcanocoSpaceAccessMethod {<#
+.SYNOPSIS
+
+Returns information about a given coSpace access method
+.DESCRIPTION
+
+Use this Cmdlet to get information on a coSpace access method
+.PARAMETER coSpaceAccessMethodID
+
+The access method ID of the access method
+.PARAMETER coSpaceID
+
+The ID of the coSpace
+.EXAMPLE
+Get-AcanocoSpaces -coSpaceAccessMethodID 61a1229d-3198-43b3-9423-6857d22bdcc9 -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the access method
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$coSpaceAccessMethodID,        [parameter(Mandatory=$true)]
+        [string]$coSpaceID    )    return (Acano-GET -NodeLocation "api/v1/coSpaces/$coSpaceID/accessMethods/$coSpaceAccessMethodID").accessMethod}
