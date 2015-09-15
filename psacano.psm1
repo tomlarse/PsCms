@@ -8,7 +8,7 @@
     $credCache = new-object System.Net.CredentialCache
     $credCache.Add($script:APIAddress, "Basic", $script:creds)
 
-    $webclient.Headers.Add(“user-agent”, “Windows Powershell WebClient”)
+    $webclient.Headers.Add("user-agent", "Windows Powershell WebClient")
     $webclient.Credentials = $credCache
 
     [xml]$doc = $webclient.DownloadString($script:APIAddress+$NodeLocation)
