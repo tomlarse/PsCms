@@ -246,7 +246,7 @@ Limits the returned results
 .PARAMETER Offset
 
 Can only be used together with -Limit. Returns the limited number of outbound dial plan rules beginning
-at the coSpace in the offset. See the API reference guide for uses. 
+at the outbound dial plan rule in the offset. See the API reference guide for uses. 
 .EXAMPLE
 
 Get-AcanoOutboundDialPlanRules
@@ -295,7 +295,7 @@ Limits the returned results
 .PARAMETER Offset
 
 Can only be used together with -Limit. Returns the limited number of inbound dial plan rules beginning
-at the coSpace in the offset. See the API reference guide for uses. 
+at the inbound dial plan rule in the offset. See the API reference guide for uses. 
 .EXAMPLE
 
 Get-AcanoInboundDialPlanRules
@@ -325,4 +325,50 @@ Will return information on the inbound dial plan rule
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$InboundDialPlanRuleID    )    return (Acano-GET -NodeLocation "api/v1/inboundDialPlanRules/$InboundDialPlanRuleID").inboundDialPlanRule}
+        [string]$InboundDialPlanRuleID    )    return (Acano-GET -NodeLocation "api/v1/inboundDialPlanRules/$InboundDialPlanRuleID").inboundDialPlanRule}function Get-AcanoCallForwardingDialPlanRules {    <#
+.SYNOPSIS
+
+Returns call forwarding dial plan rules
+.DESCRIPTION
+
+Use this Cmdlet to get information on the configured call forwarding dial plan rules
+.PARAMETER Filter
+
+Returns call forwarding dial plan rules that matches the filter text
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of call forwarding dial plan rules beginning
+at the call forwarding dial plan rule in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoCallForwardingDialPlanRules
+
+Will return all call forwarding dial plan rules
+.EXAMPLE
+Get-AcanoCallForwardingDialPlanRules -Filter contoso.com
+
+Will return all call forwarding dial plan rules matching "contoso.com"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/forwardingDialPlanRules"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Acano-GET -NodeLocation $nodeLocation).forwardingDialPlanRules.forwardingDialPlanRule}function Get-AcanoOutboundDialPlanRule {<#
+.SYNOPSIS
+
+Returns information about a given call forwarding dial plan rule
+.DESCRIPTION
+
+Use this Cmdlet to get information on a call forwarding dial plan rule
+.PARAMETER ForwardingDialPlanRuleID
+
+The ID of the call forwarding dial plan rule
+.EXAMPLE
+Get-AcanocoSpaces -ForwardingDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the call forwarding dial plan rule
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$ForwardingDialPlanRuleID    )    return (Acano-GET -NodeLocation "api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleID").forwardingDialPlanRule}
