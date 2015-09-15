@@ -119,10 +119,7 @@ The ID of the coSpace
 Get-AcanocoSpaces -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the coSpace
-.EXAMPLE
-Get-AcanocoSpaces ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
-Will return information on the coSpace
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$coSpaceID    )    return (Acano-GET -NodeLocation "api/v1/coSpaces/$coSpaceID").coSpace}function Get-AcanocoSpaceMembers {<#
@@ -233,4 +230,99 @@ Will return information on the access method
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$coSpaceAccessMethodID,        [parameter(Mandatory=$true)]
-        [string]$coSpaceID    )    return (Acano-GET -NodeLocation "api/v1/coSpaces/$coSpaceID/accessMethods/$coSpaceAccessMethodID").accessMethod}
+        [string]$coSpaceID    )    return (Acano-GET -NodeLocation "api/v1/coSpaces/$coSpaceID/accessMethods/$coSpaceAccessMethodID").accessMethod}function Get-AcanoOutboundDialPlanRules {    <#
+.SYNOPSIS
+
+Returns outbound dial plan rules
+.DESCRIPTION
+
+Use this Cmdlet to get information on the configured outbound dial plan rules
+.PARAMETER Filter
+
+Returns outbound dial plan rules that matches the filter text
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of outbound dial plan rules beginning
+at the coSpace in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoOutboundDialPlanRules
+
+Will return all outbound dial plan rules
+.EXAMPLE
+Get-AcanoOutboundDialPlanRules -Filter contoso.com
+
+Will return all outbound dial plan rules matching "contoso.com"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/outboundDialPlanRules"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Acano-GET -NodeLocation $nodeLocation).outboundDialPlanRules.outboundDialPlanRule}function Get-AcanoOutboundDialPlanRule {<#
+.SYNOPSIS
+
+Returns information about a given outbound dial plan rule
+.DESCRIPTION
+
+Use this Cmdlet to get information on a outbound dial plan rule
+.PARAMETER OutboundDialPlanRuleID
+
+The ID of the outbound dial plan rule
+.EXAMPLE
+Get-AcanocoSpaces -OutboundDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the outbound dial plan rule
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$OutboundDialPlanRuleID    )    return (Acano-GET -NodeLocation "api/v1/outboundDialPlanRules/$OutboundDialPlanRuleID").outboundDialPlanRule}function Get-AcanoInboundDialPlanRules {    <#
+.SYNOPSIS
+
+Returns inbound dial plan rules
+.DESCRIPTION
+
+Use this Cmdlet to get information on the configured inbound dial plan rules
+.PARAMETER Filter
+
+Returns inbound dial plan rules that matches the filter text
+.PARAMETER TenantFilter <tenantID>
+
+Returns coSpaces associated with that tenant
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of inbound dial plan rules beginning
+at the coSpace in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoInboundDialPlanRules
+
+Will return all inbound dial plan rules
+.EXAMPLE
+Get-AcanoInboundDialPlanRules -Filter contoso.com
+
+Will return all inbound dial plan rules matching "contoso.com"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/inboundDialPlanRules"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Acano-GET -NodeLocation $nodeLocation).inboundDialPlanRules.inboundDialPlanRule}function Get-AcanoInboundDialPlanRule {<#
+.SYNOPSIS
+
+Returns information about a given inbound dial plan rule
+.DESCRIPTION
+
+Use this Cmdlet to get information on a inbound dial plan rule
+.PARAMETER OutboundDialPlanRuleID
+
+The ID of the inbound dial plan rule
+.EXAMPLE
+Get-AcanocoSpaces -InboundDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the inbound dial plan rule
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$InboundDialPlanRuleID    )    return (Acano-GET -NodeLocation "api/v1/inboundDialPlanRules/$InboundDialPlanRuleID").inboundDialPlanRule}
