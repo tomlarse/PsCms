@@ -456,10 +456,83 @@ Use this Cmdlet to get information on a call profile
 
 The ID of the call profile
 .EXAMPLE
-Get-AcanoCall -CallProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+Get-AcanoCallProfile -CallProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the call profile
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallProfileID    )    return (Open-AcanoAPI "api/v1/callProfiles/$CallProfileID").callProfile}
+        [string]$CallProfileID    )    return (Open-AcanoAPI "api/v1/callProfiles/$CallProfileID").callProfile}function Get-AcanoCallLegs {
+<#
+.SYNOPSIS
+
+Returns all active call legs on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on all active call legs
+.PARAMETER Filter
+
+Returns all active call legs that matches the filter text
+.PARAMETER TenantFilter <tenantID>
+
+Returns all active call legs associated with that tenant
+.PARAMETER ParticipantFilter <participantID>
+
+Returns all active call legs associated with that participant
+.PARAMETER OwnerIdSet true|false
+
+Returns call legs that does/doesn't have an owner ID set
+.PARAMETER Alarms All|packetLoss|excessiveJitter|highRoundTripTime
+
+Used to return just those call legs for which the specified alarm names are currently
+active. Either “all”, which covers all supported alarm conditions, or one or more 
+specific alarm conditions to filter on, separated by the ‘|’ character.  
+The supported alarm names are:
+    - packetLoss – packet loss is currently affecting this call leg
+    - excessiveJitter – there is currently a high level of jitter on one or more of 
+                        this call leg’s active media streams
+    - highRoundTripTime – the Acano solution measures the round trip time between 
+                          itself and the call leg destination; if a media stream is 
+                          detected to have a high round trip time (which might impact 
+                          call quality), then this alarm condition is set for the call 
+                          leg.
+.PARAMETER CallID <callID>
+
+Returns all active call legs associated with that call
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of coSpaces beginning
+at the coSpace in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoCallLegs
+
+Will return all active call legs
+.EXAMPLE
+Get-AcanocoSpaces -Filter "Greg"
+
+Will return all active call legs whos URI contains "Greg"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$ParticipantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("true","false","")]        [string]$OwnerIDSet="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Alarms="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallID="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    if ($CallID -ne "") {        $nodeLocation = "api/v1/calls/$CallID/callLegs"    } else {        $nodeLocation = "api/v1/callLegs"    }    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($ParticipantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&participantFilter=$ParticipantFilter"        } else {            $nodeLocation += "?participantFilter=$ParticipantFilter"            $modifiers++        }    }    if ($OwnerIdSet -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&ownerIdSet=$OwnerIdSet"        } else {            $nodeLocation += "?ownerIdSet=$OwnerIdSet"            $modifiers++        }    }    if ($Alarms -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&alarms=$Alarms"        } else {            $nodeLocation += "?alarms=$Alarms"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callLegs.callLeg}function Get-AcanoCallLeg {<#
+.SYNOPSIS
+
+Returns information about a given call leg
+.DESCRIPTION
+
+Use this Cmdlet to get information on a call leg
+.PARAMETER CallLegID
+
+The ID of the call leg
+.EXAMPLE
+Get-AcanoCallLeg -CallLegID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the call Leg
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CallLegID    )    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID").callLeg}
