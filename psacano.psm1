@@ -371,4 +371,53 @@ Will return information on the call forwarding dial plan rule
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ForwardingDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleID").forwardingDialPlanRule}
+        [string]$ForwardingDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleID").forwardingDialPlanRule}function Get-AcanoCalls {    <#
+.SYNOPSIS
+
+Returns current active calls
+.DESCRIPTION
+
+Use this Cmdlet to get information on current active calls
+.PARAMETER coSpaceFilter <coSpaceID>
+
+Returns current active calls associated with that coSpace
+.PARAMETER TenantFilter <tenantID>
+
+Returns current active calls associated with that tenant
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of current active calls beginning
+at the current active call in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoCalls
+
+Will return all current active calls
+.EXAMPLE
+Get-AcanoCalls -coSpaceFilter ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return all current active calls on the given coSpace
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$coSpaceFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/calls"    $modifiers = 0    if ($coSpaceFilter -ne "") {        $nodeLocation += "?coSpacefilter=$coSpaceFilter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).calls.call}function Get-AcanoCall {<#
+.SYNOPSIS
+
+Returns information about a given call
+.DESCRIPTION
+
+Use this Cmdlet to get information on a call
+.PARAMETER CallID
+
+The ID of the call forwarding dial plan rule
+.EXAMPLE
+Get-AcanoCall -CallID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the call forwarding dial plan rule
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CallID    )    return (Open-AcanoAPI "api/v1/calls/$CallID").call}
