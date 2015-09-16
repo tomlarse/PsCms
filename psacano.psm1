@@ -630,4 +630,51 @@ Will return information on where the given call leg profile is used
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegID    )    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID/callLegProfileTrace").callLegProfileTrace}
+        [string]$CallLegID    )    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID/callLegProfileTrace").callLegProfileTrace}function Get-AcanoDialTransforms {
+<#
+.SYNOPSIS
+
+Returns all Dial Transforms on the Acano Server
+.DESCRIPTION
+
+Use this Cmdlet to get information on Dial Transforms on the Acano Server
+.PARAMETER Filter
+
+Returns Dial Transforms that matches the filter text
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of dial transforms beginning
+at the dial transform in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoDialTransforms
+
+Will return all dial transforms
+.EXAMPLE
+Get-AcanoDialTransforms -Filter "Greg"
+
+Will return all dial transforms whos name contains "Greg"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/dialTransforms"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).dialTransforms.dialTransform}function Get-AcanoDialTransform {<#
+.SYNOPSIS
+
+Returns information about a given dial transform rule
+.DESCRIPTION
+
+Use this Cmdlet to get information on a dial transform rule
+.PARAMETER DialTransformID
+
+The ID of the dial transform rule
+.EXAMPLE
+Get-AcanoDialTransform -DialTransformID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the dial transform rule
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$DialTransformID    )    return (Open-AcanoAPI "api/v1/dialTransform/$DialTransformID").dialTransform}
