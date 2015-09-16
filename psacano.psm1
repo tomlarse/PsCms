@@ -723,4 +723,50 @@ Will return information on the call branding profile
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBrandingProfileID    )    return (Open-AcanoAPI "api/v1/callBrandingProfiles/$CallBrandingProfileID").callBrandingProfile}
+        [string]$CallBrandingProfileID    )    return (Open-AcanoAPI "api/v1/callBrandingProfiles/$CallBrandingProfileID").callBrandingProfile}function Get-AcanoDtmfProfiles {
+<#
+.SYNOPSIS
+
+Returns all configured DTMF profiles on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on configured DTMF profiles
+.PARAMETER UsageFilter unreferenced|referenced
+
+Returns DTMF profiles that are referenced or unreferenced by another object
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of DTMF profiles beginning
+at the DTMF profile in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoDtmfProfiles
+
+Will return all DTMF profiles
+.EXAMPLE
+Get-AcanoDtmfProfiles -UsageFilter "Unreferenced"
+
+Will return all DTMF profiles who is not referenced by another object
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/dtmfProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).dtmfProfiles.dtmfProfile}function Get-DtmfProfile {<#
+.SYNOPSIS
+
+Returns information about a given DTMF profile
+.DESCRIPTION
+
+Use this Cmdlet to get information on a DTMF profile
+.PARAMETER DtmfProfileID
+
+The ID of the DTMF profile
+.EXAMPLE
+Get-AcanoDtmfProfile -DtmfProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the DTMF profile
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$DtmfProfileID    )    return (Open-AcanoAPI "api/v1/dtmfProfiles/$DtmfProfileID").dtmfProfile}
