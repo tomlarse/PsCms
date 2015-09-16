@@ -983,10 +983,150 @@ Use this Cmdlet to get information on a user
 
 The ID of the user
 .EXAMPLE
-Get-AcanoUser -IvrID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+Get-AcanoUser -UserID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the user
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID").user}
+        [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID").user}function Get-AcanoUsercoSpaces {<#
+.SYNOPSIS
+
+Returns a users coSpaces
+.DESCRIPTION
+
+Use this Cmdlet to get information on a users coSpaces
+.PARAMETER UserID
+
+The ID of the user
+.EXAMPLE
+Get-AcanoUsercoSpaces -UserID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the users coSpaces
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID/usercoSpaces").userCoSpaces.userCoSpace}function Get-AcanoUserProfiles {
+<#
+.SYNOPSIS
+
+Returns all configured user profiles on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on configured user profiles
+.PARAMETER UsageFilter unreferenced|referenced
+
+Returns user profiles that are referenced or unreferenced by another object
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of user profiles beginning
+at the user profile in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoUserProfiles
+
+Will return all user profiles
+.EXAMPLE
+Get-AcanoUserProfiles -UsageFilter "Unreferenced"
+
+Will return all user profiles who is not referenced by another object
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/userProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).userProfiles.userProfile}function Get-AcanoUserProfile {<#
+.SYNOPSIS
+
+Returns information about a given user profile
+.DESCRIPTION
+
+Use this Cmdlet to get information on a user profile
+.PARAMETER UserProfileID
+
+The ID of the user profile
+.EXAMPLE
+Get-AcanoUserProfile -UserProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the user profile
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$UserProfileID    )    return (Open-AcanoAPI "api/v1/userProfiles/$UserProfileID").userProfile}function Get-AcanoSystemStatus {<#
+.SYNOPSIS
+
+Returns information about the system status
+.DESCRIPTION
+
+Use this Cmdlet to get information on the system status
+.EXAMPLE
+Get-AcanoSystemStatus
+
+Will return information on the system status
+
+#>    return (Open-AcanoAPI "api/v1/system/status").status}function Get-AcanoSystemAlarms {<#
+.SYNOPSIS
+
+Returns information about the system alarms
+.DESCRIPTION
+
+Use this Cmdlet to get information on the system alarms
+.EXAMPLE
+Get-AcanoSystemAlarms
+
+Will return information on the system alarms
+
+#>    return (Open-AcanoAPI "api/v1/system/alarms").alarms.alarm}function Get-AcanoSystemAlarm {<#
+.SYNOPSIS
+
+Returns information about a given system alarm
+.DESCRIPTION
+
+Use this Cmdlet to get information on a system alarm
+.PARAMETER AlarmID
+
+The ID of the alarm
+.EXAMPLE
+Get-AcanoSystemAlarm -AlarmID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the alarm
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$AlarmID    )    return (Open-AcanoAPI "api/v1/system/alarms/$AlarmID").alarm}function Get-AcanoSystemDatabaseStatus {<#
+.SYNOPSIS
+
+Returns information about the system database status
+.DESCRIPTION
+
+Use this Cmdlet to get information on the system database status
+.EXAMPLE
+Get-AcanoSystemDatabaseStatus
+
+Will return information on the system database status
+
+#>    return (Open-AcanoAPI "api/v1/system/database").database}function Get-AcanoCdrReceiverUri {<#
+.SYNOPSIS
+
+Returns information about the configured CDR receiver
+.DESCRIPTION
+
+Use this Cmdlet to get information on the configured CDR receiver
+.EXAMPLE
+Get-AcanoCdrReceiverUri
+
+Will return URI of the configured CDR receiver
+
+#>    return (Open-AcanoAPI "api/v1/system/cdrReceiver").cdrReceiver}function Get-AcanoGlobalProfile {<#
+.SYNOPSIS
+
+Returns information about the global profile
+.DESCRIPTION
+
+Use this Cmdlet to get information on the global profile
+.EXAMPLE
+Get-AcanoGlobalProfile
+
+Will return the global profile
+
+#>    return (Open-AcanoAPI "api/v1/system/profiles").profiles}
