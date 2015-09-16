@@ -504,8 +504,8 @@ Returns all active call legs associated with that call
 Limits the returned results
 .PARAMETER Offset
 
-Can only be used together with -Limit. Returns the limited number of coSpaces beginning
-at the coSpace in the offset. See the API reference guide for uses. 
+Can only be used together with -Limit. Returns the limited number of call legs beginning
+at the call leg in the offset. See the API reference guide for uses. 
 .EXAMPLE
 
 Get-AcanoCallLegs
@@ -535,4 +535,54 @@ Will return information on the call Leg
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegID    )    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID").callLeg}
+        [string]$CallLegID    )    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID").callLeg}function Get-AcanoCallLegProfiles {
+<#
+.SYNOPSIS
+
+Returns all active call leg profiles on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on all active call leg profiles
+.PARAMETER Filter
+
+Returns all active call leg profiles that matches the filter text
+.PARAMETER UsageFilter unreferenced|referenced
+
+Returns call leg profiles that are referenced or unreferenced by another object
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of call leg profiles beginning
+at the call leg profile in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoCallLegProfiles
+
+Will return all active call legs
+.EXAMPLE
+Get-AcanocoSpaces -Filter "Greg"
+
+Will return all active call leg profiles whos name contains "Greg"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callLegProfiles"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($UsageFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&usageFilter=$UsageFilter"        } else {            $nodeLocation += "?usageFilter=$UsageFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callLegProfiles.callLegProfile}function Get-AcanoCallLegProfile {<#
+.SYNOPSIS
+
+Returns information about a given call leg profile
+.DESCRIPTION
+
+Use this Cmdlet to get information on a call leg profile
+.PARAMETER CallLegProfileID
+
+The ID of the call leg profile
+.EXAMPLE
+Get-AcanoCallLegProfile -CallLegProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the call leg profile
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CallLegProfileID    )    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID").callLegProfile}
