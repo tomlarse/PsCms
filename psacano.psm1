@@ -869,4 +869,57 @@ Will return information on the IVR Branding Profile
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrBrandingProfileID    )    return (Open-AcanoAPI "api/v1/ivrBrandingProfiles/$IvrBrandingProfileID").ivrBrandingProfile}
+        [string]$IvrBrandingProfileID    )    return (Open-AcanoAPI "api/v1/ivrBrandingProfiles/$IvrBrandingProfileID").ivrBrandingProfile}function Get-AcanoParticipants {
+<#
+.SYNOPSIS
+
+Returns all active participants on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on all active participants
+.PARAMETER Filter
+
+Returns all active participants that matches the filter text
+.PARAMETER TenantFilter <tenantID>
+
+Returns all active participants associated with that tenant
+.PARAMETER callBridgeFilter
+
+Returns all active participants associated with that CallBridge
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of participants beginning
+at the participant in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoParticipants
+
+Will return all active participants
+.EXAMPLE
+Get-AcanoParticipants -Filter "Greg"
+
+Will return all active participants whos URI contains "Greg"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$callBridgeFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/participants"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($CallBridgeFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callBridgeFilter=$CallBridgeFilter"        } else {            $nodeLocation += "?callBridgeFilter=$CallBridgeFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).participants.participant}function Get-AcanoParticipant {<#
+.SYNOPSIS
+
+Returns information about a given participant
+.DESCRIPTION
+
+Use this Cmdlet to get information on a participant
+.PARAMETER ParticipantID
+
+The ID of the participant
+.EXAMPLE
+Get-AcanoParticipant -ParticipantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the participant
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$ParticipantID    )    return (Open-AcanoAPI "api/v1/participants/$ParticipantID").participant}
