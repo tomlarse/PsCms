@@ -677,4 +677,50 @@ Will return information on the dial transform rule
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$DialTransformID    )    return (Open-AcanoAPI "api/v1/dialTransform/$DialTransformID").dialTransform}
+        [string]$DialTransformID    )    return (Open-AcanoAPI "api/v1/dialTransform/$DialTransformID").dialTransform}function Get-AcanoCallBrandingProfiles {
+<#
+.SYNOPSIS
+
+Returns all active call branding profiles on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on all active call branding profiles
+.PARAMETER UsageFilter unreferenced|referenced
+
+Returns call branding profiles that are referenced or unreferenced by another object
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of call branding profiles beginning
+at the call branding profile in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoCallBrandingProfiles
+
+Will return all active call legs
+.EXAMPLE
+Get-AcanocoSpaces -UsageFilter "Unreferenced"
+
+Will return all call branding profiles who is not referenced by another object
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callBrandingProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callBrandingProfiles.callBrandingProfile}function Get-AcanoCallBrandingProfile {<#
+.SYNOPSIS
+
+Returns information about a given call branding profile
+.DESCRIPTION
+
+Use this Cmdlet to get information on a call branding profile
+.PARAMETER CallBrandingProfileID
+
+The ID of the call branding profile
+.EXAMPLE
+Get-AcanoCallBrandingProfile -CallBrandingProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the call branding profile
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CallBrandingProfileID    )    return (Open-AcanoAPI "api/v1/callBrandingProfiles/$CallBrandingProfileID").callBrandingProfile}
