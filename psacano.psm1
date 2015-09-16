@@ -939,4 +939,54 @@ Will return information on the participants active call legs
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ParticipantID    )    return (Open-AcanoAPI "api/v1/participants/$ParticipantID/callLegs").callLeg}
+        [string]$ParticipantID    )    return (Open-AcanoAPI "api/v1/participants/$ParticipantID/callLegs").callLeg}function Get-AcanoUsers {
+<#
+.SYNOPSIS
+
+Returns users currently configured on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on users
+.PARAMETER Filter
+
+Returns users that matches the filter text
+.PARAMETER TenantFilter <tenantID>
+
+Returns users associated with that tenant
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of users beginning
+at the user in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoUsers
+
+Will return all users
+.EXAMPLE
+Get-AcanoUsers -Filter "Greg"
+
+Will return all users whos URI contains "Greg"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/users"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).users.user}function Get-AcanoUser {<#
+.SYNOPSIS
+
+Returns information about a given user
+.DESCRIPTION
+
+Use this Cmdlet to get information on a user
+.PARAMETER UserID
+
+The ID of the user
+.EXAMPLE
+Get-AcanoUser -IvrID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the user
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID").user}
