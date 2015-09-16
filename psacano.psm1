@@ -819,4 +819,54 @@ Will return information on the IVR
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrID    )    return (Open-AcanoAPI "api/v1/ivrs/$IvrID").ivr}
+        [string]$IvrID    )    return (Open-AcanoAPI "api/v1/ivrs/$IvrID").ivr}function Get-AcanoIvrBrandingProfiles {
+<#
+.SYNOPSIS
+
+Returns IVR branding profiles currently configured on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on IVR branding profiles
+.PARAMETER Filter
+
+Returns IVR branding profiles that matches the filter text
+.PARAMETER TenantFilter <tenantID>
+
+Returns IVR branding profiles associated with that tenant
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of IVR branding profiles beginning
+at the IVR branding profile in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoIvrBrandingProfiles
+
+Will return all IVRs
+.EXAMPLE
+Get-AcanoIvrBrandingProfiles -Filter "Greg"
+
+Will return all IVR branding profiles whos name contains "Greg"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ivrBrandingProfiles"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ivrBrandingProfiles.ivrBrandingProfile}function Get-AcanoIvrBrandingProfile {<#
+.SYNOPSIS
+
+Returns information about a given IVR Branding Profile
+.DESCRIPTION
+
+Use this Cmdlet to get information on an IVR Branding Profile
+.PARAMETER IvrBrandingProfileID
+
+The ID of the IVR Branding Profile
+.EXAMPLE
+Get-AcanoIvrBrandingProfile -IvrID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the IVR Branding Profile
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$IvrBrandingProfileID    )    return (Open-AcanoAPI "api/v1/ivrBrandingProfiles/$IvrBrandingProfileID").ivrBrandingProfile}
