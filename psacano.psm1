@@ -922,4 +922,21 @@ Will return information on the participant
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ParticipantID    )    return (Open-AcanoAPI "api/v1/participants/$ParticipantID").participant}
+        [string]$ParticipantID    )    return (Open-AcanoAPI "api/v1/participants/$ParticipantID").participant}function Get-AcanoParticipantCallLegs {<#
+.SYNOPSIS
+
+Returns the participants active call legs
+.DESCRIPTION
+
+Use this Cmdlet to get information on a participants active call legs
+.PARAMETER ParticipantID
+
+The ID of the participant
+.EXAMPLE
+Get-AcanoParticipantCallLegs -ParticipantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the participants active call legs
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$ParticipantID    )    return (Open-AcanoAPI "api/v1/participants/$ParticipantID/callLegs").callLeg}
