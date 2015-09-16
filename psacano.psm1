@@ -412,12 +412,54 @@ Returns information about a given call
 Use this Cmdlet to get information on a call
 .PARAMETER CallID
 
-The ID of the call forwarding dial plan rule
+The ID of the call
 .EXAMPLE
 Get-AcanoCall -CallID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
-Will return information on the call forwarding dial plan rule
+Will return information on the given call
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallID    )    return (Open-AcanoAPI "api/v1/calls/$CallID").call}
+        [string]$CallID    )    return (Open-AcanoAPI "api/v1/calls/$CallID").call}function Get-AcanoCallProfiles {    <#
+.SYNOPSIS
+
+Returns configured call profiles
+.DESCRIPTION
+
+Use this Cmdlet to get information on configured call profiles
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of configured call profiles beginning
+at the configured call profile in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoCallProfiles
+
+Will return all configured call profiles
+.EXAMPLE
+Get-AcanoCalls -Limit 2
+
+Will return 2 configured call profiles
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callProfiles"    $modifiers = 0    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callProfiles.callProfile}function Get-AcanoCallProfile {<#
+.SYNOPSIS
+
+Returns information about a given call profile
+.DESCRIPTION
+
+Use this Cmdlet to get information on a call profile
+.PARAMETER CallProfileID
+
+The ID of the call profile
+.EXAMPLE
+Get-AcanoCall -CallProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the call profile
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CallProfileID    )    return (Open-AcanoAPI "api/v1/callProfiles/$CallProfileID").callProfile}
