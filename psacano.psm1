@@ -45,6 +45,9 @@ The port number the API listens to. Will default to port 443 if this parameter i
 .PARAMETER Credential
 
 Credentials for connecting to the API
+.PARAMETER IgnoreSSLTrust
+
+If present, connect to the Acano server API even if the certificate running on Webadmin is untrusted.
 .EXAMPLE
 
 $cred = Get-Credential
@@ -54,9 +57,12 @@ New-AcanoSession -APIAddress acano.contoso.com -Port 445 -Credential $cred
     Param (
         [parameter(Mandatory=$true)]
         [string]$APIAddress,
+        [parameter(Mandatory=$false)]
         [string]$Port = $null,
         [parameter(Mandatory=$true)]
-        [PSCredential]$Credential
+        [PSCredential]$Credential,
+        [parameter(Mandatory=$false)]
+        [switch]$IgnoreSSLTrust
     )
 
     if ($Port -ne $null){
@@ -66,6 +72,10 @@ New-AcanoSession -APIAddress acano.contoso.com -Port 445 -Credential $cred
     }
 
     $script:creds = $Credential
+
+    if ($IgnoreSSLTrust) {
+        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+    }
 }
 
 function Get-AcanocoSpaces {
@@ -585,4 +595,39 @@ Will return information on the call leg profile
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegProfileID    )    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID").callLegProfile}
+        [string]$CallLegProfileID    )    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID").callLegProfile}function Get-AcanoCallLegProfileUsages {<#
+.SYNOPSIS
+
+Returns information about where a given call leg profile is used
+.DESCRIPTION
+
+Use this Cmdlet to get information on where a given call leg profile is used
+.PARAMETER CallLegProfileID
+
+The ID of the call leg profile
+.EXAMPLE
+Get-AcanoCallLegProfileUsages -CallLegProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on where the given call leg profile is used
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CallLegProfileID    )    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID/usage").callLegProfileUsage}function Get-AcanoCallLegProfileTrace {<#
+.SYNOPSIS
+
+Returns information about how a call legs call profile has been arrived at.
+.DESCRIPTION
+
+Use this Cmdlet to get information about how a call legs call profile has been arrived at. Check the API
+documentation chapter 8.4.7 for more info
+.PARAMETER CallLegID
+
+The ID of the call leg being looked up
+.EXAMPLE
+Get-AcanoCallLegProfileTrace -CallLegID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on where the given call leg profile is used
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CallLegID    )    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID/callLegProfileTrace").callLegProfileTrace}
