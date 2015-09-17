@@ -1226,4 +1226,44 @@ Will return information on the web bridge
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$WebBridgeID    )    return (Open-AcanoAPI "api/v1/webBridges/$WebBridgeID").webBridge}
+        [string]$WebBridgeID    )    return (Open-AcanoAPI "api/v1/webBridges/$WebBridgeID").webBridge}function Get-AcanoCallBridges {
+<#
+.SYNOPSIS
+
+Returns call bridges currently configured on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on call bridges
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of call bridges beginning
+at the call bridge in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoCallBridges
+
+Will return all call bridges
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callBridges"    if ($Limit -ne "") {        $nodeLocation += "?limit=$Limit"                if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callBridges.callBridge}function Get-AcanoCallBridge {<#
+.SYNOPSIS
+
+Returns information about a given call bridge
+.DESCRIPTION
+
+Use this Cmdlet to get information on a call bridge
+.PARAMETER CallBridgeID
+
+The ID of the call bridge
+.EXAMPLE
+Get-AcanoCallBridge -CallBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the call bridge
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CallBridgeID    )    return (Open-AcanoAPI "api/v1/callBridges/$CallBridgeID").callBridge}
