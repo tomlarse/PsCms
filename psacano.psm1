@@ -1176,4 +1176,54 @@ Will return information on the TURN Server
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TurnServerID    )    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID").turnServer}
+        [string]$TurnServerID    )    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID").turnServer}function Get-AcanoWebBridges {
+<#
+.SYNOPSIS
+
+Returns Web bridges currently configured on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on Web bridges
+.PARAMETER Filter
+
+Returns Web bridges that matches the filter text
+.PARAMETER TenantFilter <tenantID>
+
+Returns Web bridges associated with that tenant
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of Web bridges beginning
+at the Web bridge in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoWebBridges
+
+Will return all Web bridges
+.EXAMPLE
+Get-AcanoWebBridges -Filter "Greg"
+
+Will return all Web bridges whos name contains "Greg"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/webBridges"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).webBridges.webBridge}function Get-AcanoWebBridge {<#
+.SYNOPSIS
+
+Returns information about a given web bridge
+.DESCRIPTION
+
+Use this Cmdlet to get information on a web bridge
+.PARAMETER WebBridgeID
+
+The ID of the web bridge
+.EXAMPLE
+Get-AcanoWebBridge -WebBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the web bridge
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$WebBridgeID    )    return (Open-AcanoAPI "api/v1/webBridges/$WebBridgeID").webBridge}
