@@ -10,21 +10,21 @@ Knowledge of this document is assumed before use of this module.
 
 To import this module, unpack the PsAcano folder and run
 
-'Import-Module .\PsAcano.psd1'
+`Import-Module .\PsAcano.psd1`
 
 in the folder in Powershell. To make it load automatically when PowerShell starts, unpack it in to one of the folders defined in 
 
-'$env:PsModulePath'
+`$env:PsModulePath`
 
 ## Use
 
-To start a new session against an Acano server, use the 'Open-AcanoSession' cmdlet. To see an example, run
+To start a new session against an Acano server, use the `Open-AcanoSession` cmdlet. To see an example, run
 
-'help New-AcanoSession -Examples'
+`help New-AcanoSession -Examples`
 
 To get a list of possible commands use
 
-'Get-Command -Module PsAcano'
+`Get-Command -Module PsAcano`
 
 ## Caveats
 
