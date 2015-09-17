@@ -1129,4 +1129,51 @@ Get-AcanoGlobalProfile
 
 Will return the global profile
 
-#>    return (Open-AcanoAPI "api/v1/system/profiles").profiles}
+#>    return (Open-AcanoAPI "api/v1/system/profiles").profiles}function Get-AcanoTurnServers {
+<#
+.SYNOPSIS
+
+Returns TURN servers currently configured on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get information on TURN servers
+.PARAMETER Filter
+
+Returns TURN servers that matches the filter text
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of TURN servers beginning
+at the TURN server in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-Get-AcanoTurnServers
+
+Will return all TURN servers
+.EXAMPLE
+Get-AcanoTurnServers -Filter "Greg"
+
+Will return all TURN servers whos URI contains "Greg"
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/turnServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).turnServers.turnServer}function Get-AcanoTurnServer {<#
+.SYNOPSIS
+
+Returns information about a given TURN server
+.DESCRIPTION
+
+Use this Cmdlet to get information on a TURN server
+.PARAMETER TurnServerID
+
+The ID of the TURN server
+.EXAMPLE
+Get-AcanoTurnServer -TurnServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the TURN Server
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TurnServerID    )    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID").turnServer}
