@@ -1266,4 +1266,79 @@ Will return information on the call bridge
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBridgeID    )    return (Open-AcanoAPI "api/v1/callBridges/$CallBridgeID").callBridge}
+        [string]$CallBridgeID    )    return (Open-AcanoAPI "api/v1/callBridges/$CallBridgeID").callBridge}function Get-AcanoXmppServer {<#
+.SYNOPSIS
+
+Returns information about the XMPP server
+.DESCRIPTION
+
+Use this Cmdlet to get information on the XMPP server
+.EXAMPLE
+Get-AcanoXmppServer
+
+Will return information on the XMPP server
+
+#>    return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp}function Get-AcanoSystemDiagnostics {
+<#
+.SYNOPSIS
+
+Returns system diagnostics from the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to get system diagnostics from the Acano server
+.PARAMETER CoSpaceFilter <coSpaceID>
+
+Returns those diagnostics that correspond to the specified coSpace 
+.PARAMETER CallCorrelatorFilter <CallCorrelatorID>
+
+Returns those diagnostics that correspond to the specified callCorrelator 
+.PARAMETER Limit
+
+Limits the returned results
+.PARAMETER Offset
+
+Can only be used together with -Limit. Returns the limited number of system diagnostics beginning
+at the system diagnostic in the offset. See the API reference guide for uses. 
+.EXAMPLE
+
+Get-AcanoSystemDiagnostics
+
+Will return all system diagnostics
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CoSpaceFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallCorrelatorFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/system/diagnostics"    $modifiers = 0    if ($CoSpaceFilter -ne "") {        $nodeLocation += "?coSpacefilter=$CoSpaceFilter"        $modifiers++    }    if ($CallCorrelatorFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callCorrelatorFilter=$CallCorrelatorFilter"        } else {            $nodeLocation += "?callCorrelatorFilter=$CallCorrelatorFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).diagnostics.diagnostic}function Get-AcanoSystemDiagnostic {<#
+.SYNOPSIS
+
+Returns information about a given system diagnostic
+.DESCRIPTION
+
+Use this Cmdlet to get information on a system diagnostic
+.PARAMETER SystemDiagnosticID
+
+The ID of the system diagnostic
+.EXAMPLE
+Get-AcanoSystemDiagnostic -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return information on the system diagnostic
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$SystemDiagnosticID    )    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID").diagnostic}function Get-AcanoSystemDiagnosticContent {<#
+.SYNOPSIS
+
+Returns the content of a given system diagnostic
+.DESCRIPTION
+
+Use this Cmdlet to get the content of a system diagnostic
+.PARAMETER SystemDiagnosticID
+
+The ID of the system diagnostic
+.EXAMPLE
+Get-AcanoSystemDiagnosticContent -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+
+Will return the content of the system diagnostic
+
+#>    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$SystemDiagnosticID    )    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID/contents").diagnostic}
