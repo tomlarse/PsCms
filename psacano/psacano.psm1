@@ -5,15 +5,36 @@
 Opens a given node location in the Acano API directly
 .DESCRIPTION
 
-Used by the other Cmdlets in the module
+Used by the other Cmdlets in the module. If none of the switches are given it is assumed
+to be a GET request.
 .PARAMETER NodeLocation
 
-The location of the API node being accessed. 
+The location of the API node being accessed.
+.PARAMETER POST
 
+Supply this switch to make the request a POST request.
+.PARAMETER PUT
+
+Supply this switch to make the request a PUT request.
+.PARAMETER DELETE
+
+Supply this switch to make the request a DELETE request.
+.PARAMETER Data
+
+Supply this parameter together with -POST and -PUT containing the data to be uploaded.
 #>
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$NodeLocation
+        [parameter(ParameterSetName="GET",Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="POST",Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="PUT",Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="DELETE",Mandatory=$true,Position=1)]
+        [string]$NodeLocation,
+        [parameter(ParameterSetName="POST",Mandatory=$true)]        [switch]$POST,
+        [parameter(ParameterSetName="PUT",Mandatory=$true)]        [switch]$PUT,
+        [parameter(ParameterSetName="DELETE",Mandatory=$true)]        [switch]$DELETE,
+        [parameter(ParameterSetName="POST",Mandatory=$true)]
+        [parameter(ParameterSetName="PUT",Mandatory=$true)]
+        [string]$Data
     )
 
     $webclient = New-Object System.Net.WebClient
@@ -23,7 +44,15 @@ The location of the API node being accessed.
     $webclient.Headers.Add("user-agent", "Windows Powershell WebClient")
     $webclient.Credentials = $credCache
 
-    [xml]$doc = $webclient.DownloadString($script:APIAddress+$NodeLocation)
+    if ($POST) {
+        [xml]$doc = $webclient.UploadString($script:APIAddress+$NodeLocation,"POST",$Data)
+    } elseif ($PUT) {
+        [xml]$doc = $webclient.UploadString($script:APIAddress+$NodeLocation,"PUT",$Data)
+    } elseif ($DELETE){
+        [xml]$doc = $webclient.UploadString($script:APIAddress+$NodeLocation,"DELETE","")
+    } else {
+        [xml]$doc = $webclient.DownloadString($script:APIAddress+$NodeLocation)
+    }
 
     return $doc
 }
