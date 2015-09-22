@@ -45,16 +45,19 @@ Supply this parameter together with -POST and -PUT containing the data to be upl
     $webclient.Credentials = $credCache
 
     if ($POST) {
-        [xml]$doc = $webclient.UploadString($script:APIAddress+$NodeLocation,"POST",$Data)
+        $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
+        $webclient.UploadString($script:APIAddress+$NodeLocation,"POST",$Data)
+        return $webclient.ResponseHeaders.Get("Location").TrimStart("/$NodeLocation/")
+        #return $result.Substring($result.Length-36)
     } elseif ($PUT) {
-        [xml]$doc = $webclient.UploadString($script:APIAddress+$NodeLocation,"PUT",$Data)
+        $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
+        return $webclient.UploadString($script:APIAddress+$NodeLocation,"PUT",$Data)
     } elseif ($DELETE){
-        [xml]$doc = $webclient.UploadString($script:APIAddress+$NodeLocation,"DELETE","")
+        $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
+        return $webclient.UploadString($script:APIAddress+$NodeLocation,"DELETE","")
     } else {
-        [xml]$doc = $webclient.DownloadString($script:APIAddress+$NodeLocation)
+        return [xml]$webclient.DownloadString($script:APIAddress+$NodeLocation)
     }
-
-    return $doc
 }
 
 function New-AcanoSession {
@@ -161,7 +164,9 @@ Will return information on the coSpace
 
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace}function Get-AcanocoSpaceMembers {<#
+        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace}function New-AcanocoSpace {    Param (
+        [parameter(Mandatory=$true)]        [string]$Name,
+        [parameter(Mandatory=$true)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$SecondaryURI="",        [parameter(Mandatory=$false)]        [string]$CallID="",        [parameter(Mandatory=$false)]        [string]$CdrTag="",        [parameter(Mandatory=$false)]        [string]$Passcode="",        [parameter(Mandatory=$false)]        [string]$DefaultLayout="",        [parameter(Mandatory=$false)]        [string]$TenantID="",        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [string]$CallProfile="",        [parameter(Mandatory=$false)]        [string]$CallBrandingProfile="",        [parameter(Mandatory=$false)]        [boolean]$RequireCallID=$true,        [parameter(Mandatory=$false)]        [string]$Secret=""    )    $nodeLocation = "/api/v1/coSpaces"    $data = "name=$Name&uri=$Uri"    if ($SecondaryURI -ne "") {        $data += "&secondaryUri=$SecondaryURI"    }    if ($CallID -ne "") {        $data += "&callID=$CallID"    }    if ($CdrTag -ne "") {        $data += "&cdrTag=$CdrTag"    }    if ($Passcode -ne "") {        $data += "&passcode=$Passcode"    }    if ($DefaultLayout -ne "") {        $data += "&defaultLayout=$DefaultLayout"    }    if ($TenantID -ne "") {        $data += "&tenantId=$TenantID"    }    if ($CallLegProfile -ne "") {        $data += "&callLegProfile=$CallLegProfile"    }    if ($CallProfile -ne "") {        $data += "&callProfile=$CallProfile"    }    if ($CallBrandingProfile -ne "") {        $data += "&callBrandingProfile=$CallBrandingProfile"    }    if ($Secret -ne "") {        $data += "&secret=$Secret"    }    $data += "&requireCallID="+$RequireCallID.toString()    [string]$NewcoSpaceID = Open-AcanoAPI $nodeLocation -POST -Data $data    Get-AcanocoSpace -coSpaceID $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting with a whitespace}function Get-AcanocoSpaceMembers {<#
 .SYNOPSIS
 
 Returns all members of a given coSpace
