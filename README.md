@@ -8,11 +8,11 @@ Knowledge of this document is assumed before use of this module.
 
 ## Installation
 
-To import this module, unpack the PsAcano folder and run
+To import this module, unpack or clone the PsAcano folder and run
 
 `Import-Module .\PsAcano.psd1`
 
-in the folder in Powershell. To make it load automatically when PowerShell starts, unpack it in to one of the folders defined in 
+in the folder in Powershell. To make it load automatically when PowerShell starts, unpack, clone or copy it in to one of the folders defined in 
 
 `$env:PsModulePath`
 
