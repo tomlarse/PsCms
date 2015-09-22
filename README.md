@@ -2,7 +2,7 @@
 Powershell implementation of the Acano API
 
 ## Introduction
-The Acano Server provides management access through an API exposed through HTTPS in the WebAdmin on the server. This API is thorughly documented at https://www.acano.com/publications/2013/08/Solution-API-Reference-R1.7.pdf
+The Acano Server provides management access through an API exposed through HTTPS in the WebAdmin on the server. This API is thorughly documented at https://www.acano.com/publications/2015/09/Solution-API-Reference-R1_8.pdf
 
 Knowledge of this document is assumed before use of this module.
 
