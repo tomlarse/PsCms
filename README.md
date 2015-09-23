@@ -6,6 +6,25 @@ The Acano Server provides management access through an API exposed through HTTPS
 
 Knowledge of this document is assumed before use of this module.
 
+### Terminology and function names
+Acano uses HTTP GET, POST, PUT and DELETE methods to access functionality in the API. These are translated to the PowerShell verbs like this
+
+- GET     -> Get-
+- POST    -> New-
+- PUT     -> Set-
+- DELETE  -> Remove-
+
+As far as it is possible, the PowerShell noun will be based on the API node location that is being accessed in the function prepended with Acano, for instance
+
+```
+Get-AcanocoSpaces
+```
+Which will correspond to doing a GET on the /api/v1/coSpaces node, or
+```
+New-AcanocoSpace
+```
+to do a POST on the /api/v1/coSpaces node. Nouns will be plural if they might return multiple results and singular if they will only return one result. 
+
 ## Installation
 
 To import this module, unpack or clone the PsAcano folder and run
