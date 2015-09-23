@@ -28,4 +28,4 @@ To get a list of possible commands use
 
 ## Caveats
 
-Currently this module only contains the GET commands from the API. POST, PUT and DELETE are on their way. There is also no error handling in it at the moment. Feel free to give feedback through issues 
+Currently this module contains the GET commands from the API, and only some of the POST, PUT and DELETE commands. The rest are being added continually. There is also no error handling in it at the moment. Feel free to give feedback through issues 
