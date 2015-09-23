@@ -394,7 +394,127 @@ Will return information on the member user
 #>    Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$coSpaceUserID,        [parameter(Mandatory=$true)]
-        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$coSpaceUserID").coSpaceUser}function Get-AcanocoSpaceAccessMethods {<#
+        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$coSpaceUserID").coSpaceUser}function New-AcanocoSpaceMember {<#
+.SYNOPSIS
+
+Creates a new coSpace on the Acano server
+.DESCRIPTION
+
+Use this Cmdlet to create a new coSpace
+.PARAMETER coSpaceId
+
+The ID of the coSpace that is getting a new member
+.PARAMETER UserJid
+
+The full Uri of the user 
+.PARAMETER CanDestroy
+
+Whether this user is allowed to delete the coSpace.
+.PARAMETER CanAddRemoveMember
+
+Whether this user is allowed to add or remove other members of the
+coSpace. 
+.PARAMETER CanChangeName
+
+Whether this user is allowed to change the name of the coSpace. 
+.PARAMETER CanChangeUri
+
+Whether this user is allowed to change the URI of the coSpace
+.PARAMETER CanChangeCallId
+
+Whether this user is allowed to change the Call ID of the coSpace
+.PARAMETER CanChangePasscode
+
+Whether this user is allowed to change the passcode of the coSpace
+.PARAMETER CanPostMessage
+
+Whether this user is allowed to write messages in the coSpace.PARAMETER CanRemoveSelf
+
+Whether this user is allowed to remove himself from the coSpace
+.PARAMETER CanDeleteAllMessages
+
+Whether this user is allowed to delete all messages from the coSpace message board
+.EXAMPLE
+
+New-AcanocoSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -UserJid greg@contoso.com
+
+Will add greg@contoso.com as a member of this coSpace
+#>    Param (
+        [parameter(Mandatory=$true)]        [string]$coSpaceId,
+        [parameter(Mandatory=$true)]        [string]$UserJid,        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [boolean]$CanDestroy,        [parameter(Mandatory=$false)]        [boolean]$CanAddRemoveMember,        [parameter(Mandatory=$false)]        [boolean]$CanChangeName,        [parameter(Mandatory=$false)]        [boolean]$CanChangeUri,        [parameter(Mandatory=$false)]        [boolean]$CanChangeCallId,        [parameter(Mandatory=$false)]        [boolean]$CanChangePasscode,        [parameter(Mandatory=$false)]        [boolean]$CanPostMessage,        [parameter(Mandatory=$false)]        [boolean]$CanRemoveSelf,        [parameter(Mandatory=$false)]        [boolean]$CanDeleteAllMessages    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers"    $data = "userJid=$UserJid"    if ($CallLegProfile -ne "") {        $data += "&callLegProfile=$CallLegProfile"    }    if ((($CanDestroy -ne $true) -and ($CanDestroy -ne $false)) -eq $false) {        $data += "&canDestroy="+$CanDestroy.toString()    }    if ((($CanAddRemoveMember -ne $true) -and ($CanAddRemoveMember -ne $false)) -eq $false) {        $data += "&canAddRemoveMember="+$CanAddRemoveMember.toString()    }    if ((($CanChangeName -ne $true) -and ($CanChangeName -ne $false)) -eq $false) {        $data += "&canChangeName="+$CanChangeName.toString()    }    if ((($CanChangeUri -ne $true) -and ($CanChangeUri -ne $false)) -eq $false) {        $data += "&canChangeUri="+$CanChangeUri.toString()    }    if ((($CanChangeCallId -ne $true) -and ($CanChangeCallId -ne $false)) -eq $false) {        $data += "&canChangeCallId="+$CanChangeCallId.toString()    }    if ((($CanChangePasscode -ne $true) -and ($CanChangePasscode -ne $false)) -eq $false) {        $data += "&canChangePasscode="+$CanChangePasscode.toString()    }    if ((($CanPostMessage -ne $true) -and ($CanPostMessage -ne $false)) -eq $false) {        $data += "&canPostMessage="+$CanPostMessage.toString()    }    if ((($CanRemoveSelf -ne $true) -and ($CanRemoveSelf -ne $false)) -eq $false) {        $data += "&canRemoveSelf="+$CanRemoveSelf.toString()    }    if ((($CanDeleteAllMessages -ne $true) -and ($CanDeleteAllMessages -ne $false)) -eq $false) {        $data += "&canDeleteAllMessages="+$CanDeleteAllMessages.toString()    }    [string]$NewcoSpaceMemberID = Open-AcanoAPI $nodeLocation -POST -Data $data    Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting with a whitespace}function Set-AcanocoSpaceMember {<#
+.SYNOPSIS
+
+Makes changes to a coSpace Member
+.DESCRIPTION
+
+Use this Cmdlet to make changes to a coSpaceMember
+.PARAMETER coSpaceId
+
+The ID of the coSpace containing the member to be changed
+.PARAMETER UserId
+
+The ID of user that is to be changed
+.PARAMETER UserJid
+
+The full Uri of the user 
+.PARAMETER CanDestroy
+
+Whether this user is allowed to delete the coSpace.
+.PARAMETER CanAddRemoveMember
+
+Whether this user is allowed to add or remove other members of the
+coSpace. 
+.PARAMETER CanChangeName
+
+Whether this user is allowed to change the name of the coSpace. 
+.PARAMETER CanChangeUri
+
+Whether this user is allowed to change the URI of the coSpace
+.PARAMETER CanChangeCallId
+
+Whether this user is allowed to change the Call ID of the coSpace
+.PARAMETER CanChangePasscode
+
+Whether this user is allowed to change the passcode of the coSpace
+.PARAMETER CanPostMessage
+
+Whether this user is allowed to write messages in the coSpace.PARAMETER CanRemoveSelf
+
+Whether this user is allowed to remove himself from the coSpace
+.PARAMETER CanDeleteAllMessages
+
+Whether this user is allowed to delete all messages from the coSpace message board
+.EXAMPLE
+
+New-AcanocoSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -UserJid greg@contoso.com
+
+Will add greg@contoso.com as a member of this coSpace#>    Param (
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceId,
+        [parameter(Mandatory=$true)]
+        [string]$UserId,
+        [parameter(Mandatory=$false)]        [string]$UserJid,        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [boolean]$CanDestroy,        [parameter(Mandatory=$false)]        [boolean]$CanAddRemoveMember,        [parameter(Mandatory=$false)]        [boolean]$CanChangeName,        [parameter(Mandatory=$false)]        [boolean]$CanChangeUri,        [parameter(Mandatory=$false)]        [boolean]$CanChangeCallId,        [parameter(Mandatory=$false)]        [boolean]$CanChangePasscode,        [parameter(Mandatory=$false)]        [boolean]$CanPostMessage,        [parameter(Mandatory=$false)]        [boolean]$CanRemoveSelf,        [parameter(Mandatory=$false)]        [boolean]$CanDeleteAllMessages    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId"    $data = ""    $modifiers = 0    ##################### Change from here        if ($Name -ne "") {        if ($modifiers -gt 0) {            $data += "&name=$Name"        } else {            $data += "name=$Name"            $modifiers++        }    }        if ($Uri -ne "") {        if ($modifiers -gt 0) {            $data += "&uri=$Uri"        } else {            $data += "uri=$Uri"            $modifiers++        }    }        if ($SecondaryURI -ne "") {        if ($modifiers -gt 0) {            $data += "&secondaryUri=$SecondaryUri"        } else {            $data += "secondaryUri=$SecondaryUri"            $modifiers++        }    }    if ($CallID -ne "") {        if ($modifiers -gt 0) {            $data += "&callID=$CallId"        } else {            $data += "callID=$CallId"            $modifiers++        }    }    if ($CdrTag -ne "") {        if ($modifiers -gt 0) {            $data += "&cdrTag=$CdrTag"        } else {            $data += "cdrTag=$CdrTag"            $modifiers++        }    }    if ($Passcode -ne "") {        if ($modifiers -gt 0) {            $data += "&passcode=$Passcode"        } else {            $data += "passcode=$Passcode"            $modifiers++        }    }    if ($DefaultLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&defaultLayout=$DefaultLayout"        } else {            $data += "defaultLayout=$DefaultLayout"            $modifiers++        }    }    if ($TenantID -ne "") {        if ($modifiers -gt 0) {            $data += "&tenantId=$TenantId"        } else {            $data += "tenantId=$TenantId"            $modifiers++        }    }    if ($CallLegProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&callLegProfile=$CallLegProfile"        } else {            $data += "callLegProfile=$CallLegProfile"            $modifiers++        }    }    if ($CallProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&callProfile=$CallProfile"        } else {            $data += "callProfile=$CallProfile"            $modifiers++        }    }    if ($CallBrandingProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&callBrandingProfile=$CallBrandingProfile"        } else {            $data += "callBrandingProfile=$CallBrandingProfile"            $modifiers++        }    }    if ($Secret -ne "") {        if ($modifiers -gt 0) {            $data += "&secret=$Secret"        } else {            $data += "secret=$Secret"            $modifiers++        }    }    if ((($RequireCallID -ne $true) -and ($RequireCallID -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&requireCallID="+$RequireCallId.toString()        } else {            $data += "requireCallID="+$RequireCallId.toString()            $modifiers++        }    }    if ($modifiers -gt 0) {        $data += "&regenerateSecret="+$RegenerateSecret.toString()    } else {        $data += "regenerateSecret="+$RegenerateSecret.toString()    }    Open-AcanoAPI $nodeLocation -PUT -Data $data}function Remove-AcanocoSpaceMember {<#
+.SYNOPSIS
+
+Removes a coSpace Member
+.DESCRIPTION
+
+Use this Cmdlet to remove a coSpace Member
+.PARAMETER coSpaceId
+
+The ID of the coSpace you will remove a member from
+.PARAMETER UserId
+
+The ID of the user who will be removed
+.EXAMPLE
+Remove-AcanocoSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f -UserId
+
+Will delete the coSpace member
+
+#>    Param (
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceId,        [parameter(Mandatory=$true)]
+        [string]$UserId    )    ### Add confirmation    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId" -DELETE}function Get-AcanocoSpaceAccessMethods {<#
 .SYNOPSIS
 
 Returns all access methods of a given coSpace
