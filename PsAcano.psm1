@@ -1,28 +1,5 @@
-﻿function Open-AcanoAPI {
-<#
-.SYNOPSIS
-
-Opens a given node location in the Acano API directly
-.DESCRIPTION
-
-Used by the other Cmdlets in the module. If none of the switches are given it is assumed
-to be a GET request.
-.PARAMETER NodeLocation
-
-The location of the API node being accessed.
-.PARAMETER POST
-
-Supply this switch to make the request a POST request.
-.PARAMETER PUT
-
-Supply this switch to make the request a PUT request.
-.PARAMETER DELETE
-
-Supply this switch to make the request a DELETE request.
-.PARAMETER Data
-
-Supply this parameter together with -POST and -PUT containing the data to be uploaded.
-#>
+﻿# .ExternalHelp PsAcano.psm1-Help.xml
+function Open-AcanoAPI {
     Param (
         [parameter(ParameterSetName="GET",Mandatory=$true,Position=1)]
         [parameter(ParameterSetName="POST",Mandatory=$true,Position=1)]
@@ -64,32 +41,8 @@ Supply this parameter together with -POST and -PUT containing the data to be upl
     }
 }
 
+# .ExternalHelp PsAcano.psm1-Help.xml
 function New-AcanoSession {
-<#
-.SYNOPSIS
-
-Initializes the connection to the Acano Server
-.DESCRIPTION
-
-This Cmdlet should be run when connecting to the server
-.PARAMETER APIAddress
-
-The FQDN or IP address of the Acano Server
-.PARAMETER Port
-
-The port number the API listens to. Will default to port 443 if this parameter is not included
-.PARAMETER Credential
-
-Credentials for connecting to the API
-.PARAMETER IgnoreSSLTrust
-
-If present, connect to the Acano server API even if the certificate running on Webadmin is untrusted.
-.EXAMPLE
-
-$cred = Get-Credential
-New-AcanoSession -APIAddress acano.contoso.com -Port 445 -Credential $cred
-
-#>
     Param (
         [parameter(Mandatory=$true)]
         [string]$APIAddress,
@@ -114,132 +67,13 @@ New-AcanoSession -APIAddress acano.contoso.com -Port 445 -Credential $cred
     }
 }
 
+# .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanocoSpaces {
-<#
-.SYNOPSIS
-
-Returns coSpaces currently configured on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on coSpaces
-.PARAMETER Filter
-
-Returns coSpaces that matches the filter text
-.PARAMETER TenantFilter <tenantID>
-
-Returns coSpaces associated with that tenant
-.PARAMETER CallLegProfileFilter <callLegProfileID>
-
-Returns coSpaces using just that call leg profile
-
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of coSpaces beginning
-at the coSpace in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-AcanocoSpaces
-
-Will return all coSpaces
-.EXAMPLE
-Get-AcanocoSpaces -Filter "Greg"
-
-Will return all coSpaces whos name contains "Greg"
-#>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallLegProfileFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/coSpaces"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($CallLegProfileFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"        } else {            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).coSpaces.coSpace}function Get-AcanocoSpace {<#
-.SYNOPSIS
-
-Returns information about a given coSpace
-.DESCRIPTION
-
-Use this Cmdlet to get information on a coSpace
-.PARAMETER coSpaceID
-
-The ID of the coSpace
-.EXAMPLE
-Get-AcanocoSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the coSpace
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallLegProfileFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/coSpaces"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($CallLegProfileFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"        } else {            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).coSpaces.coSpace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanocoSpace {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace}function New-AcanocoSpace {<#
-.SYNOPSIS
-
-Creates a new coSpace on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to create a new coSpace
-.PARAMETER Name
-
-The human-readable name that will be shown on clients’ UI for this coSpace
-.PARAMETER Uri
-
-The URI that a SIP system would use to dial in to this coSpace 
-.PARAMETER SecondaryUri
-
-The secondary URI for this coSpace – this provide the same functionality as
-the “uri” parameter, but allows more than one URI to be configured for a coSpace.
-.PARAMETER CallId
-
-The numeric ID that a user would enter at the IVR (or via a web client) to connect
-to this coSpace
-.PARAMETER CdrTag
-
-Up to 100 characters of free form text to identify this coSpace in a CDR; when a
-"callStart" CDR is generated for a call associated with this coSpace, this tag will
-be written (as "cdrTag") to the callStart CDR. See the Acano solution CDR Reference
-for details.
-.PARAMETER Passcode
-
-The security code for this coSpace
-.PARAMETER DefaultLayout
-
-The default layout to be used for new call legs in this coSpace. Valid values are
-
--- allEqual
--- speakerOnly
--- telepresence
--- stacked
--- allEqualQuarters
--- allEqualNinths
--- allEqualSixteenths
--- allEqualTwentyFifths
--- onePlusFive
--- onePlusSeven
--- onePlusNine
-.PARAMETER Tenant
-
-If provided, associates the specified call leg profile with this tenant.
-.PARAMETER CallLegProfile
-
-If provided, associates the specified call leg profile with this coSpace..PARAMETER CallProfile
-
-If provided, associates the specified call profile with this coSpace.
-.PARAMETER CallBrandingProfile
-
-If provided, associates the specified call branding profile with this coSpace.
-.PARAMETER RequireCallID <true|false>
-
-If this value is supplied as true, and no callId is currently specified for the
-coSpace, a new auto-generated Call Id will be assigned. Default value is $true.
-.PARAMETER Secret
-
-If provided, sets the security string for this coSpace. If absent, a security
-string is chosen automatically if the coSpace has a callId value. This is the
-security value associated with the coSpace that needs to be supplied with the
-callId for guest access to the coSpace.
-.EXAMPLE
-
-New-AcanocoSpace -Name "Gregs coSpace" -Uri "greg.cs"
-
-Will create a new coSpace
-#>    Param (
+        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction New-AcanocoSpace {    Param (
         [parameter(Mandatory=$true)]        [string]$Name,
         [parameter(Mandatory=$true)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$SecondaryUri="",        [parameter(Mandatory=$false)]        [string]$CallId="",        [parameter(Mandatory=$false)]        [string]$CdrTag="",        [parameter(Mandatory=$false)]        [string]$Passcode="",        [parameter(Mandatory=$false)]        [string]$DefaultLayout="",        [parameter(Mandatory=$false)]        [string]$TenantID="",        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [string]$CallProfile="",        [parameter(Mandatory=$false)]        [string]$CallBrandingProfile="",        [parameter(Mandatory=$false)]        [boolean]$RequireCallID=$true,        [parameter(Mandatory=$false)]        [string]$Secret=""    )    $nodeLocation = "/api/v1/coSpaces"    $data = "name=$Name&uri=$Uri"    if ($SecondaryUri -ne "") {        $data += "&secondaryUri=$SecondaryUri"    }    if ($CallID -ne "") {        $data += "&callId=$CallId"    }    if ($CdrTag -ne "") {        $data += "&cdrTag=$CdrTag"    }    if ($Passcode -ne "") {        $data += "&passcode=$Passcode"    }    if ($DefaultLayout -ne "") {        $data += "&defaultLayout=$DefaultLayout"    }    if ($TenantID -ne "") {        $data += "&tenantId=$TenantID"    }    if ($CallLegProfile -ne "") {        $data += "&callLegProfile=$CallLegProfile"    }    if ($CallProfile -ne "") {        $data += "&callProfile=$CallProfile"    }    if ($CallBrandingProfile -ne "") {        $data += "&callBrandingProfile=$CallBrandingProfile"    }    if ($Secret -ne "") {        $data += "&secret=$Secret"    }    $data += "&requireCallID="+$RequireCallID.toString()    [string]$NewcoSpaceID = Open-AcanoAPI $nodeLocation -POST -Data $data    Get-AcanocoSpace -coSpaceID $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanocoSpace {<#
 .SYNOPSIS
