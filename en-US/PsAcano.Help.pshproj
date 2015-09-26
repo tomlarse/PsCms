@@ -4931,7 +4931,8 @@
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description>If provided, associates the specified call leg profile with this coSpace.</Description>
+          <Description>If provided, associates the specified call leg profile with this coSpace.
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="9" globbing="false">
@@ -5404,8 +5405,10 @@ to be a GET request.</Description>
     <CmdletObject verb="Remove" noun="AcanocoSpace">
       <Name>Remove-AcanocoSpace</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Deletes a coSpace
+</Synopsis>
+        <Description>Use this Cmdlet to delete a coSpace
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -5428,7 +5431,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the coSpace
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5457,7 +5461,16 @@ to be a GET request.</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Remove-AcanocoSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will delete the coSpace
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -5536,8 +5549,10 @@ to be a GET request.</Description>
     <CmdletObject verb="Set" noun="AcanocoSpace">
       <Name>Set-AcanocoSpace</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Makes changes to a coSpace on the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to make changes to a coSpace
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -5560,7 +5575,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the coSpace to be changed
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5570,7 +5586,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The human-readable name that will be shown on clients’ UI for this coSpace
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5580,7 +5597,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The URI that a SIP system would use to dial in to this coSpace 
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5590,7 +5608,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The secondary URI for this coSpace – this provide the same functionality as the “uri” parameter, but allows more than one URI to be configured for a coSpace.
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5600,7 +5619,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The numeric ID that a user would enter at the IVR (or via a web client) to connect to this coSpace
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5610,7 +5630,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Up to 100 characters of free form text to identify this coSpace in a CDR; when a "callStart" CDR is generated for a call associated with this coSpace, this tag will be written (as "cdrTag") to the callStart CDR. See the Acano solution CDR Reference for details.
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5620,7 +5641,7 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The security code for this coSpace</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5630,7 +5651,20 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The default layout to be used for new call legs in this coSpace. Valid values are
+
+-- allEqual
+-- speakerOnly
+-- telepresence
+-- stacked
+-- allEqualQuarters
+-- allEqualNinths
+-- allEqualSixteenths
+-- allEqualTwentyFifths
+-- onePlusFive
+-- onePlusSeven
+-- onePlusNine
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5640,7 +5674,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>If provided, associates the specified call leg profile with this tenant.
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5650,7 +5685,7 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>If provided, associates the specified call leg profile with this coSpace.</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5660,7 +5695,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>If provided, associates the specified call profile with this coSpace.
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5670,7 +5706,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>If provided, associates the specified call branding profile with this coSpace.
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="Boolean" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5680,7 +5717,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>If this value is supplied as true, and no callId is currently specified for the coSpace, a new auto-generated Call Id will be assigned
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5690,7 +5728,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>If provided, sets the security string for this coSpace. If absent, a security string is chosen automatically if the coSpace has a callId value. This is the security value associated with the coSpace that needs to be supplied with the callId for guest access to the coSpace.
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="SwitchParameter" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5700,7 +5739,7 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>If this parameter is supplied a new security value is generated for this coSpace and the former value is no longer valid (for instance, any hyperlinks including it will cease to work)</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5729,7 +5768,24 @@ to be a GET request.</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Set-AcanocoSpace -coSpaceId "ce03f08f-547f-4df1-b531-ae3a64a9c18f" -Name "Gregs coSpace" -Uri "greg.cs"
+</Cmd>
+          <Description>Will change the name and the URI of the coSpace
+</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Example 2</Name>
+          <Cmd>Set-AcanocoSpace -coSpaceId "ce03f08f-547f-4df1-b531-ae3a64a9c18f" -RegenerateSecret
+</Cmd>
+          <Description>Will generate a new secret for the coSpace
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
