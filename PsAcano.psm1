@@ -29,9 +29,12 @@ Supply this parameter together with -POST and -PUT containing the data to be upl
         [parameter(ParameterSetName="PUT",Mandatory=$true,Position=1)]
         [parameter(ParameterSetName="DELETE",Mandatory=$true,Position=1)]
         [string]$NodeLocation,
-        [parameter(ParameterSetName="POST",Mandatory=$true)]        [switch]$POST,
-        [parameter(ParameterSetName="PUT",Mandatory=$true)]        [switch]$PUT,
-        [parameter(ParameterSetName="DELETE",Mandatory=$true)]        [switch]$DELETE,
+        [parameter(ParameterSetName="POST",Mandatory=$true)]
+        [switch]$POST,
+        [parameter(ParameterSetName="PUT",Mandatory=$true)]
+        [switch]$PUT,
+        [parameter(ParameterSetName="DELETE",Mandatory=$true)]
+        [switch]$DELETE,
         [parameter(ParameterSetName="POST",Mandatory=$true)]
         [parameter(ParameterSetName="PUT",Mandatory=$true)]
         [string]$Data
@@ -151,7 +154,65 @@ Will return all coSpaces whos name contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallLegProfileFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/coSpaces"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($CallLegProfileFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"        } else {            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).coSpaces.coSpace}function Get-AcanocoSpace {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CallLegProfileFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/coSpaces"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($CallLegProfileFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"
+        } else {
+            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).coSpaces.coSpace
+}
+
+function Get-AcanocoSpace {
+<#
 .SYNOPSIS
 
 Returns information about a given coSpace
@@ -166,9 +227,18 @@ Get-AcanocoSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the coSpace
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace}function New-AcanocoSpace {<#
+        [string]$coSpaceID
+    )
+
+    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace
+
+}
+
+function New-AcanocoSpace {
+<#
 .SYNOPSIS
 
 Creates a new coSpace on the Acano server
@@ -218,7 +288,8 @@ The default layout to be used for new call legs in this coSpace. Valid values ar
 If provided, associates the specified call leg profile with this tenant.
 .PARAMETER CallLegProfile
 
-If provided, associates the specified call leg profile with this coSpace..PARAMETER CallProfile
+If provided, associates the specified call leg profile with this coSpace.
+.PARAMETER CallProfile
 
 If provided, associates the specified call profile with this coSpace.
 .PARAMETER CallBrandingProfile
@@ -239,9 +310,88 @@ callId for guest access to the coSpace.
 New-AcanocoSpace -Name "Gregs coSpace" -Uri "greg.cs"
 
 Will create a new coSpace
-#>    Param (
-        [parameter(Mandatory=$true)]        [string]$Name,
-        [parameter(Mandatory=$true)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$SecondaryUri="",        [parameter(Mandatory=$false)]        [string]$CallId="",        [parameter(Mandatory=$false)]        [string]$CdrTag="",        [parameter(Mandatory=$false)]        [string]$Passcode="",        [parameter(Mandatory=$false)]        [string]$DefaultLayout="",        [parameter(Mandatory=$false)]        [string]$Tenant="",        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [string]$CallProfile="",        [parameter(Mandatory=$false)]        [string]$CallBrandingProfile="",        [parameter(Mandatory=$false)]        [boolean]$RequireCallID=$true,        [parameter(Mandatory=$false)]        [string]$Secret=""    )    $nodeLocation = "/api/v1/coSpaces"    $data = "name=$Name&uri=$Uri"    if ($SecondaryUri -ne "") {        $data += "&secondaryUri=$SecondaryUri"    }    if ($CallID -ne "") {        $data += "&callId=$CallId"    }    if ($CdrTag -ne "") {        $data += "&cdrTag=$CdrTag"    }    if ($Passcode -ne "") {        $data += "&passcode=$Passcode"    }    if ($DefaultLayout -ne "") {        $data += "&defaultLayout=$DefaultLayout"    }    if ($Tenant -ne "") {        $data += "&tenant=$Tenant"    }    if ($CallLegProfile -ne "") {        $data += "&callLegProfile=$CallLegProfile"    }    if ($CallProfile -ne "") {        $data += "&callProfile=$CallProfile"    }    if ($CallBrandingProfile -ne "") {        $data += "&callBrandingProfile=$CallBrandingProfile"    }    if ($Secret -ne "") {        $data += "&secret=$Secret"    }    $data += "&requireCallID="+$RequireCallID.toString()    [string]$NewcoSpaceID = Open-AcanoAPI $nodeLocation -POST -Data $data    Get-AcanocoSpace -coSpaceID $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanocoSpace {<#
+#>
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Name,
+        [parameter(Mandatory=$true)]
+        [string]$Uri,
+        [parameter(Mandatory=$false)]
+        [string]$SecondaryUri="",
+        [parameter(Mandatory=$false)]
+        [string]$CallId="",
+        [parameter(Mandatory=$false)]
+        [string]$CdrTag="",
+        [parameter(Mandatory=$false)]
+        [string]$Passcode="",
+        [parameter(Mandatory=$false)]
+        [string]$DefaultLayout="",
+        [parameter(Mandatory=$false)]
+        [string]$Tenant="",
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile="",
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile="",
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile="",
+        [parameter(Mandatory=$false)]
+        [boolean]$RequireCallID=$true,
+        [parameter(Mandatory=$false)]
+        [string]$Secret=""
+    )
+
+    $nodeLocation = "/api/v1/coSpaces"
+    $data = "name=$Name&uri=$Uri"
+
+    if ($SecondaryUri -ne "") {
+        $data += "&secondaryUri=$SecondaryUri"
+    }
+
+    if ($CallID -ne "") {
+        $data += "&callId=$CallId"
+    }
+
+    if ($CdrTag -ne "") {
+        $data += "&cdrTag=$CdrTag"
+    }
+
+    if ($Passcode -ne "") {
+        $data += "&passcode=$Passcode"
+    }
+
+    if ($DefaultLayout -ne "") {
+        $data += "&defaultLayout=$DefaultLayout"
+    }
+
+    if ($Tenant -ne "") {
+        $data += "&tenant=$Tenant"
+    }
+
+    if ($CallLegProfile -ne "") {
+        $data += "&callLegProfile=$CallLegProfile"
+    }
+
+    if ($CallProfile -ne "") {
+        $data += "&callProfile=$CallProfile"
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        $data += "&callBrandingProfile=$CallBrandingProfile"
+    }
+
+    if ($Secret -ne "") {
+        $data += "&secret=$Secret"
+    }
+
+    $data += "&requireCallID="+$RequireCallID.toString()
+
+    [string]$NewcoSpaceID = Open-AcanoAPI $nodeLocation -POST -Data $data
+
+    Get-AcanocoSpace -coSpaceID $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanocoSpace {
+<#
 .SYNOPSIS
 
 Makes changes to a coSpace on the Acano server
@@ -294,7 +444,8 @@ The default layout to be used for new call legs in this coSpace. Valid values ar
 If provided, associates the specified call leg profile with this tenant.
 .PARAMETER CallLegProfile
 
-If provided, associates the specified call leg profile with this coSpace..PARAMETER CallProfile
+If provided, associates the specified call leg profile with this coSpace.
+.PARAMETER CallProfile
 
 If provided, associates the specified call profile with this coSpace.
 .PARAMETER CallBrandingProfile
@@ -313,7 +464,9 @@ callId for guest access to the coSpace.
 .PARAMETER RegenerateSecret
 
 If this parameter is supplied a new security value is generated for this coSpace
-and the former value is no longer valid (for instance, any hyperlinks includingit will cease to work).EXAMPLE
+and the former value is no longer valid (for instance, any hyperlinks including
+it will cease to work)
+.EXAMPLE
 
 Set-AcanocoSpace -coSpaceId "ce03f08f-547f-4df1-b531-ae3a64a9c18f" -Name "Gregs coSpace" -Uri "greg.cs"
 
@@ -323,11 +476,172 @@ Will change the name and the URI of the coSpace
 Set-AcanocoSpace -coSpaceId "ce03f08f-547f-4df1-b531-ae3a64a9c18f" -RegenerateSecret
 
 Will generate a new secret for the coSpace
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$coSpaceId,
-        [parameter(Mandatory=$false)]        [string]$Name,
-        [parameter(Mandatory=$false)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$SecondaryUri="",        [parameter(Mandatory=$false)]        [string]$CallId="",        [parameter(Mandatory=$false)]        [string]$CdrTag="",        [parameter(Mandatory=$false)]        [string]$Passcode="",        [parameter(Mandatory=$false)]        [string]$DefaultLayout="",        [parameter(Mandatory=$false)]        [string]$TenantId="",        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [string]$CallProfile="",        [parameter(Mandatory=$false)]        [string]$CallBrandingProfile="",        [parameter(Mandatory=$false)]        [boolean]$RequireCallId,        [parameter(Mandatory=$false)]        [string]$Secret="",        [parameter(Mandatory=$false)]        [switch]$RegenerateSecret    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId"    $data = ""    $modifiers = 0        if ($Name -ne "") {        if ($modifiers -gt 0) {            $data += "&name=$Name"        } else {            $data += "name=$Name"            $modifiers++        }    }        if ($Uri -ne "") {        if ($modifiers -gt 0) {            $data += "&uri=$Uri"        } else {            $data += "uri=$Uri"            $modifiers++        }    }        if ($SecondaryURI -ne "") {        if ($modifiers -gt 0) {            $data += "&secondaryUri=$SecondaryUri"        } else {            $data += "secondaryUri=$SecondaryUri"            $modifiers++        }    }    if ($CallID -ne "") {        if ($modifiers -gt 0) {            $data += "&callID=$CallId"        } else {            $data += "callID=$CallId"            $modifiers++        }    }    if ($CdrTag -ne "") {        if ($modifiers -gt 0) {            $data += "&cdrTag=$CdrTag"        } else {            $data += "cdrTag=$CdrTag"            $modifiers++        }    }    if ($Passcode -ne "") {        if ($modifiers -gt 0) {            $data += "&passcode=$Passcode"        } else {            $data += "passcode=$Passcode"            $modifiers++        }    }    if ($DefaultLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&defaultLayout=$DefaultLayout"        } else {            $data += "defaultLayout=$DefaultLayout"            $modifiers++        }    }    if ($TenantID -ne "") {        if ($modifiers -gt 0) {            $data += "&tenantId=$TenantId"        } else {            $data += "tenantId=$TenantId"            $modifiers++        }    }    if ($CallLegProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&callLegProfile=$CallLegProfile"        } else {            $data += "callLegProfile=$CallLegProfile"            $modifiers++        }    }    if ($CallProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&callProfile=$CallProfile"        } else {            $data += "callProfile=$CallProfile"            $modifiers++        }    }    if ($CallBrandingProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&callBrandingProfile=$CallBrandingProfile"        } else {            $data += "callBrandingProfile=$CallBrandingProfile"            $modifiers++        }    }    if ($Secret -ne "") {        if ($modifiers -gt 0) {            $data += "&secret=$Secret"        } else {            $data += "secret=$Secret"            $modifiers++        }    }    if ((($RequireCallID -ne $true) -and ($RequireCallID -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&requireCallID="+$RequireCallId.toString()        } else {            $data += "requireCallID="+$RequireCallId.toString()            $modifiers++        }    }    if ($modifiers -gt 0) {        $data += "&regenerateSecret="+$RegenerateSecret.toString()    } else {        $data += "regenerateSecret="+$RegenerateSecret.toString()    }    Open-AcanoAPI $nodeLocation -PUT -Data $data}function Remove-AcanocoSpace {<#
+        [parameter(Mandatory=$false)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [string]$Uri,
+        [parameter(Mandatory=$false)]
+        [string]$SecondaryUri="",
+        [parameter(Mandatory=$false)]
+        [string]$CallId="",
+        [parameter(Mandatory=$false)]
+        [string]$CdrTag="",
+        [parameter(Mandatory=$false)]
+        [string]$Passcode="",
+        [parameter(Mandatory=$false)]
+        [string]$DefaultLayout="",
+        [parameter(Mandatory=$false)]
+        [string]$Tenant="",
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile="",
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile="",
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile="",
+        [parameter(Mandatory=$false)]
+        [boolean]$RequireCallId,
+        [parameter(Mandatory=$false)]
+        [string]$Secret="",
+        [parameter(Mandatory=$false)]
+        [switch]$RegenerateSecret
+    )
+
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId"
+    $data = ""
+    $modifiers = 0
+    
+    if ($Name -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&name=$Name"
+        } else {
+            $data += "name=$Name"
+            $modifiers++
+        }
+    }
+    
+    if ($Uri -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&uri=$Uri"
+        } else {
+            $data += "uri=$Uri"
+            $modifiers++
+        }
+    }
+    
+    if ($SecondaryURI -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&secondaryUri=$SecondaryUri"
+        } else {
+            $data += "secondaryUri=$SecondaryUri"
+            $modifiers++
+        }
+    }
+
+    if ($CallID -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callID=$CallId"
+        } else {
+            $data += "callID=$CallId"
+            $modifiers++
+        }
+    }
+
+    if ($CdrTag -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&cdrTag=$CdrTag"
+        } else {
+            $data += "cdrTag=$CdrTag"
+            $modifiers++
+        }
+    }
+
+    if ($Passcode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&passcode=$Passcode"
+        } else {
+            $data += "passcode=$Passcode"
+            $modifiers++
+        }
+    }
+
+    if ($DefaultLayout -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&defaultLayout=$DefaultLayout"
+        } else {
+            $data += "defaultLayout=$DefaultLayout"
+            $modifiers++
+        }
+    }
+
+    if ($Tenant -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&tenant=$Tenant"
+        } else {
+            $data += "tenant=$Tenant"
+            $modifiers++
+        }
+    }
+
+    if ($CallLegProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callLegProfile=$CallLegProfile"
+        } else {
+            $data += "callLegProfile=$CallLegProfile"
+            $modifiers++
+        }
+    }
+
+    if ($CallProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callProfile=$CallProfile"
+        } else {
+            $data += "callProfile=$CallProfile"
+            $modifiers++
+        }
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callBrandingProfile=$CallBrandingProfile"
+        } else {
+            $data += "callBrandingProfile=$CallBrandingProfile"
+            $modifiers++
+        }
+    }
+
+    if ($Secret -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&secret=$Secret"
+        } else {
+            $data += "secret=$Secret"
+            $modifiers++
+        }
+    }
+
+    if ((($RequireCallID -ne $true) -and ($RequireCallID -ne $false)) -eq $false) {
+        if ($modifiers -gt 0) {
+            $data += "&requireCallID="+$RequireCallId.toString()
+        } else {
+            $data += "requireCallID="+$RequireCallId.toString()
+            $modifiers++
+        }
+    }
+
+    if ($modifiers -gt 0) {
+        $data += "&regenerateSecret="+$RegenerateSecret.toString()
+    } else {
+        $data += "regenerateSecret="+$RegenerateSecret.toString()
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+}
+
+function Remove-AcanocoSpace {
+<#
 .SYNOPSIS
 
 Deletes a coSpace
@@ -342,9 +656,20 @@ Remove-AcanocoSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will delete the coSpace
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceID    )    ### Add confirmation    Open-AcanoAPI "api/v1/coSpaces/$coSpaceID" -DELETE}function Get-AcanocoSpaceMembers {<#
+        [string]$coSpaceID
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "api/v1/coSpaces/$coSpaceID" -DELETE
+
+}
+
+function Get-AcanocoSpaceMembers {
+<#
 .SYNOPSIS
 
 Returns all members of a given coSpace
@@ -374,10 +699,60 @@ Will return all members of the provided coSpaceID
 Get-AcanocoSpaceMembers -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd -Filter "Greg"
 
 Will return all coSpace members whos userJid contains "Greg"
-#>[CmdletBinding(DefaultParameterSetName="NoOffset")]
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]        [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]        [string]$coSpaceID,
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallLegProfileFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )        $nodeLocation = "api/v1/coSpaces/$coSpaceID/coSpaceUsers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($CallLegProfileFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"        } else {            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).coSpaceUsers.coSpaceUser | fl}function Get-AcanocoSpaceMember {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]
+        [string]$coSpaceID,
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CallLegProfileFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    
+    $nodeLocation = "api/v1/coSpaces/$coSpaceID/coSpaceUsers"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($CallLegProfileFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"
+        } else {
+            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).coSpaceUsers.coSpaceUser | fl
+}
+
+function Get-AcanocoSpaceMember {
+<#
 .SYNOPSIS
 
 Returns information about a given coSpace member user
@@ -395,10 +770,20 @@ Get-AcanocoSpaces -coSpaceUserID 61a1229d-3198-43b3-9423-6857d22bdcc9 -coSpaceID
 
 Will return information on the member user
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceUserID,        [parameter(Mandatory=$true)]
-        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$coSpaceUserID").coSpaceUser}function New-AcanocoSpaceMember {<#
+        [string]$coSpaceUserID,
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceID
+    )
+
+    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$coSpaceUserID").coSpaceUser
+
+}
+
+function New-AcanocoSpaceMember {
+<#
 .SYNOPSIS
 
 Creates a new coSpace on the Acano server
@@ -432,7 +817,8 @@ Whether this user is allowed to change the Call ID of the coSpace
 Whether this user is allowed to change the passcode of the coSpace
 .PARAMETER CanPostMessage
 
-Whether this user is allowed to write messages in the coSpace.PARAMETER CanRemoveSelf
+Whether this user is allowed to write messages in the coSpace
+.PARAMETER CanRemoveSelf
 
 Whether this user is allowed to remove himself from the coSpace
 .PARAMETER CanDeleteAllMessages
@@ -443,9 +829,84 @@ Whether this user is allowed to delete all messages from the coSpace message boa
 New-AcanocoSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -UserJid greg@contoso.com
 
 Will add greg@contoso.com as a member of this coSpace
-#>    Param (
-        [parameter(Mandatory=$true)]        [string]$coSpaceId,
-        [parameter(Mandatory=$true)]        [string]$UserJid,        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [boolean]$CanDestroy,        [parameter(Mandatory=$false)]        [boolean]$CanAddRemoveMember,        [parameter(Mandatory=$false)]        [boolean]$CanChangeName,        [parameter(Mandatory=$false)]        [boolean]$CanChangeUri,        [parameter(Mandatory=$false)]        [boolean]$CanChangeCallId,        [parameter(Mandatory=$false)]        [boolean]$CanChangePasscode,        [parameter(Mandatory=$false)]        [boolean]$CanPostMessage,        [parameter(Mandatory=$false)]        [boolean]$CanRemoveSelf,        [parameter(Mandatory=$false)]        [boolean]$CanDeleteAllMessages    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers"    $data = "userJid=$UserJid"    if ($CallLegProfile -ne "") {        $data += "&callLegProfile=$CallLegProfile"    }    if ((($CanDestroy -ne $true) -and ($CanDestroy -ne $false)) -eq $false) {        $data += "&canDestroy="+$CanDestroy.toString()    }    if ((($CanAddRemoveMember -ne $true) -and ($CanAddRemoveMember -ne $false)) -eq $false) {        $data += "&canAddRemoveMember="+$CanAddRemoveMember.toString()    }    if ((($CanChangeName -ne $true) -and ($CanChangeName -ne $false)) -eq $false) {        $data += "&canChangeName="+$CanChangeName.toString()    }    if ((($CanChangeUri -ne $true) -and ($CanChangeUri -ne $false)) -eq $false) {        $data += "&canChangeUri="+$CanChangeUri.toString()    }    if ((($CanChangeCallId -ne $true) -and ($CanChangeCallId -ne $false)) -eq $false) {        $data += "&canChangeCallId="+$CanChangeCallId.toString()    }    if ((($CanChangePasscode -ne $true) -and ($CanChangePasscode -ne $false)) -eq $false) {        $data += "&canChangePasscode="+$CanChangePasscode.toString()    }    if ((($CanPostMessage -ne $true) -and ($CanPostMessage -ne $false)) -eq $false) {        $data += "&canPostMessage="+$CanPostMessage.toString()    }    if ((($CanRemoveSelf -ne $true) -and ($CanRemoveSelf -ne $false)) -eq $false) {        $data += "&canRemoveSelf="+$CanRemoveSelf.toString()    }    if ((($CanDeleteAllMessages -ne $true) -and ($CanDeleteAllMessages -ne $false)) -eq $false) {        $data += "&canDeleteAllMessages="+$CanDeleteAllMessages.toString()    }    [string]$NewcoSpaceMemberID = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanocoSpaceMember {<#
+#>
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceId,
+        [parameter(Mandatory=$true)]
+        [string]$UserJid,
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile="",
+        [parameter(Mandatory=$false)]
+        [boolean]$CanDestroy,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanAddRemoveMember,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanChangeName,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanChangeUri,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanChangeCallId,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanChangePasscode,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanPostMessage,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanRemoveSelf,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanDeleteAllMessages
+    )
+
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers"
+    $data = "userJid=$UserJid"
+
+    if ($CallLegProfile -ne "") {
+        $data += "&callLegProfile=$CallLegProfile"
+    }
+
+    if ((($CanDestroy -ne $true) -and ($CanDestroy -ne $false)) -eq $false) {
+        $data += "&canDestroy="+$CanDestroy.toString()
+    }
+
+    if ((($CanAddRemoveMember -ne $true) -and ($CanAddRemoveMember -ne $false)) -eq $false) {
+        $data += "&canAddRemoveMember="+$CanAddRemoveMember.toString()
+    }
+
+    if ((($CanChangeName -ne $true) -and ($CanChangeName -ne $false)) -eq $false) {
+        $data += "&canChangeName="+$CanChangeName.toString()
+    }
+
+    if ((($CanChangeUri -ne $true) -and ($CanChangeUri -ne $false)) -eq $false) {
+        $data += "&canChangeUri="+$CanChangeUri.toString()
+    }
+
+    if ((($CanChangeCallId -ne $true) -and ($CanChangeCallId -ne $false)) -eq $false) {
+        $data += "&canChangeCallId="+$CanChangeCallId.toString()
+    }
+
+    if ((($CanChangePasscode -ne $true) -and ($CanChangePasscode -ne $false)) -eq $false) {
+        $data += "&canChangePasscode="+$CanChangePasscode.toString()
+    }
+
+    if ((($CanPostMessage -ne $true) -and ($CanPostMessage -ne $false)) -eq $false) {
+        $data += "&canPostMessage="+$CanPostMessage.toString()
+    }
+
+    if ((($CanRemoveSelf -ne $true) -and ($CanRemoveSelf -ne $false)) -eq $false) {
+        $data += "&canRemoveSelf="+$CanRemoveSelf.toString()
+    }
+
+    if ((($CanDeleteAllMessages -ne $true) -and ($CanDeleteAllMessages -ne $false)) -eq $false) {
+        $data += "&canDeleteAllMessages="+$CanDeleteAllMessages.toString()
+    }
+
+    [string]$NewcoSpaceMemberID = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanocoSpaceMember {
+<#
 .SYNOPSIS
 
 Makes changes to a coSpace Member
@@ -482,7 +943,8 @@ Whether this user is allowed to change the Call ID of the coSpace
 Whether this user is allowed to change the passcode of the coSpace
 .PARAMETER CanPostMessage
 
-Whether this user is allowed to write messages in the coSpace.PARAMETER CanRemoveSelf
+Whether this user is allowed to write messages in the coSpace
+.PARAMETER CanRemoveSelf
 
 Whether this user is allowed to remove himself from the coSpace
 .PARAMETER CanDeleteAllMessages
@@ -492,12 +954,141 @@ Whether this user is allowed to delete all messages from the coSpace message boa
 
 New-AcanocoSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -UserJid greg@contoso.com
 
-Will add greg@contoso.com as a member of this coSpace#>    Param (
+Will add greg@contoso.com as a member of this coSpace
+#>
+    Param (
         [parameter(Mandatory=$true)]
         [string]$coSpaceId,
         [parameter(Mandatory=$true)]
         [string]$UserId,
-        [parameter(Mandatory=$false)]        [string]$UserJid="",        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [boolean]$CanDestroy,        [parameter(Mandatory=$false)]        [boolean]$CanAddRemoveMember,        [parameter(Mandatory=$false)]        [boolean]$CanChangeName,        [parameter(Mandatory=$false)]        [boolean]$CanChangeUri,        [parameter(Mandatory=$false)]        [boolean]$CanChangeCallId,        [parameter(Mandatory=$false)]        [boolean]$CanChangePasscode,        [parameter(Mandatory=$false)]        [boolean]$CanPostMessage,        [parameter(Mandatory=$false)]        [boolean]$CanRemoveSelf,        [parameter(Mandatory=$false)]        [boolean]$CanDeleteAllMessages    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId"    $data = ""    $modifiers = 0        if ($UserJid -ne "") {        $data += "userJid=$UserJid"        $modifiers++    }        if ($CallLegProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&callLegProfile=$CallLegProfile"        } else {            $data += "callLegProfile=$CallLegProfile"            $modifiers++        }    }    if ((($CanDestroy -ne $true) -and ($CanDestroy -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&canDestroy="+$CanDestroy.toString()        } else {            $data += "canDestroy="+$CanDestroy.toString()            $modifiers++        }    }    if ((($CanAddRemoveMember -ne $true) -and ($CanAddRemoveMember -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&canAddRemoveMember="+$CanAddRemoveMember.toString()        } else {            $data += "canAddRemoveMember="+$CanAddRemoveMember.toString()            $modifiers++        }    }    if ((($CanChangeName -ne $true) -and ($CanChangeName -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&canChangeName="+$CanChangeName.toString()        } else {            $data += "canChangeName="+$CanChangeName.toString()            $modifiers++        }    }    if ((($CanChangeUri -ne $true) -and ($CanChangeUri -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&canChangeUri="+$CanChangeUri.toString()        } else {            $data += "canChangeUri="+$CanChangeUri.toString()            $modifiers++        }    }    if ((($CanChangeCallId -ne $true) -and ($CanChangeCallId -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&canChangeCallId="+$CanChangeCallId.toString()        } else {            $data += "canChangeCallId="+$CanChangeCallId.toString()            $modifiers++        }    }    if ((($CanChangePasscode -ne $true) -and ($CanChangePasscode -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&canChangePasscode="+$CanChangePasscode.toString()        } else {            $data += "canChangePasscode="+$CanChangePasscode.toString()            $modifiers++        }    }    if ((($CanPostMessage -ne $true) -and ($CanPostMessage -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&canPostMessage="+$CanPostMessage.toString()        } else {            $data += "canPostMessage="+$CanPostMessage.toString()            $modifiers++        }    }    if ((($CanRemoveSelf -ne $true) -and ($CanRemoveSelf -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&canRemoveSelf="+$CanRemoveSelf.toString()        } else {            $data += "canRemoveSelf="+$CanRemoveSelf.toString()            $modifiers++        }    }    if ((($CanDeleteAllMessages -ne $true) -and ($CanDeleteAllMessages -ne $false)) -eq $false) {        if ($modifiers -gt 0) {            $data += "&canDeleteAllMessages="+$CanDeleteAllMessages.toString()        } else {            $data += "canDeleteAllMessages="+$CanDeleteAllMessages.toString()            $modifiers++        }    }    Open-AcanoAPI $nodeLocation -PUT -Data $data}function Remove-AcanocoSpaceMember {<#
+        [parameter(Mandatory=$false)]
+        [string]$UserJid="",
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile="",
+        [parameter(Mandatory=$false)]
+        [boolean]$CanDestroy,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanAddRemoveMember,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanChangeName,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanChangeUri,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanChangeCallId,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanChangePasscode,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanPostMessage,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanRemoveSelf,
+        [parameter(Mandatory=$false)]
+        [boolean]$CanDeleteAllMessages
+    )
+
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId"
+    $data = ""
+    $modifiers = 0
+    
+    if ($UserJid -ne "") {
+        $data += "userJid=$UserJid"
+        $modifiers++
+    }
+    
+    if ($CallLegProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callLegProfile=$CallLegProfile"
+        } else {
+            $data += "callLegProfile=$CallLegProfile"
+            $modifiers++
+        }
+    }
+
+    if ((($CanDestroy -ne $true) -and ($CanDestroy -ne $false)) -eq $false) {
+        if ($modifiers -gt 0) {
+            $data += "&canDestroy="+$CanDestroy.toString()
+        } else {
+            $data += "canDestroy="+$CanDestroy.toString()
+            $modifiers++
+        }
+    }
+
+    if ((($CanAddRemoveMember -ne $true) -and ($CanAddRemoveMember -ne $false)) -eq $false) {
+        if ($modifiers -gt 0) {
+            $data += "&canAddRemoveMember="+$CanAddRemoveMember.toString()
+        } else {
+            $data += "canAddRemoveMember="+$CanAddRemoveMember.toString()
+            $modifiers++
+        }
+    }
+
+    if ((($CanChangeName -ne $true) -and ($CanChangeName -ne $false)) -eq $false) {
+        if ($modifiers -gt 0) {
+            $data += "&canChangeName="+$CanChangeName.toString()
+        } else {
+            $data += "canChangeName="+$CanChangeName.toString()
+            $modifiers++
+        }
+    }
+
+    if ((($CanChangeUri -ne $true) -and ($CanChangeUri -ne $false)) -eq $false) {
+        if ($modifiers -gt 0) {
+            $data += "&canChangeUri="+$CanChangeUri.toString()
+        } else {
+            $data += "canChangeUri="+$CanChangeUri.toString()
+            $modifiers++
+        }
+    }
+
+    if ((($CanChangeCallId -ne $true) -and ($CanChangeCallId -ne $false)) -eq $false) {
+        if ($modifiers -gt 0) {
+            $data += "&canChangeCallId="+$CanChangeCallId.toString()
+        } else {
+            $data += "canChangeCallId="+$CanChangeCallId.toString()
+            $modifiers++
+        }
+    }
+
+    if ((($CanChangePasscode -ne $true) -and ($CanChangePasscode -ne $false)) -eq $false) {
+        if ($modifiers -gt 0) {
+            $data += "&canChangePasscode="+$CanChangePasscode.toString()
+        } else {
+            $data += "canChangePasscode="+$CanChangePasscode.toString()
+            $modifiers++
+        }
+    }
+
+    if ((($CanPostMessage -ne $true) -and ($CanPostMessage -ne $false)) -eq $false) {
+        if ($modifiers -gt 0) {
+            $data += "&canPostMessage="+$CanPostMessage.toString()
+        } else {
+            $data += "canPostMessage="+$CanPostMessage.toString()
+            $modifiers++
+        }
+    }
+
+    if ((($CanRemoveSelf -ne $true) -and ($CanRemoveSelf -ne $false)) -eq $false) {
+        if ($modifiers -gt 0) {
+            $data += "&canRemoveSelf="+$CanRemoveSelf.toString()
+        } else {
+            $data += "canRemoveSelf="+$CanRemoveSelf.toString()
+            $modifiers++
+        }
+    }
+
+    if ((($CanDeleteAllMessages -ne $true) -and ($CanDeleteAllMessages -ne $false)) -eq $false) {
+        if ($modifiers -gt 0) {
+            $data += "&canDeleteAllMessages="+$CanDeleteAllMessages.toString()
+        } else {
+            $data += "canDeleteAllMessages="+$CanDeleteAllMessages.toString()
+            $modifiers++
+        }
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+}
+
+function Remove-AcanocoSpaceMember {
+<#
 .SYNOPSIS
 
 Removes a coSpace Member
@@ -515,10 +1106,22 @@ Remove-AcanocoSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f -UserId
 
 Will delete the coSpace member
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,        [parameter(Mandatory=$true)]
-        [string]$UserId    )    ### Add confirmation    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId" -DELETE}function Get-AcanocoSpaceAccessMethods {<#
+        [string]$coSpaceId,
+        [parameter(Mandatory=$true)]
+        [string]$UserId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId" -DELETE
+
+}
+
+function Get-AcanocoSpaceAccessMethods {
+<#
 .SYNOPSIS
 
 Returns all access methods of a given coSpace
@@ -548,10 +1151,60 @@ Will return all access methods of the provided coSpaceID
 Get-Get-AcanocoSpaceAccessMethods -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd -Filter "Greg"
 
 Will return all coSpace access methods who matches "Greg"
-#>[CmdletBinding(DefaultParameterSetName="NoOffset")]
+#>
+[CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]        [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]        [string]$coSpaceID,
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallLegProfileFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )        $nodeLocation = "api/v1/coSpaces/$coSpaceID/accessMethods"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($CallLegProfileFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"        } else {            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).accessMethods.accessMethod | fl}function Get-AcanocoSpaceAccessMethod {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]
+        [string]$coSpaceID,
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CallLegProfileFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    
+    $nodeLocation = "api/v1/coSpaces/$coSpaceID/accessMethods"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($CallLegProfileFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"
+        } else {
+            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).accessMethods.accessMethod | fl
+}
+
+function Get-AcanocoSpaceAccessMethod {
+<#
 .SYNOPSIS
 
 Returns information about a given coSpace access method
@@ -569,10 +1222,20 @@ Get-AcanocoSpaces -coSpaceAccessMethodID 61a1229d-3198-43b3-9423-6857d22bdcc9 -c
 
 Will return information on the access method
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceAccessMethodID,        [parameter(Mandatory=$true)]
-        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/accessMethods/$coSpaceAccessMethodID").accessMethod}function Get-AcanoOutboundDialPlanRules {    <#
+        [string]$coSpaceAccessMethodID,
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceID
+    )
+
+    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/accessMethods/$coSpaceAccessMethodID").accessMethod
+
+}
+
+function Get-AcanoOutboundDialPlanRules {
+    <#
 .SYNOPSIS
 
 Returns outbound dial plan rules
@@ -601,7 +1264,41 @@ Will return all outbound dial plan rules matching "contoso.com"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/outboundDialPlanRules"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).outboundDialPlanRules.outboundDialPlanRule}function Get-AcanoOutboundDialPlanRule {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/outboundDialPlanRules"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).outboundDialPlanRules.outboundDialPlanRule
+}
+
+function Get-AcanoOutboundDialPlanRule {
+<#
 .SYNOPSIS
 
 Returns information about a given outbound dial plan rule
@@ -616,9 +1313,18 @@ Get-AcanocoSpaces -OutboundDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the outbound dial plan rule
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$OutboundDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/outboundDialPlanRules/$OutboundDialPlanRuleID").outboundDialPlanRule}function Get-AcanoInboundDialPlanRules {    <#
+        [string]$OutboundDialPlanRuleID
+    )
+
+    return (Open-AcanoAPI "api/v1/outboundDialPlanRules/$OutboundDialPlanRuleID").outboundDialPlanRule
+
+}
+
+function Get-AcanoInboundDialPlanRules {
+    <#
 .SYNOPSIS
 
 Returns inbound dial plan rules
@@ -650,7 +1356,53 @@ Will return all inbound dial plan rules matching "contoso.com"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/inboundDialPlanRules"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).inboundDialPlanRules.inboundDialPlanRule}function Get-AcanoInboundDialPlanRule {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/inboundDialPlanRules"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).inboundDialPlanRules.inboundDialPlanRule
+}
+
+function Get-AcanoInboundDialPlanRule {
+<#
 .SYNOPSIS
 
 Returns information about a given inbound dial plan rule
@@ -665,9 +1417,18 @@ Get-AcanocoSpaces -InboundDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the inbound dial plan rule
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$InboundDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/inboundDialPlanRules/$InboundDialPlanRuleID").inboundDialPlanRule}function Get-AcanoCallForwardingDialPlanRules {    <#
+        [string]$InboundDialPlanRuleID
+    )
+
+    return (Open-AcanoAPI "api/v1/inboundDialPlanRules/$InboundDialPlanRuleID").inboundDialPlanRule
+
+}
+
+function Get-AcanoCallForwardingDialPlanRules {
+    <#
 .SYNOPSIS
 
 Returns call forwarding dial plan rules
@@ -696,7 +1457,41 @@ Will return all call forwarding dial plan rules matching "contoso.com"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/forwardingDialPlanRules"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).forwardingDialPlanRules.forwardingDialPlanRule}function Get-AcanoOutboundDialPlanRule {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/forwardingDialPlanRules"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).forwardingDialPlanRules.forwardingDialPlanRule
+}
+
+function Get-AcanoOutboundDialPlanRule {
+<#
 .SYNOPSIS
 
 Returns information about a given call forwarding dial plan rule
@@ -711,9 +1506,18 @@ Get-AcanocoSpaces -ForwardingDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the call forwarding dial plan rule
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ForwardingDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleID").forwardingDialPlanRule}function Get-AcanoCalls {    <#
+        [string]$ForwardingDialPlanRuleID
+    )
+
+    return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleID").forwardingDialPlanRule
+
+}
+
+function Get-AcanoCalls {
+    <#
 .SYNOPSIS
 
 Returns current active calls
@@ -745,7 +1549,53 @@ Will return all current active calls on the given coSpace
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$coSpaceFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/calls"    $modifiers = 0    if ($coSpaceFilter -ne "") {        $nodeLocation += "?coSpacefilter=$coSpaceFilter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).calls.call}function Get-AcanoCall {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$coSpaceFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/calls"
+    $modifiers = 0
+
+    if ($coSpaceFilter -ne "") {
+        $nodeLocation += "?coSpacefilter=$coSpaceFilter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).calls.call
+}
+
+function Get-AcanoCall {
+<#
 .SYNOPSIS
 
 Returns information about a given call
@@ -760,9 +1610,18 @@ Get-AcanoCall -CallID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the given call
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallID    )    return (Open-AcanoAPI "api/v1/calls/$CallID").call}function Get-AcanoCallProfiles {    <#
+        [string]$CallID
+    )
+
+    return (Open-AcanoAPI "api/v1/calls/$CallID").call
+
+}
+
+function Get-AcanoCallProfiles {
+    <#
 .SYNOPSIS
 
 Returns configured call profiles
@@ -787,7 +1646,34 @@ Get-AcanoCalls -Limit 2
 Will return 2 configured call profiles
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callProfiles"    $modifiers = 0    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callProfiles.callProfile}function Get-AcanoCallProfile {<#
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/callProfiles"
+    $modifiers = 0
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).callProfiles.callProfile
+}
+
+function Get-AcanoCallProfile {
+<#
 .SYNOPSIS
 
 Returns information about a given call profile
@@ -802,9 +1688,17 @@ Get-AcanoCallProfile -CallProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the call profile
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallProfileID    )    return (Open-AcanoAPI "api/v1/callProfiles/$CallProfileID").callProfile}function Get-AcanoCallLegs {
+        [string]$CallProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/callProfiles/$CallProfileID").callProfile
+
+}
+
+function Get-AcanoCallLegs {
 <#
 .SYNOPSIS
 
@@ -860,7 +1754,98 @@ Will return all active call legs whos URI contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$ParticipantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("true","false","")]        [string]$OwnerIDSet="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Alarms="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallID="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    if ($CallID -ne "") {        $nodeLocation = "api/v1/calls/$CallID/callLegs"    } else {        $nodeLocation = "api/v1/callLegs"    }    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($ParticipantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&participantFilter=$ParticipantFilter"        } else {            $nodeLocation += "?participantFilter=$ParticipantFilter"            $modifiers++        }    }    if ($OwnerIdSet -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&ownerIdSet=$OwnerIdSet"        } else {            $nodeLocation += "?ownerIdSet=$OwnerIdSet"            $modifiers++        }    }    if ($Alarms -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&alarms=$Alarms"        } else {            $nodeLocation += "?alarms=$Alarms"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callLegs.callLeg}function Get-AcanoCallLeg {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$ParticipantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("true","false","")]
+        [string]$OwnerIDSet="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Alarms="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CallID="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    if ($CallID -ne "") {
+        $nodeLocation = "api/v1/calls/$CallID/callLegs"
+    } else {
+        $nodeLocation = "api/v1/callLegs"
+    }
+
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($ParticipantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&participantFilter=$ParticipantFilter"
+        } else {
+            $nodeLocation += "?participantFilter=$ParticipantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($OwnerIdSet -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&ownerIdSet=$OwnerIdSet"
+        } else {
+            $nodeLocation += "?ownerIdSet=$OwnerIdSet"
+            $modifiers++
+        }
+    }
+
+    if ($Alarms -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&alarms=$Alarms"
+        } else {
+            $nodeLocation += "?alarms=$Alarms"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).callLegs.callLeg
+}
+
+function Get-AcanoCallLeg {
+<#
 .SYNOPSIS
 
 Returns information about a given call leg
@@ -875,9 +1860,17 @@ Get-AcanoCallLeg -CallLegID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the call Leg
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegID    )    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID").callLeg}function Get-AcanoCallLegProfiles {
+        [string]$CallLegID
+    )
+
+    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID").callLeg
+
+}
+
+function Get-AcanoCallLegProfiles {
 <#
 .SYNOPSIS
 
@@ -910,7 +1903,56 @@ Will return all active call leg profiles whos name contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callLegProfiles"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($UsageFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&usageFilter=$UsageFilter"        } else {            $nodeLocation += "?usageFilter=$UsageFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callLegProfiles.callLegProfile}function Get-AcanoCallLegProfile {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("unreferenced","referenced","")]
+        [string]$UsageFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/callLegProfiles"
+
+
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($UsageFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&usageFilter=$UsageFilter"
+        } else {
+            $nodeLocation += "?usageFilter=$UsageFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).callLegProfiles.callLegProfile
+}
+
+function Get-AcanoCallLegProfile {
+<#
 .SYNOPSIS
 
 Returns information about a given call leg profile
@@ -925,9 +1967,18 @@ Get-AcanoCallLegProfile -CallLegProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the call leg profile
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegProfileID    )    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID").callLegProfile}function Get-AcanoCallLegProfileUsages {<#
+        [string]$CallLegProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID").callLegProfile
+
+}
+
+function Get-AcanoCallLegProfileUsages {
+<#
 .SYNOPSIS
 
 Returns information about where a given call leg profile is used
@@ -942,9 +1993,18 @@ Get-AcanoCallLegProfileUsages -CallLegProfileID ce03f08f-547f-4df1-b531-ae3a64a9
 
 Will return information on where the given call leg profile is used
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegProfileID    )    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID/usage").callLegProfileUsage}function Get-AcanoCallLegProfileTrace {<#
+        [string]$CallLegProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID/usage").callLegProfileUsage
+
+}
+
+function Get-AcanoCallLegProfileTrace {
+<#
 .SYNOPSIS
 
 Returns information about how a call legs call profile has been arrived at.
@@ -960,9 +2020,17 @@ Get-AcanoCallLegProfileTrace -CallLegID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on where the given call leg profile is used
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegID    )    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID/callLegProfileTrace").callLegProfileTrace}function Get-AcanoDialTransforms {
+        [string]$CallLegID
+    )
+
+    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID/callLegProfileTrace").callLegProfileTrace
+
+}
+
+function Get-AcanoDialTransforms {
 <#
 .SYNOPSIS
 
@@ -992,7 +2060,41 @@ Will return all dial transforms whos name contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/dialTransforms"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).dialTransforms.dialTransform}function Get-AcanoDialTransform {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/dialTransforms"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).dialTransforms.dialTransform
+}
+
+function Get-AcanoDialTransform {
+<#
 .SYNOPSIS
 
 Returns information about a given dial transform rule
@@ -1007,9 +2109,17 @@ Get-AcanoDialTransform -DialTransformID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the dial transform rule
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$DialTransformID    )    return (Open-AcanoAPI "api/v1/dialTransform/$DialTransformID").dialTransform}function Get-AcanoCallBrandingProfiles {
+        [string]$DialTransformID
+    )
+
+    return (Open-AcanoAPI "api/v1/dialTransform/$DialTransformID").dialTransform
+
+}
+
+function Get-AcanoCallBrandingProfiles {
 <#
 .SYNOPSIS
 
@@ -1038,7 +2148,45 @@ Get-AcanocoSpaces -UsageFilter "Unreferenced"
 Will return all call branding profiles who is not referenced by another object
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callBrandingProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callBrandingProfiles.callBrandingProfile}function Get-AcanoCallBrandingProfile {<#
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("unreferenced","referenced","")]
+        [string]$UsageFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/callBrandingProfiles"
+
+
+    $modifiers = 0
+
+    if ($UsageFilter -ne "") {
+        $nodeLocation += "?usageFilter=$UsageFilter"
+        $modifiers++
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).callBrandingProfiles.callBrandingProfile
+}
+
+function Get-AcanoCallBrandingProfile {
+<#
 .SYNOPSIS
 
 Returns information about a given call branding profile
@@ -1053,9 +2201,17 @@ Get-AcanoCallBrandingProfile -CallBrandingProfileID ce03f08f-547f-4df1-b531-ae3a
 
 Will return information on the call branding profile
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBrandingProfileID    )    return (Open-AcanoAPI "api/v1/callBrandingProfiles/$CallBrandingProfileID").callBrandingProfile}function Get-AcanoDtmfProfiles {
+        [string]$CallBrandingProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/callBrandingProfiles/$CallBrandingProfileID").callBrandingProfile
+
+}
+
+function Get-AcanoDtmfProfiles {
 <#
 .SYNOPSIS
 
@@ -1084,7 +2240,45 @@ Get-AcanoDtmfProfiles -UsageFilter "Unreferenced"
 Will return all DTMF profiles who is not referenced by another object
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/dtmfProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).dtmfProfiles.dtmfProfile}function Get-AcanoDtmfProfile {<#
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("unreferenced","referenced","")]
+        [string]$UsageFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/dtmfProfiles"
+
+
+    $modifiers = 0
+
+    if ($UsageFilter -ne "") {
+        $nodeLocation += "?usageFilter=$UsageFilter"
+        $modifiers++
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).dtmfProfiles.dtmfProfile
+}
+
+function Get-AcanoDtmfProfile {
+<#
 .SYNOPSIS
 
 Returns information about a given DTMF profile
@@ -1099,9 +2293,17 @@ Get-AcanoDtmfProfile -DtmfProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the DTMF profile
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$DtmfProfileID    )    return (Open-AcanoAPI "api/v1/dtmfProfiles/$DtmfProfileID").dtmfProfile}function Get-AcanoIvrs {
+        [string]$DtmfProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/dtmfProfiles/$DtmfProfileID").dtmfProfile
+
+}
+
+function Get-AcanoIvrs {
 <#
 .SYNOPSIS
 
@@ -1134,7 +2336,53 @@ Will return all IVRs whos name contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ivrs"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ivrs.ivr}function Get-AcanoIvr {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ivrs"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ivrs.ivr
+}
+
+function Get-AcanoIvr {
+<#
 .SYNOPSIS
 
 Returns information about a given IVR
@@ -1149,9 +2397,17 @@ Get-AcanoIvr -IvrID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the IVR
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrID    )    return (Open-AcanoAPI "api/v1/ivrs/$IvrID").ivr}function Get-AcanoIvrBrandingProfiles {
+        [string]$IvrID
+    )
+
+    return (Open-AcanoAPI "api/v1/ivrs/$IvrID").ivr
+
+}
+
+function Get-AcanoIvrBrandingProfiles {
 <#
 .SYNOPSIS
 
@@ -1184,7 +2440,53 @@ Will return all IVR branding profiles whos name contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ivrBrandingProfiles"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ivrBrandingProfiles.ivrBrandingProfile}function Get-AcanoIvrBrandingProfile {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ivrBrandingProfiles"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ivrBrandingProfiles.ivrBrandingProfile
+}
+
+function Get-AcanoIvrBrandingProfile {
+<#
 .SYNOPSIS
 
 Returns information about a given IVR Branding Profile
@@ -1199,9 +2501,17 @@ Get-AcanoIvrBrandingProfile -IvrID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the IVR Branding Profile
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrBrandingProfileID    )    return (Open-AcanoAPI "api/v1/ivrBrandingProfiles/$IvrBrandingProfileID").ivrBrandingProfile}function Get-AcanoParticipants {
+        [string]$IvrBrandingProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/ivrBrandingProfiles/$IvrBrandingProfileID").ivrBrandingProfile
+
+}
+
+function Get-AcanoParticipants {
 <#
 .SYNOPSIS
 
@@ -1237,7 +2547,66 @@ Will return all active participants whos URI contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$callBridgeFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/participants"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($CallBridgeFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callBridgeFilter=$CallBridgeFilter"        } else {            $nodeLocation += "?callBridgeFilter=$CallBridgeFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).participants.participant}function Get-AcanoParticipant {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$callBridgeFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/participants"
+
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($CallBridgeFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callBridgeFilter=$CallBridgeFilter"
+        } else {
+            $nodeLocation += "?callBridgeFilter=$CallBridgeFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).participants.participant
+}
+
+function Get-AcanoParticipant {
+<#
 .SYNOPSIS
 
 Returns information about a given participant
@@ -1252,9 +2621,18 @@ Get-AcanoParticipant -ParticipantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the participant
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ParticipantID    )    return (Open-AcanoAPI "api/v1/participants/$ParticipantID").participant}function Get-AcanoParticipantCallLegs {<#
+        [string]$ParticipantID
+    )
+
+    return (Open-AcanoAPI "api/v1/participants/$ParticipantID").participant
+
+}
+
+function Get-AcanoParticipantCallLegs {
+<#
 .SYNOPSIS
 
 Returns the participants active call legs
@@ -1269,9 +2647,17 @@ Get-AcanoParticipantCallLegs -ParticipantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the participants active call legs
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ParticipantID    )    return (Open-AcanoAPI "api/v1/participants/$ParticipantID/callLegs").callLeg}function Get-AcanoUsers {
+        [string]$ParticipantID
+    )
+
+    return (Open-AcanoAPI "api/v1/participants/$ParticipantID/callLegs").callLeg
+
+}
+
+function Get-AcanoUsers {
 <#
 .SYNOPSIS
 
@@ -1304,7 +2690,53 @@ Will return all users whos URI contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/users"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).users.user}function Get-AcanoUser {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/users"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).users.user
+}
+
+function Get-AcanoUser {
+<#
 .SYNOPSIS
 
 Returns information about a given user
@@ -1319,9 +2751,18 @@ Get-AcanoUser -UserID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the user
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID").user}function Get-AcanoUsercoSpaces {<#
+        [string]$UserID
+    )
+
+    return (Open-AcanoAPI "api/v1/users/$UserID").user
+
+}
+
+function Get-AcanoUsercoSpaces {
+<#
 .SYNOPSIS
 
 Returns a users coSpaces
@@ -1336,9 +2777,17 @@ Get-AcanoUsercoSpaces -UserID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the users coSpaces
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID/usercoSpaces").userCoSpaces.userCoSpace}function Get-AcanoUserProfiles {
+        [string]$UserID
+    )
+
+    return (Open-AcanoAPI "api/v1/users/$UserID/usercoSpaces").userCoSpaces.userCoSpace
+
+}
+
+function Get-AcanoUserProfiles {
 <#
 .SYNOPSIS
 
@@ -1367,7 +2816,45 @@ Get-AcanoUserProfiles -UsageFilter "Unreferenced"
 Will return all user profiles who is not referenced by another object
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/userProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).userProfiles.userProfile}function Get-AcanoUserProfile {<#
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("unreferenced","referenced","")]
+        [string]$UsageFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/userProfiles"
+
+
+    $modifiers = 0
+
+    if ($UsageFilter -ne "") {
+        $nodeLocation += "?usageFilter=$UsageFilter"
+        $modifiers++
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).userProfiles.userProfile
+}
+
+function Get-AcanoUserProfile {
+<#
 .SYNOPSIS
 
 Returns information about a given user profile
@@ -1382,9 +2869,18 @@ Get-AcanoUserProfile -UserProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the user profile
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserProfileID    )    return (Open-AcanoAPI "api/v1/userProfiles/$UserProfileID").userProfile}function Get-AcanoSystemStatus {<#
+        [string]$UserProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/userProfiles/$UserProfileID").userProfile
+
+}
+
+function Get-AcanoSystemStatus {
+<#
 .SYNOPSIS
 
 Returns information about the system status
@@ -1396,7 +2892,14 @@ Get-AcanoSystemStatus
 
 Will return information on the system status
 
-#>    return (Open-AcanoAPI "api/v1/system/status").status}function Get-AcanoSystemAlarms {<#
+#>
+
+    return (Open-AcanoAPI "api/v1/system/status").status
+
+}
+
+function Get-AcanoSystemAlarms {
+<#
 .SYNOPSIS
 
 Returns information about the system alarms
@@ -1408,7 +2911,14 @@ Get-AcanoSystemAlarms
 
 Will return information on the system alarms
 
-#>    return (Open-AcanoAPI "api/v1/system/alarms").alarms.alarm}function Get-AcanoSystemAlarm {<#
+#>
+
+    return (Open-AcanoAPI "api/v1/system/alarms").alarms.alarm
+
+}
+
+function Get-AcanoSystemAlarm {
+<#
 .SYNOPSIS
 
 Returns information about a given system alarm
@@ -1423,9 +2933,18 @@ Get-AcanoSystemAlarm -AlarmID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the alarm
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$AlarmID    )    return (Open-AcanoAPI "api/v1/system/alarms/$AlarmID").alarm}function Get-AcanoSystemDatabaseStatus {<#
+        [string]$AlarmID
+    )
+
+    return (Open-AcanoAPI "api/v1/system/alarms/$AlarmID").alarm
+
+}
+
+function Get-AcanoSystemDatabaseStatus {
+<#
 .SYNOPSIS
 
 Returns information about the system database status
@@ -1437,7 +2956,14 @@ Get-AcanoSystemDatabaseStatus
 
 Will return information on the system database status
 
-#>    return (Open-AcanoAPI "api/v1/system/database").database}function Get-AcanoCdrReceiverUri {<#
+#>
+
+    return (Open-AcanoAPI "api/v1/system/database").database
+
+}
+
+function Get-AcanoCdrReceiverUri {
+<#
 .SYNOPSIS
 
 Returns information about the configured CDR receiver
@@ -1449,7 +2975,14 @@ Get-AcanoCdrReceiverUri
 
 Will return URI of the configured CDR receiver
 
-#>    return (Open-AcanoAPI "api/v1/system/cdrReceiver").cdrReceiver}function Get-AcanoGlobalProfile {<#
+#>
+
+    return (Open-AcanoAPI "api/v1/system/cdrReceiver").cdrReceiver
+
+}
+
+function Get-AcanoGlobalProfile {
+<#
 .SYNOPSIS
 
 Returns information about the global profile
@@ -1461,7 +2994,13 @@ Get-AcanoGlobalProfile
 
 Will return the global profile
 
-#>    return (Open-AcanoAPI "api/v1/system/profiles").profiles}function Get-AcanoTurnServers {
+#>
+
+    return (Open-AcanoAPI "api/v1/system/profiles").profiles
+
+}
+
+function Get-AcanoTurnServers {
 <#
 .SYNOPSIS
 
@@ -1491,7 +3030,41 @@ Will return all TURN servers whos URI contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/turnServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).turnServers.turnServer}function Get-AcanoTurnServer {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/turnServers"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).turnServers.turnServer
+}
+
+function Get-AcanoTurnServer {
+<#
 .SYNOPSIS
 
 Returns information about a given TURN server
@@ -1506,9 +3079,17 @@ Get-AcanoTurnServer -TurnServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the TURN Server
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TurnServerID    )    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID").turnServer}function Get-AcanoWebBridges {
+        [string]$TurnServerID
+    )
+
+    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID").turnServer
+
+}
+
+function Get-AcanoWebBridges {
 <#
 .SYNOPSIS
 
@@ -1541,7 +3122,53 @@ Will return all Web bridges whos name contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/webBridges"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).webBridges.webBridge}function Get-AcanoWebBridge {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/webBridges"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).webBridges.webBridge
+}
+
+function Get-AcanoWebBridge {
+<#
 .SYNOPSIS
 
 Returns information about a given web bridge
@@ -1556,9 +3183,17 @@ Get-AcanoWebBridge -WebBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the web bridge
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$WebBridgeID    )    return (Open-AcanoAPI "api/v1/webBridges/$WebBridgeID").webBridge}function Get-AcanoCallBridges {
+        [string]$WebBridgeID
+    )
+
+    return (Open-AcanoAPI "api/v1/webBridges/$WebBridgeID").webBridge
+
+}
+
+function Get-AcanoCallBridges {
 <#
 .SYNOPSIS
 
@@ -1581,7 +3216,28 @@ Will return all call bridges
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callBridges"    if ($Limit -ne "") {        $nodeLocation += "?limit=$Limit"                if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callBridges.callBridge}function Get-AcanoCallBridge {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/callBridges"
+
+    if ($Limit -ne "") {
+        $nodeLocation += "?limit=$Limit"
+        
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).callBridges.callBridge
+}
+
+function Get-AcanoCallBridge {
+<#
 .SYNOPSIS
 
 Returns information about a given call bridge
@@ -1596,9 +3252,18 @@ Get-AcanoCallBridge -CallBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the call bridge
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBridgeID    )    return (Open-AcanoAPI "api/v1/callBridges/$CallBridgeID").callBridge}function Get-AcanoXmppServer {<#
+        [string]$CallBridgeID
+    )
+
+    return (Open-AcanoAPI "api/v1/callBridges/$CallBridgeID").callBridge
+
+}
+
+function Get-AcanoXmppServer {
+<#
 .SYNOPSIS
 
 Returns information about the XMPP server
@@ -1610,7 +3275,13 @@ Get-AcanoXmppServer
 
 Will return information on the XMPP server
 
-#>    return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp}function Get-AcanoSystemDiagnostics {
+#>
+
+    return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp
+
+}
+
+function Get-AcanoSystemDiagnostics {
 <#
 .SYNOPSIS
 
@@ -1639,7 +3310,53 @@ Will return all system diagnostics
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CoSpaceFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallCorrelatorFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/system/diagnostics"    $modifiers = 0    if ($CoSpaceFilter -ne "") {        $nodeLocation += "?coSpacefilter=$CoSpaceFilter"        $modifiers++    }    if ($CallCorrelatorFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callCorrelatorFilter=$CallCorrelatorFilter"        } else {            $nodeLocation += "?callCorrelatorFilter=$CallCorrelatorFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).diagnostics.diagnostic}function Get-AcanoSystemDiagnostic {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CoSpaceFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CallCorrelatorFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/system/diagnostics"
+    $modifiers = 0
+
+    if ($CoSpaceFilter -ne "") {
+        $nodeLocation += "?coSpacefilter=$CoSpaceFilter"
+        $modifiers++
+    }
+
+    if ($CallCorrelatorFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callCorrelatorFilter=$CallCorrelatorFilter"
+        } else {
+            $nodeLocation += "?callCorrelatorFilter=$CallCorrelatorFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).diagnostics.diagnostic
+}
+
+function Get-AcanoSystemDiagnostic {
+<#
 .SYNOPSIS
 
 Returns information about a given system diagnostic
@@ -1654,9 +3371,18 @@ Get-AcanoSystemDiagnostic -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c1
 
 Will return information on the system diagnostic
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$SystemDiagnosticID    )    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID").diagnostic}function Get-AcanoSystemDiagnosticContent {<#
+        [string]$SystemDiagnosticID
+    )
+
+    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID").diagnostic
+
+}
+
+function Get-AcanoSystemDiagnosticContent {
+<#
 .SYNOPSIS
 
 Returns the content of a given system diagnostic
@@ -1671,9 +3397,17 @@ Get-AcanoSystemDiagnosticContent -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3
 
 Will return the content of the system diagnostic
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$SystemDiagnosticID    )    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID/contents").diagnostic}function Get-AcanoLdapServers {
+        [string]$SystemDiagnosticID
+    )
+
+    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID/contents").diagnostic
+
+}
+
+function Get-AcanoLdapServers {
 <#
 .SYNOPSIS
 
@@ -1703,7 +3437,41 @@ Will return all LDAP servers whos URI contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapServers.ldapServer}function Get-AcanoLdapServer {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ldapServers"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ldapServers.ldapServer
+}
+
+function Get-AcanoLdapServer {
+<#
 .SYNOPSIS
 
 Returns information about a given LDAP server
@@ -1718,9 +3486,17 @@ Get-AcanoLdapServer -LdapServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the LDAP Server
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapServerID    )    return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer}function Get-AcanoLdapMappings {
+        [string]$LdapServerID
+    )
+
+    return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer
+
+}
+
+function Get-AcanoLdapMappings {
 <#
 .SYNOPSIS
 
@@ -1750,7 +3526,41 @@ Will return all LDAP mappings whos URI contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapMappings"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapMappings.ldapMapping}function Get-AcanoLdapMapping {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ldapMappings"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ldapMappings.ldapMapping
+}
+
+function Get-AcanoLdapMapping {
+<#
 .SYNOPSIS
 
 Returns information about a given LDAP mapping
@@ -1765,9 +3575,17 @@ Get-AcanoLdapMapping -LdapMappingID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the LDAP Mapping
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapMappingID    )    return (Open-AcanoAPI "api/v1/ldapMappings/$LdapMappingID").ldapMapping}function Get-AcanoLdapSources {
+        [string]$LdapMappingID
+    )
+
+    return (Open-AcanoAPI "api/v1/ldapMappings/$LdapMappingID").ldapMapping
+
+}
+
+function Get-AcanoLdapSources {
 <#
 .SYNOPSIS
 
@@ -1800,7 +3618,53 @@ Will return all LDAP sources whos URI contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapMappings"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapSources.ldapSource}function Get-AcanoLdapSource {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ldapMappings"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ldapSources.ldapSource
+}
+
+function Get-AcanoLdapSource {
+<#
 .SYNOPSIS
 
 Returns information about a given LDAP Source
@@ -1815,9 +3679,17 @@ Get-AcanoLdapSource -LdapSourceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the LDAP Source
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSourceID    )    return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource}function Get-AcanoLdapSyncs {
+        [string]$LdapSourceID
+    )
+
+    return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource
+
+}
+
+function Get-AcanoLdapSyncs {
 <#
 .SYNOPSIS
 
@@ -1840,7 +3712,28 @@ Will return all LDAP syncs currently pending and in-progress
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapSyncs"    if ($Limit -ne "") {        $nodeLocation += "?limit=$Limit"                if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapSyncs.ldapSync}function Get-AcanoLdapSync {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ldapSyncs"
+
+    if ($Limit -ne "") {
+        $nodeLocation += "?limit=$Limit"
+        
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ldapSyncs.ldapSync
+}
+
+function Get-AcanoLdapSync {
+<#
 .SYNOPSIS
 
 Returns information about a given LDAP sync currently pending and in-progress
@@ -1855,9 +3748,17 @@ Get-AcanoLdapSync -LdapSyncID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the LDAP sync currently pending and in-progress
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSyncID    )    return (Open-AcanoAPI "api/v1/ldapSyncs/$LdapSyncID").ldapSync}function Get-AcanoExternalDirectorySearchLocations {
+        [string]$LdapSyncID
+    )
+
+    return (Open-AcanoAPI "api/v1/ldapSyncs/$LdapSyncID").ldapSync
+
+}
+
+function Get-AcanoExternalDirectorySearchLocations {
 <#
 .SYNOPSIS
 
@@ -1888,7 +3789,41 @@ that tenant
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/directorySearchLocations"    $modifiers = 0    if ($TenantFilter -ne "") {        $nodeLocation += "?tenantFilter=$TenantFilter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).directorySearchLocations.directorySearchLocation}function Get-AcanoExternalDirectorySearchLocation {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/directorySearchLocations"
+    $modifiers = 0
+
+    if ($TenantFilter -ne "") {
+        $nodeLocation += "?tenantFilter=$TenantFilter"
+        $modifiers++
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).directorySearchLocations.directorySearchLocation
+}
+
+function Get-AcanoExternalDirectorySearchLocation {
+<#
 .SYNOPSIS
 
 Returns information about a given external directory search location
@@ -1903,9 +3838,17 @@ Get-AcanoExternalDirectorySearchLocation -ExternalDirectorySearchLocationID ce03
 
 Will return information on the external directory search location
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ExternalDirectorySearchLocationID    )    return (Open-AcanoAPI "api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID").directorySearchLocation}function Get-AcanoTenants {
+        [string]$ExternalDirectorySearchLocationID
+    )
+
+    return (Open-AcanoAPI "api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID").directorySearchLocation
+
+}
+
+function Get-AcanoTenants {
 <#
 .SYNOPSIS
 
@@ -1935,7 +3878,41 @@ Will return all Tenants whos URI contains "Greg"
 #>
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/tenants"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).tenants.tenant}function Get-AcanoTenant {<#
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/tenants"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).tenants.tenant
+}
+
+function Get-AcanoTenant {
+<#
 .SYNOPSIS
 
 Returns information about a given Tenant
@@ -1950,6 +3927,12 @@ Get-AcanoTenant -TenantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 
 Will return information on the Tenant
 
-#>    Param (
+#>
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TenantID    )    return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenants}
+        [string]$TenantID
+    )
+
+    return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenants
+
+}
