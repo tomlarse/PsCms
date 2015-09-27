@@ -8450,9 +8450,10 @@
 		<command:syntaxItem>
 			<maml:name>Get-AcanoOutboundDialPlanRule</maml:name>
 			<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
-				<maml:name>ForwardingDialPlanRuleID</maml:name>
+				<maml:name>OutboundDialPlanRuleID</maml:name>
 				<maml:description>
-					<maml:para />
+					<maml:para>The ID of the outbound dial plan rule
+</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
@@ -8473,18 +8474,6 @@
 		</command:syntaxItem>
 	</command:syntax>
 	<command:parameters>
-		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
-			<maml:name>ForwardingDialPlanRuleID</maml:name>
-			<maml:description>
-				<maml:para />
-			</maml:description>
-			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-			<dev:type>
-				<maml:name>String</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
 			<maml:name>InformationAction</maml:name>
 			<maml:description>
@@ -8501,6 +8490,19 @@
 			<maml:name>InformationVariable</maml:name>
 			<maml:description>
 				<maml:para />
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
+			<maml:name>OutboundDialPlanRuleID</maml:name>
+			<maml:description>
+				<maml:para>The ID of the outbound dial plan rule
+</maml:para>
 			</maml:description>
 			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			<dev:type>
@@ -8543,6 +8545,28 @@
 		</maml:alert>
 	</maml:alertSet>
 	<command:examples>
+		<command:example>
+			<maml:title>--------------------------  Example 1  --------------------------</maml:title>
+			<maml:introduction>
+				<maml:paragraph>PS C:\&gt;</maml:paragraph>
+			</maml:introduction>
+			<dev:code>Get-AcanocoOutboundDialPlanRule -OutboundDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</dev:code>
+			<dev:remarks>
+				<maml:para>Will return information on the outbound dial plan rule
+</maml:para>
+				<maml:para />
+				<maml:para />
+				<maml:para></maml:para>
+			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+						<maml:para />
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
 	</command:examples>
 	<maml:relatedLinks>
 	</maml:relatedLinks>
@@ -14600,20 +14624,13 @@ to be a GET request.</maml:para>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
 			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
-				<maml:name>UserJid</maml:name>
-				<maml:description>
-					<maml:para />
-				</maml:description>
-				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
 				<maml:name>CallLegProfile</maml:name>
 				<maml:description>
 					<maml:para>If provided, associates the specified call leg profile with this coSpace user</maml:para>
 				</maml:description>
 				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
 			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
 				<maml:name>CanDestroy</maml:name>
 				<maml:description>
 					<maml:para>Whether this user is allowed to delete the coSpace.
@@ -14621,7 +14638,7 @@ to be a GET request.</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
 			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
 				<maml:name>CanAddRemoveMember</maml:name>
 				<maml:description>
 					<maml:para>Whether this user is allowed to add or remove other members of the coSpace. 
@@ -14629,7 +14646,7 @@ to be a GET request.</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
 			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="6">
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
 				<maml:name>CanChangeName</maml:name>
 				<maml:description>
 					<maml:para>Whether this user is allowed to change the name of the coSpace. 
@@ -14637,7 +14654,7 @@ to be a GET request.</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
 			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="6">
 				<maml:name>CanChangeUri</maml:name>
 				<maml:description>
 					<maml:para>Whether this user is allowed to change the URI of the coSpace
@@ -14645,7 +14662,7 @@ to be a GET request.</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
 			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="8">
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
 				<maml:name>CanChangeCallId</maml:name>
 				<maml:description>
 					<maml:para>Whether this user is allowed to change the Call ID of the coSpace
@@ -14653,7 +14670,7 @@ to be a GET request.</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
 			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="9">
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="8">
 				<maml:name>CanChangePasscode</maml:name>
 				<maml:description>
 					<maml:para>Whether this user is allowed to change the passcode of the coSpace
@@ -14661,7 +14678,7 @@ to be a GET request.</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
 			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="10">
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="9">
 				<maml:name>CanPostMessage</maml:name>
 				<maml:description>
 					<maml:para>Whether this user is allowed to write messages in the coSpace
@@ -14669,7 +14686,7 @@ to be a GET request.</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
 			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="11">
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="10">
 				<maml:name>CanRemoveSelf</maml:name>
 				<maml:description>
 					<maml:para>Whether this user is allowed to remove himself from the coSpace
@@ -14677,7 +14694,7 @@ to be a GET request.</maml:para>
 				</maml:description>
 				<command:parameterValue required="false" variableLength="false">Boolean</command:parameterValue>
 			</command:parameter>
-			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="12">
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="11">
 				<maml:name>CanDeleteAllMessages</maml:name>
 				<maml:description>
 					<maml:para>Whether this user is allowed to delete all messages from the coSpace message board
@@ -14729,18 +14746,6 @@ to be a GET request.</maml:para>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
 		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="2">
-			<maml:name>UserJid</maml:name>
-			<maml:description>
-				<maml:para />
-			</maml:description>
-			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-			<dev:type>
-				<maml:name>String</maml:name>
-				<maml:uri/>
-			</dev:type>
-			<dev:defaultValue></dev:defaultValue>
-		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
 			<maml:name>CallLegProfile</maml:name>
 			<maml:description>
 				<maml:para>If provided, associates the specified call leg profile with this coSpace user</maml:para>
@@ -14752,7 +14757,7 @@ to be a GET request.</maml:para>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="3">
 			<maml:name>CanDestroy</maml:name>
 			<maml:description>
 				<maml:para>Whether this user is allowed to delete the coSpace.
@@ -14765,7 +14770,7 @@ to be a GET request.</maml:para>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="4">
 			<maml:name>CanAddRemoveMember</maml:name>
 			<maml:description>
 				<maml:para>Whether this user is allowed to add or remove other members of the coSpace. 
@@ -14778,7 +14783,7 @@ to be a GET request.</maml:para>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="6">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="5">
 			<maml:name>CanChangeName</maml:name>
 			<maml:description>
 				<maml:para>Whether this user is allowed to change the name of the coSpace. 
@@ -14791,7 +14796,7 @@ to be a GET request.</maml:para>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="6">
 			<maml:name>CanChangeUri</maml:name>
 			<maml:description>
 				<maml:para>Whether this user is allowed to change the URI of the coSpace
@@ -14804,7 +14809,7 @@ to be a GET request.</maml:para>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="8">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="7">
 			<maml:name>CanChangeCallId</maml:name>
 			<maml:description>
 				<maml:para>Whether this user is allowed to change the Call ID of the coSpace
@@ -14817,7 +14822,7 @@ to be a GET request.</maml:para>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="9">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="8">
 			<maml:name>CanChangePasscode</maml:name>
 			<maml:description>
 				<maml:para>Whether this user is allowed to change the passcode of the coSpace
@@ -14830,7 +14835,7 @@ to be a GET request.</maml:para>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="10">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="9">
 			<maml:name>CanPostMessage</maml:name>
 			<maml:description>
 				<maml:para>Whether this user is allowed to write messages in the coSpace
@@ -14843,7 +14848,7 @@ to be a GET request.</maml:para>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="11">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="10">
 			<maml:name>CanRemoveSelf</maml:name>
 			<maml:description>
 				<maml:para>Whether this user is allowed to remove himself from the coSpace
@@ -14856,7 +14861,7 @@ to be a GET request.</maml:para>
 			</dev:type>
 			<dev:defaultValue></dev:defaultValue>
 		</command:parameter>
-		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="12">
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="11">
 			<maml:name>CanDeleteAllMessages</maml:name>
 			<maml:description>
 				<maml:para>Whether this user is allowed to delete all messages from the coSpace message board
@@ -14936,6 +14941,150 @@ to be a GET request.</maml:para>
 </dev:code>
 			<dev:remarks>
 				<maml:para>Will add greg@contoso.com as a member of this coSpace
+</maml:para>
+				<maml:para />
+				<maml:para />
+				<maml:para></maml:para>
+			</dev:remarks>
+			<command:commandLines>
+				<command:commandLine>
+					<command:commandText>
+						<maml:para />
+					</command:commandText>
+				</command:commandLine>
+			</command:commandLines>
+		</command:example>
+	</command:examples>
+	<maml:relatedLinks>
+	</maml:relatedLinks>
+</command:command>
+<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+<!--Generated by PS Cmdlet Help Editor-->
+	<command:details>
+		<command:name>Get-AcanoCallForwardingDialPlanRule</command:name>
+		<maml:description>
+			<maml:para>Returns information about a given call forwarding dial plan rule
+</maml:para>
+		</maml:description>
+		<maml:copyright>
+			<maml:para />
+		</maml:copyright>
+		<command:verb>Get</command:verb>
+		<command:noun>AcanoCallForwardingDialPlanRule</command:noun>
+		<dev:version />
+	</command:details>
+	<maml:description>
+		<maml:para>Use this Cmdlet to get information on a call forwarding dial plan rule
+</maml:para>
+	</maml:description>
+	<command:syntax>
+		<command:syntaxItem>
+			<maml:name>Get-AcanoCallForwardingDialPlanRule</maml:name>
+			<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
+				<maml:name>ForwardingDialPlanRuleID</maml:name>
+				<maml:description>
+					<maml:para>The ID of the call forwarding dial plan rule
+</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>InformationAction</maml:name>
+				<maml:description>
+					<maml:para />
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+			</command:parameter>
+			<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+				<maml:name>InformationVariable</maml:name>
+				<maml:description>
+					<maml:para />
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			</command:parameter>
+		</command:syntaxItem>
+	</command:syntax>
+	<command:parameters>
+		<command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="1">
+			<maml:name>ForwardingDialPlanRuleID</maml:name>
+			<maml:description>
+				<maml:para>The ID of the call forwarding dial plan rule
+</maml:para>
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>InformationAction</maml:name>
+			<maml:description>
+				<maml:para />
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+			<dev:type>
+				<maml:name>ActionPreference</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+		<command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="named">
+			<maml:name>InformationVariable</maml:name>
+			<maml:description>
+				<maml:para />
+			</maml:description>
+			<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+			<dev:type>
+				<maml:name>String</maml:name>
+				<maml:uri/>
+			</dev:type>
+			<dev:defaultValue></dev:defaultValue>
+		</command:parameter>
+	</command:parameters>
+	<command:inputTypes>
+		<command:inputType>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri></maml:uri>
+				<maml:description/>
+			</dev:type>
+			<maml:description>
+<maml:para />
+			</maml:description>
+		</command:inputType>
+	</command:inputTypes>
+	<command:returnValues>
+		<command:returnValue>
+			<dev:type>
+				<maml:name></maml:name>
+				<maml:uri></maml:uri>
+				<maml:description/>
+			</dev:type>
+			<maml:description>
+<maml:para />
+			</maml:description>
+		</command:returnValue>
+	</command:returnValues>
+	<command:terminatingErrors></command:terminatingErrors>
+	<command:nonTerminatingErrors></command:nonTerminatingErrors>
+	<maml:alertSet>
+		<maml:title></maml:title>
+		<maml:alert>
+			<maml:para />
+		</maml:alert>
+	</maml:alertSet>
+	<command:examples>
+		<command:example>
+			<maml:title>--------------------------  Example 1  --------------------------</maml:title>
+			<maml:introduction>
+				<maml:paragraph>PS C:\&gt;</maml:paragraph>
+			</maml:introduction>
+			<dev:code>Get-AcanocoSpaces -ForwardingDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</dev:code>
+			<dev:remarks>
+				<maml:para>Will return information on the call forwarding dial plan rule
 </maml:para>
 				<maml:para />
 				<maml:para />

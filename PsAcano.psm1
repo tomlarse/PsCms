@@ -141,26 +141,10 @@ function Get-AcanocoSpaces {
     return (Open-AcanoAPI $nodeLocation).outboundDialPlanRules.outboundDialPlanRule
 }
 
-function Get-AcanoOutboundDialPlanRule {
-<#
-.SYNOPSIS
-
-Returns information about a given outbound dial plan rule
-.DESCRIPTION
-
-Use this Cmdlet to get information on a outbound dial plan rule
-.PARAMETER OutboundDialPlanRuleID
-
-The ID of the outbound dial plan rule
-.EXAMPLE
-Get-AcanocoSpaces -OutboundDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the outbound dial plan rule
-
-#>
+# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoOutboundDialPlanRule {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$OutboundDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/outboundDialPlanRules/$OutboundDialPlanRuleID").outboundDialPlanRule}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoInboundDialPlanRules {
+        [string]$OutboundDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/outboundDialPlanRules/$OutboundDialPlanRuleID").outboundDialPlanRule}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoInboundDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/inboundDialPlanRules"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).inboundDialPlanRules.inboundDialPlanRule}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoInboundDialPlanRule {    Param (
@@ -201,26 +185,10 @@ Will return information on the outbound dial plan rule
     return (Open-AcanoAPI $nodeLocation).forwardingDialPlanRules.forwardingDialPlanRule
 }
 
-function Get-AcanoCallForwardingDialPlanRule {
-<#
-.SYNOPSIS
-
-Returns information about a given call forwarding dial plan rule
-.DESCRIPTION
-
-Use this Cmdlet to get information on a call forwarding dial plan rule
-.PARAMETER ForwardingDialPlanRuleID
-
-The ID of the call forwarding dial plan rule
-.EXAMPLE
-Get-AcanocoSpaces -ForwardingDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the call forwarding dial plan rule
-
-#>
+# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallForwardingDialPlanRule {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ForwardingDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleID").forwardingDialPlanRule}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCalls {
+        [string]$ForwardingDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleID").forwardingDialPlanRule}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCalls {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$coSpaceFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/calls"    $modifiers = 0    if ($coSpaceFilter -ne "") {        $nodeLocation += "?coSpacefilter=$coSpaceFilter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).calls.call}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCall {    Param (
