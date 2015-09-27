@@ -2431,8 +2431,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoExternalDirectorySearchLocation">
       <Name>Get-AcanoExternalDirectorySearchLocation</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given external directory search location
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a external directory search location
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -2455,7 +2457,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the external directory search location
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -2484,7 +2487,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoExternalDirectorySearchLocation -ExternalDirectorySearchLocationID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the external directory search location
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -2492,8 +2504,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoExternalDirectorySearchLocations">
       <Name>Get-AcanoExternalDirectorySearchLocations</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns external directory search locations currently configured on the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on external directory search locations
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -2519,7 +2533,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns external directory search locations associated with that tenant
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -2530,7 +2545,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -2565,11 +2581,29 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of external directory search locations beginning at the location in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoExternalDirectorySearchLocations
+</Cmd>
+          <Description>Will return all LDAP mappings
+</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Example 2</Name>
+          <Cmd>Get-AcanoLdapSources -TenantFilter ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the external directory search locations associated with that tenant
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -3743,8 +3777,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoLdapSync">
       <Name>Get-AcanoLdapSync</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given LDAP sync currently pending and in-progress
+</Synopsis>
+        <Description>Use this Cmdlet to get information on an LDAP sync currently pending and in-progress
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -3767,7 +3803,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the LDAP sync currently pending and in-progress
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3796,7 +3833,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoLdapSync -LdapSyncID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the LDAP sync currently pending and in-progress
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -3804,8 +3850,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoLdapSyncs">
       <Name>Get-AcanoLdapSyncs</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns LDAP syncs currently pending and in-progress on the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on LDAP syncs currently pending and in-progress
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -3831,7 +3879,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3866,11 +3915,21 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of LDAP syncs beginning at the sync in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoLdapSyncs
+</Cmd>
+          <Description>Will return all LDAP syncs currently pending and in-progress
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4763,8 +4822,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoTenant">
       <Name>Get-AcanoTenant</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given Tenant
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a Tenant
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4787,7 +4848,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the Tenant
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4816,7 +4878,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoTenant -TenantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the Tenant
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4824,8 +4895,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoTenants">
       <Name>Get-AcanoTenants</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns Tenants currently configured on the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on Tenants
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4851,7 +4924,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns Tenants that matches the filter text
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4862,7 +4936,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4897,11 +4972,29 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of Tenants beginning at the Tenant in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-Get-AcanoTenants
+</Cmd>
+          <Description>Will return all Tenants
+</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Example 2</Name>
+          <Cmd>Get-AcanoTenants -Filter "Greg"
+</Cmd>
+          <Description>Will return all Tenants whos URI contains "Greg"
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>

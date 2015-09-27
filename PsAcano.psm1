@@ -251,139 +251,19 @@ Will return information on the call forwarding dial plan rule
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapMappings"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapSources.ldapSource}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapSource {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSourceID    )    return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource}function Get-AcanoLdapSyncs {
-<#
-.SYNOPSIS
-
-Returns LDAP syncs currently pending and in-progress on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on LDAP syncs currently pending and in-progress
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of LDAP syncs beginning
-at the sync in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-AcanoLdapSyncs
-
-Will return all LDAP syncs currently pending and in-progress
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$LdapSourceID    )    return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapSyncs {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapSyncs"    if ($Limit -ne "") {        $nodeLocation += "?limit=$Limit"                if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapSyncs.ldapSync}function Get-AcanoLdapSync {<#
-.SYNOPSIS
-
-Returns information about a given LDAP sync currently pending and in-progress
-.DESCRIPTION
-
-Use this Cmdlet to get information on an LDAP sync currently pending and in-progress
-.PARAMETER LdapSyncID
-
-The ID of the LDAP sync currently pending and in-progress
-.EXAMPLE
-Get-AcanoLdapSync -LdapSyncID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the LDAP sync currently pending and in-progress
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapSyncs"    if ($Limit -ne "") {        $nodeLocation += "?limit=$Limit"                if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapSyncs.ldapSync}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapSync {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSyncID    )    return (Open-AcanoAPI "api/v1/ldapSyncs/$LdapSyncID").ldapSync}function Get-AcanoExternalDirectorySearchLocations {
-<#
-.SYNOPSIS
-
-Returns external directory search locations currently configured on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on external directory search locations
-.PARAMETER TenantFilter <tenantID>
-
-Returns external directory search locations associated with that tenant
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of external directory
-search locations beginning at the location in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-AcanoExternalDirectorySearchLocations
-
-Will return all LDAP mappings
-.EXAMPLE
-Get-AcanoLdapSources -TenantFilter ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the external directory search locations associated with
-that tenant
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$LdapSyncID    )    return (Open-AcanoAPI "api/v1/ldapSyncs/$LdapSyncID").ldapSync}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoExternalDirectorySearchLocations {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/directorySearchLocations"    $modifiers = 0    if ($TenantFilter -ne "") {        $nodeLocation += "?tenantFilter=$TenantFilter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).directorySearchLocations.directorySearchLocation}function Get-AcanoExternalDirectorySearchLocation {<#
-.SYNOPSIS
-
-Returns information about a given external directory search location
-.DESCRIPTION
-
-Use this Cmdlet to get information on a external directory search location
-.PARAMETER ExternalDirectorySearchLocationID
-
-The ID of the external directory search location
-.EXAMPLE
-Get-AcanoExternalDirectorySearchLocation -ExternalDirectorySearchLocationID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the external directory search location
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/directorySearchLocations"    $modifiers = 0    if ($TenantFilter -ne "") {        $nodeLocation += "?tenantFilter=$TenantFilter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).directorySearchLocations.directorySearchLocation}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoExternalDirectorySearchLocation {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ExternalDirectorySearchLocationID    )    return (Open-AcanoAPI "api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID").directorySearchLocation}function Get-AcanoTenants {
-<#
-.SYNOPSIS
-
-Returns Tenants currently configured on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on Tenants
-.PARAMETER Filter
-
-Returns Tenants that matches the filter text
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of Tenants beginning
-at the Tenant in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-Get-AcanoTenants
-
-Will return all Tenants
-.EXAMPLE
-Get-AcanoTenants -Filter "Greg"
-
-Will return all Tenants whos URI contains "Greg"
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$ExternalDirectorySearchLocationID    )    return (Open-AcanoAPI "api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID").directorySearchLocation}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTenants {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/tenants"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).tenants.tenant}function Get-AcanoTenant {<#
-.SYNOPSIS
-
-Returns information about a given Tenant
-.DESCRIPTION
-
-Use this Cmdlet to get information on a Tenant
-.PARAMETER TenantID
-
-The ID of the Tenant
-.EXAMPLE
-Get-AcanoTenant -TenantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the Tenant
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/tenants"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).tenants.tenant}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTenant {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TenantID    )    return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenants}
+        [string]$TenantID    )    return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenants}
