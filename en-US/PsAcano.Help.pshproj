@@ -3191,8 +3191,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoLdapMapping">
       <Name>Get-AcanoLdapMapping</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given LDAP mapping
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a LDAP mapping
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -3215,7 +3217,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the LDAP mapping
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3244,7 +3247,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoLdapMapping -LdapMappingID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the LDAP Mapping
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -3252,8 +3264,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoLdapMappings">
       <Name>Get-AcanoLdapMappings</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns LDAP mappings currently configured on the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on LDAP mappings
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -3279,7 +3293,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns LDAP mappings that matches the filter text
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3290,7 +3305,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3325,11 +3341,29 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of LDAP mappings beginning at the LDAP mapping in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-Get-AcanoLdapMappings
+</Cmd>
+          <Description>Will return all LDAP mappings
+</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Example 2</Name>
+          <Cmd>Get-AcanoLdapMappings -Filter "Greg"
+</Cmd>
+          <Description>Will return all LDAP mappings whos URI contains "Greg"
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -3517,8 +3551,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoLdapSource">
       <Name>Get-AcanoLdapSource</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given LDAP Source
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a LDAP Source
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -3541,7 +3577,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the LDAP Source
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3570,7 +3607,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoLdapSource -LdapSourceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the LDAP Source
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -3578,8 +3624,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoLdapSources">
       <Name>Get-AcanoLdapSources</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns LDAP sources currently configured on the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on LDAP sources
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -3605,7 +3653,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns LDAP sources that matches the filter text
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3616,7 +3665,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns LDAP sources associated with that tenant
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3627,7 +3677,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3662,11 +3713,29 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of LDAP sources beginning at the LDAP source in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-Get-AcanoLdapSources
+</Cmd>
+          <Description>Will return all LDAP mappings
+</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Example 2</Name>
+          <Cmd>Get-AcanoLdapSources -Filter "Greg"
+</Cmd>
+          <Description>Will return all LDAP sources whos URI contains "Greg"
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>

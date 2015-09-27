@@ -241,104 +241,17 @@ Will return information on the call forwarding dial plan rule
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapServers.ldapServer}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapServer {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapServerID    )    return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer}function Get-AcanoLdapMappings {
-<#
-.SYNOPSIS
-
-Returns LDAP mappings currently configured on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on LDAP mappings
-.PARAMETER Filter
-
-Returns LDAP mappings that matches the filter text
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of LDAP mappings beginning
-at the LDAP mapping in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-Get-AcanoLdapMappings
-
-Will return all LDAP mappings
-.EXAMPLE
-Get-AcanoLdapMappings -Filter "Greg"
-
-Will return all LDAP mappings whos URI contains "Greg"
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$LdapServerID    )    return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapMappings {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapMappings"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapMappings.ldapMapping}function Get-AcanoLdapMapping {<#
-.SYNOPSIS
-
-Returns information about a given LDAP mapping
-.DESCRIPTION
-
-Use this Cmdlet to get information on a LDAP mapping
-.PARAMETER LdapMappingID
-
-The ID of the LDAP mapping
-.EXAMPLE
-Get-AcanoLdapMapping -LdapMappingID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the LDAP Mapping
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapMappings"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapMappings.ldapMapping}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapMapping {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapMappingID    )    return (Open-AcanoAPI "api/v1/ldapMappings/$LdapMappingID").ldapMapping}function Get-AcanoLdapSources {
-<#
-.SYNOPSIS
-
-Returns LDAP sources currently configured on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on LDAP sources
-.PARAMETER Filter
-
-Returns LDAP sources that matches the filter text
-.PARAMETER TenantFilter <tenantID>
-
-Returns LDAP sources associated with that tenant
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of LDAP sources beginning
-at the LDAP source in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-Get-AcanoLdapSources
-
-Will return all LDAP mappings
-.EXAMPLE
-Get-AcanoLdapSources -Filter "Greg"
-
-Will return all LDAP sources whos URI contains "Greg"
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$LdapMappingID    )    return (Open-AcanoAPI "api/v1/ldapMappings/$LdapMappingID").ldapMapping}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapSources {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapMappings"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapSources.ldapSource}function Get-AcanoLdapSource {<#
-.SYNOPSIS
-
-Returns information about a given LDAP Source
-.DESCRIPTION
-
-Use this Cmdlet to get information on a LDAP Source
-.PARAMETER LdapSourceID
-
-The ID of the LDAP Source
-.EXAMPLE
-Get-AcanoLdapSource -LdapSourceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the LDAP Source
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapMappings"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapSources.ldapSource}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapSource {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSourceID    )    return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource}function Get-AcanoLdapSyncs {
+        [string]$LdapSourceID    )    return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource}function Get-AcanoLdapSyncs {
 <#
 .SYNOPSIS
 
