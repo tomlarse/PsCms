@@ -201,7 +201,7 @@ Will return information on the outbound dial plan rule
     return (Open-AcanoAPI $nodeLocation).forwardingDialPlanRules.forwardingDialPlanRule
 }
 
-function Get-AcanoOutboundDialPlanRule {
+function Get-AcanoCallForwardingDialPlanRule {
 <#
 .SYNOPSIS
 
