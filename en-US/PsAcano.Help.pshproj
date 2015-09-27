@@ -268,8 +268,10 @@ Possible values are
     <CmdletObject verb="Get" noun="AcanoCallBridge">
       <Name>Get-AcanoCallBridge</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given call bridge
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a call bridge
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -292,7 +294,8 @@ Possible values are
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the call bridge
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -321,7 +324,16 @@ Possible values are
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoCallBridge -CallBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the call bridge
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -329,8 +341,10 @@ Possible values are
     <CmdletObject verb="Get" noun="AcanoCallBridges">
       <Name>Get-AcanoCallBridges</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns call bridges currently configured on the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on call bridges
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -356,7 +370,8 @@ Possible values are
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -391,11 +406,21 @@ Possible values are
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of call bridges beginning at the call bridge in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoCallBridges
+</Cmd>
+          <Description>Will return all call bridges
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -1390,8 +1415,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoCdrReceiverUri">
       <Name>Get-AcanoCdrReceiverUri</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about the configured CDR receiver
+</Synopsis>
+        <Description>Use this Cmdlet to get information on the configured CDR receiver
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -1407,7 +1434,16 @@ The supported alarm names are:
         <string>Get-AcanoCdrReceiverUri</string>
       </Syntax>
       <Parameters />
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoCdrReceiverUri
+</Cmd>
+          <Description>Will return URI of the configured CDR receiver
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -2541,8 +2577,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoGlobalProfile">
       <Name>Get-AcanoGlobalProfile</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about the global profile
+</Synopsis>
+        <Description>Use this Cmdlet to get information on the global profile
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -2558,7 +2596,16 @@ The supported alarm names are:
         <string>Get-AcanoGlobalProfile</string>
       </Syntax>
       <Parameters />
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoGlobalProfile
+</Cmd>
+          <Description>Will return the global profile
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -3290,8 +3337,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoLdapServer">
       <Name>Get-AcanoLdapServer</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given LDAP server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a LDAP server
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -3314,7 +3363,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the LDAP server
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3343,7 +3393,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoLdapServer -LdapServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the LDAP Server
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -3351,8 +3410,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoLdapServers">
       <Name>Get-AcanoLdapServers</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns LDAP servers currently configured on the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on LDAP servers
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -3378,7 +3439,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns LDAP servers that matches the filter text
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3389,7 +3451,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3424,11 +3487,29 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of LDAP servers beginning at the LDAP server in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-Get-AcanoLdapServers
+</Cmd>
+          <Description>Will return all LDAP servers
+</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Example 2</Name>
+          <Cmd>Get-AcanoLdapServers -Filter "Greg"
+</Cmd>
+          <Description>Will return all LDAP servers whos URI contains "Greg"
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4175,8 +4256,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoSystemAlarm">
       <Name>Get-AcanoSystemAlarm</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given system alarm
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a system alarm
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4199,7 +4282,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the alarm
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4228,7 +4312,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoSystemAlarm -AlarmID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the alarm
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4236,8 +4329,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoSystemAlarms">
       <Name>Get-AcanoSystemAlarms</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about the system alarms
+</Synopsis>
+        <Description>Use this Cmdlet to get information on the system alarms
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4253,7 +4348,16 @@ The supported alarm names are:
         <string>Get-AcanoSystemAlarms</string>
       </Syntax>
       <Parameters />
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoSystemAlarms
+</Cmd>
+          <Description>Will return information on the system alarms
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4261,8 +4365,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoSystemDatabaseStatus">
       <Name>Get-AcanoSystemDatabaseStatus</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about the system database status
+</Synopsis>
+        <Description>Use this Cmdlet to get information on the system database status
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4278,7 +4384,16 @@ The supported alarm names are:
         <string>Get-AcanoSystemDatabaseStatus</string>
       </Syntax>
       <Parameters />
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoSystemDatabaseStatus
+</Cmd>
+          <Description>Will return information on the system database status
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4286,8 +4401,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoSystemDiagnostic">
       <Name>Get-AcanoSystemDiagnostic</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given system diagnostic
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a system diagnostic
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4310,7 +4427,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the system diagnostic
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4339,7 +4457,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoSystemDiagnostic -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the system diagnostic
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4347,8 +4474,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoSystemDiagnosticContent">
       <Name>Get-AcanoSystemDiagnosticContent</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns the content of a given system diagnostic
+</Synopsis>
+        <Description>Use this Cmdlet to get the content of a system diagnostic
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4371,7 +4500,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the system diagnostic
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4400,7 +4530,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoSystemDiagnosticContent -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return the content of the system diagnostic
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4408,8 +4547,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoSystemDiagnostics">
       <Name>Get-AcanoSystemDiagnostics</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns system diagnostics from the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to get system diagnostics from the Acano server
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4435,7 +4576,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns those diagnostics that correspond to the specified coSpace 
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4446,7 +4588,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns those diagnostics that correspond to the specified callCorrelator 
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4457,7 +4600,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4492,11 +4636,21 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of system diagnostics beginning at the system diagnostic in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoSystemDiagnostics
+</Cmd>
+          <Description>Will return all system diagnostics
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4504,8 +4658,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoSystemStatus">
       <Name>Get-AcanoSystemStatus</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about the system status
+</Synopsis>
+        <Description>Use this Cmdlet to get information on the system status
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4521,7 +4677,16 @@ The supported alarm names are:
         <string>Get-AcanoSystemStatus</string>
       </Syntax>
       <Parameters />
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoSystemStatus
+</Cmd>
+          <Description>Will return information on the system status
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4675,8 +4840,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoTurnServer">
       <Name>Get-AcanoTurnServer</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given TURN server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a TURN server
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4699,7 +4866,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the TURN server
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4728,7 +4896,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoTurnServer -TurnServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the TURN Server
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4736,8 +4913,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoTurnServers">
       <Name>Get-AcanoTurnServers</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns TURN servers currently configured on the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on TURN servers
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4763,7 +4942,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns TURN servers that matches the filter text
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4774,7 +4954,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4809,11 +4990,29 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of TURN servers beginning at the TURN server in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-Get-AcanoTurnServers
+</Cmd>
+          <Description>Will return all TURN servers
+</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Example 2</Name>
+          <Cmd>Get-AcanoTurnServers -Filter "Greg"
+</Cmd>
+          <Description>Will return all TURN servers whos URI contains "Greg"
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -4967,8 +5166,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoUserProfile">
       <Name>Get-AcanoUserProfile</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given user profile
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a user profile
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -4991,7 +5192,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the user profile
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5020,7 +5222,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoUserProfile -UserProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the user profile
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -5028,8 +5239,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoUserProfiles">
       <Name>Get-AcanoUserProfiles</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns all configured user profiles on the Acano server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on configured user profiles
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -5056,7 +5269,11 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns user profiles that are referenced or unreferenced by another object
+
+Possible values are 
+    -Referenced
+    -Unreferenced</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5067,7 +5284,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5102,11 +5320,29 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of user profiles beginning at the user profile in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoUserProfiles
+</Cmd>
+          <Description>Will return all user profiles
+</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Example 2</Name>
+          <Cmd>Get-AcanoUserProfiles -UsageFilter "Unreferenced"
+</Cmd>
+          <Description>Will return all user profiles who is not referenced by another object
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -5233,8 +5469,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoWebBridge">
       <Name>Get-AcanoWebBridge</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about a given web bridge
+</Synopsis>
+        <Description>Use this Cmdlet to get information on a web bridge
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -5257,7 +5495,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>The ID of the web bridge
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5286,7 +5525,16 @@ The supported alarm names are:
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoWebBridge -WebBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+</Cmd>
+          <Description>Will return information on the web bridge
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -5294,8 +5542,8 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoWebBridges">
       <Name>Get-AcanoWebBridges</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns Web bridges currently configured on the Acano server</Synopsis>
+        <Description>Use this Cmdlet to get information on Web bridges</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -5321,7 +5569,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns Web bridges that matches the filter text
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5332,7 +5581,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Returns Web bridges associated with that tenant
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5343,7 +5593,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Limits the returned results
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="ActionPreference" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5378,11 +5629,29 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description />
+          <Description>Can only be used together with -Limit. Returns the limited number of Web bridges beginning at the Web bridge in the offset. See the API reference guide for uses. 
+</Description>
           <DefaultValue />
         </ParameterDescription>
       </Parameters>
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoWebBridges
+</Cmd>
+          <Description>Will return all Web bridges
+</Description>
+          <Output />
+        </Example>
+        <Example>
+          <Name>Example 2</Name>
+          <Cmd>Get-AcanoWebBridges -Filter "Greg"
+</Cmd>
+          <Description>Will return all Web bridges whos name contains "Greg"
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -5390,8 +5659,10 @@ The supported alarm names are:
     <CmdletObject verb="Get" noun="AcanoXmppServer">
       <Name>Get-AcanoXmppServer</Name>
       <GeneralHelp>
-        <Synopsis />
-        <Description />
+        <Synopsis>Returns information about the XMPP server
+</Synopsis>
+        <Description>Use this Cmdlet to get information on the XMPP server
+</Description>
         <Notes />
         <InputType />
         <InputUrl />
@@ -5407,7 +5678,16 @@ The supported alarm names are:
         <string>Get-AcanoXmppServer</string>
       </Syntax>
       <Parameters />
-      <Examples />
+      <Examples>
+        <Example>
+          <Name>Example 1</Name>
+          <Cmd>Get-AcanoXmppServer
+</Cmd>
+          <Description>Will return information on the XMPP server
+</Description>
+          <Output />
+        </Example>
+      </Examples>
       <RelatedLinks />
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
@@ -5745,7 +6025,8 @@ The supported alarm names are:
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description>Whether this user is allowed to write messages in the coSpace</Description>
+          <Description>Whether this user is allowed to write messages in the coSpace
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="Boolean" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="10" globbing="false">
@@ -6564,7 +6845,8 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description>Whether this user is allowed to write messages in the coSpace</Description>
+          <Description>Whether this user is allowed to write messages in the coSpace
+</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="Boolean" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="11" globbing="false">
@@ -6620,7 +6902,8 @@ to be a GET request.</Description>
           <Name>Example 1</Name>
           <Cmd>New-AcanocoSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -UserJid greg@contoso.com
 </Cmd>
-          <Description>Will add greg@contoso.com as a member of this coSpace</Description>
+          <Description>Will add greg@contoso.com as a member of this coSpace
+</Description>
           <Output />
         </Example>
       </Examples>

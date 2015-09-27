@@ -208,389 +208,40 @@ Will return information on the call forwarding dial plan rule
         [parameter(Mandatory=$true,Position=1)]
         [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID").user}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoUsercoSpaces {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID/usercoSpaces").userCoSpaces.userCoSpace}function Get-AcanoUserProfiles {
-<#
-.SYNOPSIS
-
-Returns all configured user profiles on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on configured user profiles
-.PARAMETER UsageFilter unreferenced|referenced
-
-Returns user profiles that are referenced or unreferenced by another object
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of user profiles beginning
-at the user profile in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-AcanoUserProfiles
-
-Will return all user profiles
-.EXAMPLE
-Get-AcanoUserProfiles -UsageFilter "Unreferenced"
-
-Will return all user profiles who is not referenced by another object
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/userProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).userProfiles.userProfile}function Get-AcanoUserProfile {<#
-.SYNOPSIS
-
-Returns information about a given user profile
-.DESCRIPTION
-
-Use this Cmdlet to get information on a user profile
-.PARAMETER UserProfileID
-
-The ID of the user profile
-.EXAMPLE
-Get-AcanoUserProfile -UserProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the user profile
-
-#>    Param (
+        [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID/usercoSpaces").userCoSpaces.userCoSpace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoUserProfiles {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/userProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).userProfiles.userProfile}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoUserProfile {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserProfileID    )    return (Open-AcanoAPI "api/v1/userProfiles/$UserProfileID").userProfile}function Get-AcanoSystemStatus {<#
-.SYNOPSIS
-
-Returns information about the system status
-.DESCRIPTION
-
-Use this Cmdlet to get information on the system status
-.EXAMPLE
-Get-AcanoSystemStatus
-
-Will return information on the system status
-
-#>    return (Open-AcanoAPI "api/v1/system/status").status}function Get-AcanoSystemAlarms {<#
-.SYNOPSIS
-
-Returns information about the system alarms
-.DESCRIPTION
-
-Use this Cmdlet to get information on the system alarms
-.EXAMPLE
-Get-AcanoSystemAlarms
-
-Will return information on the system alarms
-
-#>    return (Open-AcanoAPI "api/v1/system/alarms").alarms.alarm}function Get-AcanoSystemAlarm {<#
-.SYNOPSIS
-
-Returns information about a given system alarm
-.DESCRIPTION
-
-Use this Cmdlet to get information on a system alarm
-.PARAMETER AlarmID
-
-The ID of the alarm
-.EXAMPLE
-Get-AcanoSystemAlarm -AlarmID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the alarm
-
-#>    Param (
+        [string]$UserProfileID    )    return (Open-AcanoAPI "api/v1/userProfiles/$UserProfileID").userProfile}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemStatus {    return (Open-AcanoAPI "api/v1/system/status").status}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemAlarms {    return (Open-AcanoAPI "api/v1/system/alarms").alarms.alarm}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemAlarm {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$AlarmID    )    return (Open-AcanoAPI "api/v1/system/alarms/$AlarmID").alarm}function Get-AcanoSystemDatabaseStatus {<#
-.SYNOPSIS
-
-Returns information about the system database status
-.DESCRIPTION
-
-Use this Cmdlet to get information on the system database status
-.EXAMPLE
-Get-AcanoSystemDatabaseStatus
-
-Will return information on the system database status
-
-#>    return (Open-AcanoAPI "api/v1/system/database").database}function Get-AcanoCdrReceiverUri {<#
-.SYNOPSIS
-
-Returns information about the configured CDR receiver
-.DESCRIPTION
-
-Use this Cmdlet to get information on the configured CDR receiver
-.EXAMPLE
-Get-AcanoCdrReceiverUri
-
-Will return URI of the configured CDR receiver
-
-#>    return (Open-AcanoAPI "api/v1/system/cdrReceiver").cdrReceiver}function Get-AcanoGlobalProfile {<#
-.SYNOPSIS
-
-Returns information about the global profile
-.DESCRIPTION
-
-Use this Cmdlet to get information on the global profile
-.EXAMPLE
-Get-AcanoGlobalProfile
-
-Will return the global profile
-
-#>    return (Open-AcanoAPI "api/v1/system/profiles").profiles}function Get-AcanoTurnServers {
-<#
-.SYNOPSIS
-
-Returns TURN servers currently configured on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on TURN servers
-.PARAMETER Filter
-
-Returns TURN servers that matches the filter text
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of TURN servers beginning
-at the TURN server in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-Get-AcanoTurnServers
-
-Will return all TURN servers
-.EXAMPLE
-Get-AcanoTurnServers -Filter "Greg"
-
-Will return all TURN servers whos URI contains "Greg"
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$AlarmID    )    return (Open-AcanoAPI "api/v1/system/alarms/$AlarmID").alarm}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemDatabaseStatus {    return (Open-AcanoAPI "api/v1/system/database").database}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCdrReceiverUri {    return (Open-AcanoAPI "api/v1/system/cdrReceiver").cdrReceiver}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoGlobalProfile {    return (Open-AcanoAPI "api/v1/system/profiles").profiles}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTurnServers {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/turnServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).turnServers.turnServer}function Get-AcanoTurnServer {<#
-.SYNOPSIS
-
-Returns information about a given TURN server
-.DESCRIPTION
-
-Use this Cmdlet to get information on a TURN server
-.PARAMETER TurnServerID
-
-The ID of the TURN server
-.EXAMPLE
-Get-AcanoTurnServer -TurnServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the TURN Server
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/turnServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).turnServers.turnServer}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTurnServer {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TurnServerID    )    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID").turnServer}function Get-AcanoWebBridges {
-<#
-.SYNOPSIS
-
-Returns Web bridges currently configured on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on Web bridges
-.PARAMETER Filter
-
-Returns Web bridges that matches the filter text
-.PARAMETER TenantFilter <tenantID>
-
-Returns Web bridges associated with that tenant
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of Web bridges beginning
-at the Web bridge in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-AcanoWebBridges
-
-Will return all Web bridges
-.EXAMPLE
-Get-AcanoWebBridges -Filter "Greg"
-
-Will return all Web bridges whos name contains "Greg"
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$TurnServerID    )    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID").turnServer}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoWebBridges {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/webBridges"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).webBridges.webBridge}function Get-AcanoWebBridge {<#
-.SYNOPSIS
-
-Returns information about a given web bridge
-.DESCRIPTION
-
-Use this Cmdlet to get information on a web bridge
-.PARAMETER WebBridgeID
-
-The ID of the web bridge
-.EXAMPLE
-Get-AcanoWebBridge -WebBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the web bridge
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/webBridges"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).webBridges.webBridge}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoWebBridge {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$WebBridgeID    )    return (Open-AcanoAPI "api/v1/webBridges/$WebBridgeID").webBridge}function Get-AcanoCallBridges {
-<#
-.SYNOPSIS
-
-Returns call bridges currently configured on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on call bridges
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of call bridges beginning
-at the call bridge in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-AcanoCallBridges
-
-Will return all call bridges
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$WebBridgeID    )    return (Open-AcanoAPI "api/v1/webBridges/$WebBridgeID").webBridge}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallBridges {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callBridges"    if ($Limit -ne "") {        $nodeLocation += "?limit=$Limit"                if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callBridges.callBridge}function Get-AcanoCallBridge {<#
-.SYNOPSIS
-
-Returns information about a given call bridge
-.DESCRIPTION
-
-Use this Cmdlet to get information on a call bridge
-.PARAMETER CallBridgeID
-
-The ID of the call bridge
-.EXAMPLE
-Get-AcanoCallBridge -CallBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the call bridge
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callBridges"    if ($Limit -ne "") {        $nodeLocation += "?limit=$Limit"                if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callBridges.callBridge}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallBridge {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBridgeID    )    return (Open-AcanoAPI "api/v1/callBridges/$CallBridgeID").callBridge}function Get-AcanoXmppServer {<#
-.SYNOPSIS
-
-Returns information about the XMPP server
-.DESCRIPTION
-
-Use this Cmdlet to get information on the XMPP server
-.EXAMPLE
-Get-AcanoXmppServer
-
-Will return information on the XMPP server
-
-#>    return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp}function Get-AcanoSystemDiagnostics {
-<#
-.SYNOPSIS
-
-Returns system diagnostics from the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get system diagnostics from the Acano server
-.PARAMETER CoSpaceFilter <coSpaceID>
-
-Returns those diagnostics that correspond to the specified coSpace 
-.PARAMETER CallCorrelatorFilter <CallCorrelatorID>
-
-Returns those diagnostics that correspond to the specified callCorrelator 
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of system diagnostics beginning
-at the system diagnostic in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-AcanoSystemDiagnostics
-
-Will return all system diagnostics
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$CallBridgeID    )    return (Open-AcanoAPI "api/v1/callBridges/$CallBridgeID").callBridge}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoXmppServer {    return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemDiagnostics {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CoSpaceFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallCorrelatorFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/system/diagnostics"    $modifiers = 0    if ($CoSpaceFilter -ne "") {        $nodeLocation += "?coSpacefilter=$CoSpaceFilter"        $modifiers++    }    if ($CallCorrelatorFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callCorrelatorFilter=$CallCorrelatorFilter"        } else {            $nodeLocation += "?callCorrelatorFilter=$CallCorrelatorFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).diagnostics.diagnostic}function Get-AcanoSystemDiagnostic {<#
-.SYNOPSIS
-
-Returns information about a given system diagnostic
-.DESCRIPTION
-
-Use this Cmdlet to get information on a system diagnostic
-.PARAMETER SystemDiagnosticID
-
-The ID of the system diagnostic
-.EXAMPLE
-Get-AcanoSystemDiagnostic -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the system diagnostic
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CoSpaceFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallCorrelatorFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/system/diagnostics"    $modifiers = 0    if ($CoSpaceFilter -ne "") {        $nodeLocation += "?coSpacefilter=$CoSpaceFilter"        $modifiers++    }    if ($CallCorrelatorFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callCorrelatorFilter=$CallCorrelatorFilter"        } else {            $nodeLocation += "?callCorrelatorFilter=$CallCorrelatorFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).diagnostics.diagnostic}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemDiagnostic {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$SystemDiagnosticID    )    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID").diagnostic}function Get-AcanoSystemDiagnosticContent {<#
-.SYNOPSIS
-
-Returns the content of a given system diagnostic
-.DESCRIPTION
-
-Use this Cmdlet to get the content of a system diagnostic
-.PARAMETER SystemDiagnosticID
-
-The ID of the system diagnostic
-.EXAMPLE
-Get-AcanoSystemDiagnosticContent -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return the content of the system diagnostic
-
-#>    Param (
+        [string]$SystemDiagnosticID    )    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID").diagnostic}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemDiagnosticContent {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$SystemDiagnosticID    )    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID/contents").diagnostic}function Get-AcanoLdapServers {
-<#
-.SYNOPSIS
-
-Returns LDAP servers currently configured on the Acano server
-.DESCRIPTION
-
-Use this Cmdlet to get information on LDAP servers
-.PARAMETER Filter
-
-Returns LDAP servers that matches the filter text
-.PARAMETER Limit
-
-Limits the returned results
-.PARAMETER Offset
-
-Can only be used together with -Limit. Returns the limited number of LDAP servers beginning
-at the LDAP server in the offset. See the API reference guide for uses. 
-.EXAMPLE
-
-Get-Get-AcanoLdapServers
-
-Will return all LDAP servers
-.EXAMPLE
-Get-AcanoLdapServers -Filter "Greg"
-
-Will return all LDAP servers whos URI contains "Greg"
-#>
-[CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$SystemDiagnosticID    )    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID/contents").diagnostic}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapServers {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapServers.ldapServer}function Get-AcanoLdapServer {<#
-.SYNOPSIS
-
-Returns information about a given LDAP server
-.DESCRIPTION
-
-Use this Cmdlet to get information on a LDAP server
-.PARAMETER LdapServerID
-
-The ID of the LDAP server
-.EXAMPLE
-Get-AcanoLdapServer -LdapServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
-
-Will return information on the LDAP Server
-
-#>    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapServers.ldapServer}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapServer {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapServerID    )    return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer}function Get-AcanoLdapMappings {
+        [string]$LdapServerID    )    return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer}function Get-AcanoLdapMappings {
 <#
 .SYNOPSIS
 
