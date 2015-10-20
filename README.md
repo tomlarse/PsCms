@@ -23,7 +23,13 @@ Which will correspond to doing a GET on the /api/v1/coSpaces node, or
 ```
 New-AcanocoSpace
 ```
-to do a POST on the /api/v1/coSpaces node. Nouns will be plural if they might return multiple results and singular if they will only return one result. 
+to do a POST on the /api/v1/coSpaces node. Nouns will be plural if they might return multiple results and singular if they will only return one result.
+
+There are some exceptions - some of the API functions only trigger something to happen, for instance a POST to the node /api/v1/coSpaces/<coSpace id>/diagnostics, will trigger diagnostics logging on the coSpace. In these situations a suitable noun has been chosen. For the example the Start- noun was chosen,
+
+```
+Start-AcanocoSpaceCallDiagnosticsGeneration
+```
 
 ## Installation
 
@@ -47,4 +53,4 @@ To get a list of possible commands use
 
 ## Caveats
 
-Currently this module contains the GET commands from the API, and only some of the POST, PUT and DELETE commands. The rest are being added continually. There is also no error handling in it at the moment. Feel free to give feedback through issues 
+Currently this module contains the GET commands from the API, and only some of the POST, PUT and DELETE commands. The rest are being added continually. There is also no error handling in it at the moment, and there is a lot of comment-based help missing. Feel free to give feedback through issues.
