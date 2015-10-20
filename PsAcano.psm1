@@ -12,8 +12,8 @@ function Open-AcanoAPI {
         [switch]$PUT,
         [parameter(ParameterSetName="DELETE",Mandatory=$true)]
         [switch]$DELETE,
-        [parameter(ParameterSetName="POST",Mandatory=$true)]
-        [parameter(ParameterSetName="PUT",Mandatory=$true)]
+        [parameter(ParameterSetName="POST",Mandatory=$false)]
+        [parameter(ParameterSetName="PUT",Mandatory=$false)]
         [parameter(ParameterSetName="DELETE",Mandatory=$false)]
         [string]$Data
     )
@@ -117,7 +117,9 @@ function Get-AcanocoSpaces {
         [parameter(Mandatory=$false)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$CallId="",        [parameter(Mandatory=$false)]        [string]$Passcode="",        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [string]$Secret="",        [parameter(Mandatory=$false)]        [switch]$RegenerateSecret,        [parameter(Mandatory=$false)]        [string]$Scope=""    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"    $modifiers = 0    if ($Uri -ne "") {        $nodeLocation += "?uri=$Uri"        $modifiers++    }    if ($CallId -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callId=$CallId"        } else {            $nodeLocation += "?callId=$CallId"            $modifiers++        }    }    if ($Passcode -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&passcode=$Passcode"        } else {            $nodeLocation += "?passcode=$Passcode"            $modifiers++        }    }    if ($CallLegProfile -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfile=$CallLegProfile"        } else {            $nodeLocation += "?callLegProfile=$CallLegProfile"            $modifiers++        }    }    if ($Secret -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&secret=$Secret"        } else {            $nodeLocation += "?secret=$Secret"            $modifiers++        }    }    if ($RegenerateSecret) {        if ($modifiers -gt 0) {            $nodeLocation += "&regenerateSecret=true"        } else {            $nodeLocation += "?regenerateSecret=true"            $modifiers++        }    }    if ($Scope -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&scope=$Scope"        } else {            $nodeLocation += "?scope=$Scope"            $modifiers++        }    }    [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanocoSpaceAccessMethod -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") -coSpaceID $coSpaceId ## For some reason POST returns a string starting and ending with a whitespace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Remove-AcanocoSpaceAccessMethod {    Param (
         [parameter(Mandatory=$true)]
         [string]$coSpaceId,        [parameter(Mandatory=$true)]
-        [string]$AccessMethodId    )    ### Add confirmation    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/accessMethods/$AccessMethodId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoOutboundDialPlanRules {
+        [string]$AccessMethodId    )    ### Add confirmation    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/accessMethods/$AccessMethodId" -DELETE}function Start-AcanocoSpaceCallDiagnosticsGeneration {    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$coSpaceId    )    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/diagnostics" -POST}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoOutboundDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
