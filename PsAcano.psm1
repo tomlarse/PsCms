@@ -14,6 +14,7 @@ function Open-AcanoAPI {
         [switch]$DELETE,
         [parameter(ParameterSetName="POST",Mandatory=$true)]
         [parameter(ParameterSetName="PUT",Mandatory=$true)]
+        [parameter(ParameterSetName="DELETE",Mandatory=$false)]
         [string]$Data
     )
 
@@ -38,7 +39,7 @@ function Open-AcanoAPI {
     } elseif ($DELETE){
         $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
 
-        return $webclient.UploadString($script:APIAddress+$NodeLocation,"DELETE","")
+        return $webclient.UploadString($script:APIAddress+$NodeLocation,"DELETE",$Data)
     } else {
         return [xml]$webclient.DownloadString($script:APIAddress+$NodeLocation)
     }
@@ -101,7 +102,9 @@ function Get-AcanocoSpaces {
         [string]$coSpaceId,        [parameter(Mandatory=$true)]
         [string]$UserId    )    ### Add confirmation    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId" -DELETE}## Not implemented in the API#function Get-AcanocoSpaceMessages {#    Param (#        [parameter(Mandatory=$true)]#        [string]$coSpaceId#    )#    #    $nodeLocation = "api/v1/coSpaces/$coSpaceID/messages"##     return (Open-AcanoAPI $nodeLocation).messages.message | fl###}# .ExternalHelp PsAcano.psm1-Help.xmlfunction New-AcanocoSpaceMessage {    Param (
         [parameter(Mandatory=$true)]        [string]$coSpaceId,
-        [parameter(Mandatory=$true)]        [string]$Message,        [parameter(Mandatory=$false)]        [string]$From=""    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/messages"    $data = "message=$Message"    if ($From -ne "") {        $data += "&from=$From"    }    [string]$NewcoSpaceMessage = Open-AcanoAPI $nodeLocation -POST -Data $data        ## NOT IMPLEMENTED YET Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMessage.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanocoSpaceAccessMethods {    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [parameter(Mandatory=$true)]        [string]$Message,        [parameter(Mandatory=$false)]        [string]$From=""    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/messages"    $data = "message=$Message"    if ($From -ne "") {        $data += "&from=$From"    }    [string]$NewcoSpaceMessage = Open-AcanoAPI $nodeLocation -POST -Data $data        ## NOT IMPLEMENTED YET Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMessage.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Remove-AcanocoSpaceMessages {    Param (
+        [parameter(Mandatory=$false)]        [string]$MinAge,
+        [parameter(Mandatory=$false)]        [string]$MaxAge    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/messages"    $data = ""    if ($MinAge -ne "") {        $data += "minAge=$MinAge"        $modifiers++    }    if ($MaxAge -ne "") {        if ($modifiers -gt 0) {            $data += "&maxAge=$MaxAge"        } else {            $data += "maxAge=$MaxAge"            $modifiers++        }    }    ### Add confirmation    Open-AcanoAPI $nodeLocation -DELETE -Data $data}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanocoSpaceAccessMethods {    [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]        [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]        [string]$coSpaceID,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallLegProfileFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )        $nodeLocation = "api/v1/coSpaces/$coSpaceID/accessMethods"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($CallLegProfileFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"        } else {            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).accessMethods.accessMethod | fl}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanocoSpaceAccessMethod {    Param (
