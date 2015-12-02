@@ -7168,3 +7168,62 @@ function Remove-AcanoTenant {
     Open-AcanoAPI "/api/v1/tenants/$TenantID" -DELETE
 
 }
+
+function Get-AcanoTenantGroups {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/tenantGroups"
+    $modifiers = 0
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).tenantGroups.tenantGroup
+}
+
+function Get-AcanoTenantGroup {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TenantGroupID
+    )
+
+    return (Open-AcanoAPI "api/v1/tenantGroups/$TenantGroupID").tenantGroup
+}
+
+function New-AcanoTenantGroup {
+
+    $nodeLocation = "/api/v1/tenantGroups"
+    $data = ""
+
+    [string]$NewTenantGroupId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoTenantGroup -TenantGroupID $NewTenantGroupId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Remove-AcanoTenantGroup {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TenantGroupID
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/tenantGroups/$TenantGroupID" -DELETE
+
+}
