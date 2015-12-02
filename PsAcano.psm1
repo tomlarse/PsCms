@@ -43,7 +43,6 @@ function Open-AcanoAPI {
     } else {
         return [xml]$webclient.DownloadString($script:APIAddress+$NodeLocation)
     }
-
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
