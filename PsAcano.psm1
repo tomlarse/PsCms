@@ -5535,12 +5535,16 @@ function New-AcanoWebBridge {
         [parameter(Mandatory=$false)]
         [ValidateSet("disabled","secure","legacy")]
         [string]$IdEntryMode,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$AllowWebLinkAccess,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ShowSignIn,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ResolveCoSpaceCallIds,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ResolveLyncConferenceIds
     )
@@ -5646,12 +5650,16 @@ function Set-AcanoWebBridge {
         [parameter(Mandatory=$false)]
         [ValidateSet("disabled","secure","legacy")]
         [string]$IdEntryMode,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$AllowWebLinkAccess,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ShowSignIn,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ResolveCoSpaceCallIds,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ResolveLyncConferenceIds
     )
@@ -5995,6 +6003,116 @@ function Get-AcanoLdapServer {
     return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer
 }
 
+function New-AcanoLdapServer {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Address,
+        [parameter(Mandatory=$true)]
+        [string]$PortNumber,
+        [parameter(Mandatory=$false)]
+        [string]$Username,
+        [parameter(Mandatory=$false)]
+        [string]$Password,
+        [parameter(Mandatory=$true)]
+        [ValidateSet("true","false")]
+        [string]$Secure
+    )
+
+    $nodeLocation = "/api/v1/ldapServers"
+    $data = "address=$Address&portNumber=$PortNumber&secure=$Secure"
+    $modifiers = 0
+
+    if ($Username -ne "") {
+        $data += "&username=$Username"
+    }
+
+    if ($Password -ne "") {
+        $data += "&password=$Password"
+    }
+
+    [string]$NewLdapServerId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoLdapServer -LdapServerID $NewLdapServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoLdapServer {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapServerId,
+        [parameter(Mandatory=$false)]
+        [string]$Address,
+        [parameter(Mandatory=$false)]
+        [string]$PortNumber,
+        [parameter(Mandatory=$false)]
+        [string]$Username,
+        [parameter(Mandatory=$false)]
+        [string]$Password,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$Secure
+    )
+
+    $nodeLocation = "/api/v1/ldapServers/$LdapServerId"
+    $data = ""
+    $modifiers = 0
+
+    if ($Address -ne "") {
+        $data += "address=$Address"
+        $modifiers++
+    }
+
+    if ($PortNumber -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "portNumber=$PortNumber"
+        $modifiers++
+    }
+
+    if ($Username -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "username=$Username"
+        $modifiers++
+    }
+
+    if ($Password -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "password=$Password"
+        $modifiers++
+    }
+
+    if ($Secure -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "secure=$Secure"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoLdapServer -LdapServerID $LdapServerId
+}
+
+function Remove-AcanoLdapServer {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapServerId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/ldapServers/$LdapServerId" -DELETE
+
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoLdapMappings {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
@@ -6040,6 +6158,214 @@ function Get-AcanoLdapMapping {
     )
 
     return (Open-AcanoAPI "api/v1/ldapMappings/$LdapMappingID").ldapMapping
+}
+
+function New-AcanoLdapMapping {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$JidMapping,
+        [parameter(Mandatory=$false)]
+        [string]$NameMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CdrTagMapping,
+        [parameter(Mandatory=$false)]
+        [string]$AuthenticationMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceUriMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceSecondaryUriMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceNameMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceCallIdMapping
+    )
+
+    $nodeLocation = "/api/v1/ldapMappings"
+    $data = ""
+    $modifiers = 0
+
+    if ($JidMapping -ne "") {
+        $data += "jidMapping=$JidMapping"
+        $modifiers++
+    }
+
+    if ($NameMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "nameMapping=$NameMapping"
+        $modifiers++
+    }
+
+    if ($CdrTagMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "cdrTagMapping=$CdrTagMapping"
+        $modifiers++
+    }
+
+    if ($AuthenticationMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "authenticationMapping=$AuthenticationMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceUriMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceUriMapping=$CoSpaceUriMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceSecondaryUriMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceSecondaryUriMapping=$CoSpaceSecondaryUriMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceNameMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceNameMapping=$CoSpaceNameMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceCallIdMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceCallIdMapping=$CoSpaceCallIdMapping"
+        $modifiers++
+    }
+
+    [string]$NewLdapMappingId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoLdapMapping -LdapMappingID $NewLdapMappingId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoLdapMapping {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapMappingId,
+        [parameter(Mandatory=$false)]
+        [string]$JidMapping,
+        [parameter(Mandatory=$false)]
+        [string]$NameMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CdrTagMapping,
+        [parameter(Mandatory=$false)]
+        [string]$AuthenticationMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceUriMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceSecondaryUriMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceNameMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceCallIdMapping
+    )
+
+    $nodeLocation = "/api/v1/ldapMappings/$LdapMappingId"
+    $data = ""
+    $modifiers = 0
+
+    if ($JidMapping -ne "") {
+        $data += "jidMapping=$JidMapping"
+        $modifiers++
+    }
+
+    if ($NameMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "nameMapping=$NameMapping"
+        $modifiers++
+    }
+
+    if ($CdrTagMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "cdrTagMapping=$CdrTagMapping"
+        $modifiers++
+    }
+
+    if ($AuthenticationMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "authenticationMapping=$AuthenticationMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceUriMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceUriMapping=$CoSpaceUriMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceSecondaryUriMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceSecondaryUriMapping=$CoSpaceSecondaryUriMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceNameMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceNameMapping=$CoSpaceNameMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceCallIdMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceCallIdMapping=$CoSpaceCallIdMapping"
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoLdapMapping -LdapMappingID $LdapMappingId
+}
+
+function Remove-AcanoLdapMapping {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapMappingId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/ldapMappings/$LdapMappingId" -DELETE
+
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
