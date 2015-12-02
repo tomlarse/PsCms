@@ -6984,3 +6984,187 @@ function Get-AcanoTenant {
 
     return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenants
 }
+
+function New-AcanoTenant {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [string]$TenantGroup,
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile,
+        [parameter(Mandatory=$false)]
+        [string]$DtmfProfile,
+        [parameter(Mandatory=$false)]
+        [string]$IvrBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [string]$ParticipantLimit,
+        [parameter(Mandatory=$false)]
+        [string]$UserProfile
+    )
+
+    $nodeLocation = "/api/v1/tenants"
+    $data = "name=$Name"
+
+    if ($TenantGroup -ne "") {
+        $data += "&tenantGroup=$TenantGroup"
+    }
+
+    if ($CallLegProfile -ne "") {
+        $data += "&callLegProfile=$CallLegProfile"
+    }
+
+    if ($CallProfile -ne "") {
+        $data += "&callProfile=$CallProfile"
+    }
+
+    if ($DtmfProfile -ne "") {
+        $data += "&dtmfProfile=$DtmfProfile"
+    }
+
+    if ($IvrBrandingProfile -ne "") {
+        $data += "&ivrBrandingProfile=$IvrBrandingProfile"
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        $data += "&callBrandingProfile=$CallBrandingProfile"
+    }
+
+    if ($ParticipantLimit -ne "") {
+        $data += "&participantLimit=$ParticipantLimit"
+    }
+
+    if ($UserProfile -ne "") {
+        $data += "&userProfile=$UserProfile"
+    }
+
+    [string]$NewTenantId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoTenant -TenantID $NewTenantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoTenant {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TenantId,
+        [parameter(Mandatory=$false)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [string]$TenantGroup,
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile,
+        [parameter(Mandatory=$false)]
+        [string]$DtmfProfile,
+        [parameter(Mandatory=$false)]
+        [string]$IvrBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [string]$ParticipantLimit,
+        [parameter(Mandatory=$false)]
+        [string]$UserProfile
+    )
+
+    $nodeLocation = "/api/v1/Tenants/$TenantId"
+    $data = ""
+    $modifiers = 0
+
+    if ($TenantGroup -ne "") {
+        $data += "tenantgroup=$TenantGroup"
+        $modifiers++
+    }
+
+    if ($Name -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "name=$Name"
+        $modifiers++
+    }
+
+    if ($CallLegProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "callLegProfile=$CallLegProfile"
+        $modifiers++
+    }
+
+    if ($CallProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "callProfile=$CallProfile"
+        $modifiers++
+    }
+
+    if ($DtmfProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "dtmfProfile=$DtmfProfile"
+        $modifiers++
+    }
+
+    if ($IvrBrandingProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "ivrBrandingProfile=$IvrBrandingProfile"
+        $modifiers++
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "callBrandingProfile=$CallBrandingProfile"
+        $modifiers++
+    }
+
+    if ($ParticipantLimit -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "participantLimit=$ParticipantLimit"
+        $modifiers++
+    }
+
+    if ($UserProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "userProfile=$UserProfile"
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoTenant -TenantID $TenantId
+}
+
+function Remove-AcanoTenant {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TenantID
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/tenants/$TenantID" -DELETE
+
+}
