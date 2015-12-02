@@ -6427,6 +6427,114 @@ function Get-AcanoLdapSource {
     return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource
 }
 
+function New-AcanoLdapSource {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Server,
+        [parameter(Mandatory=$true)]
+        [string]$Mapping,
+        [parameter(Mandatory=$true)]
+        [string]$BaseDN,
+        [parameter(Mandatory=$false)]
+        [string]$Filter,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant
+    )
+
+    $nodeLocation = "/api/v1/ldapSources"
+    $data = "server=$Server&mapping=$Mapping&baseDN=$BaseDN"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $data += "&filter=$Filter"
+    }
+
+    if ($Tenant -ne "") {
+        $data += "&tenant=$Tenant"
+    }
+
+    [string]$NewLdapSourceId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoLdapSource -LdapSourceID $NewLdapSourceId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoLdapSource {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapSourceId,
+        [parameter(Mandatory=$false)]
+        [string]$Server,
+        [parameter(Mandatory=$false)]
+        [string]$Mapping,
+        [parameter(Mandatory=$false)]
+        [string]$BaseDN,
+        [parameter(Mandatory=$false)]
+        [string]$Filter,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant
+    )
+
+    $nodeLocation = "/api/v1/ldapSources/$LdapSourceId"
+    $data = ""
+    $modifiers = 0
+
+    if ($Server -ne "") {
+        $data += "server=$Server"
+        $modifiers++
+    }
+
+    if ($Mapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "mapping=$Mapping"
+        $modifiers++
+    }
+
+    if ($BaseDN -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "baseDn=$BaseDN"
+        $modifiers++
+    }
+
+    if ($Filter -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "filter=$Filter"
+        $modifiers++
+    }
+
+    if ($Tenant -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "tenant=$Tenant"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoLdapSource -LdapSourceID $LdapSourceId
+}
+
+function Remove-AcanoLdapSource {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapSourceId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/ldapSources/$LdapSourceId" -DELETE
+
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoLdapSyncs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
