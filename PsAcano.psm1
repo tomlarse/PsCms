@@ -6569,6 +6569,59 @@ function Get-AcanoLdapSync {
     return (Open-AcanoAPI "api/v1/ldapSyncs/$LdapSyncID").ldapSync
 }
 
+function New-AcanoLdapSync {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$LdapSource,
+        [parameter(Mandatory=$false)]
+        [string]$RemoveWhenFinished
+    )
+
+    $nodeLocation = "/api/v1/ldapSyncs"
+    $data = ""
+    $modifiers = 0
+
+    if ($Tenant -ne "") {
+        $data += "tenant=$Tenant"
+        $modifiers++
+    }
+
+    if ($LdapSource -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "ldapSource=$LdapSource"
+        $modifiers++
+    }
+
+    if ($RemoveWhenFinished -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "removeWhenFinished=$RemoveWhenFinished"
+    }
+
+    [string]$NewLdapSyncId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoLdapSync -LdapSyncID $NewLdapSyncId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Remove-AcanoLdapSync {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapSyncId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/ldapSyncs/$LdapSyncId" -DELETE
+
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoExternalDirectorySearchLocations {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
