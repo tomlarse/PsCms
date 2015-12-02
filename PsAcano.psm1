@@ -6669,6 +6669,275 @@ function Get-AcanoExternalDirectorySearchLocation {
     return (Open-AcanoAPI "api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID").directorySearchLocation
 }
 
+function New-AcanoExternalDirectorySearchLocation {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$LdapServer,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$BaseDN,
+        [parameter(Mandatory=$false)]
+        [string]$FilterFormat,
+        [parameter(Mandatory=$false)]
+        [string]$Label,
+        [parameter(Mandatory=$false)]
+        [string]$Priority,
+        [parameter(Mandatory=$false)]
+        [string]$FirstName,
+        [parameter(Mandatory=$false)]
+        [string]$LastName,
+        [parameter(Mandatory=$false)]
+        [string]$DisplayName,
+        [parameter(Mandatory=$false)]
+        [string]$Phone,
+        [parameter(Mandatory=$false)]
+        [string]$Mobile,
+        [parameter(Mandatory=$false)]
+        [string]$Email,
+        [parameter(Mandatory=$false)]
+        [string]$Sip,
+        [parameter(Mandatory=$false)]
+        [string]$Organization
+    )
+
+    $nodeLocation = "/api/v1/directorySearchLocations"
+    $data = "ldapServer=$LdapServer"
+
+    if ($Tenant -ne "") {
+        $data += "&tenant=$Tenant"
+    }
+
+    if ($BaseDN -ne "") {
+        $data += "&baseDn=$BaseDN"
+    }
+
+    if ($FilterFormat -ne "") {
+        $data += "&filterFormat=$FilterFormat"
+    }
+
+    if ($Label -ne "") {
+        $data += "&label=$Label"
+    }
+
+    if ($Priority -ne "") {
+        $data += "&priority=$Priority"
+    }
+
+    if ($FirstName -ne "") {
+        $data += "&firstName=$FirstName"
+    }
+
+    if ($LastName -ne "") {
+        $data += "&lastName=$LastName"
+    }
+
+    if ($DisplayName -ne "") {
+        $data += "&displayName=$DisplayName"
+    }
+
+    if ($Phone -ne "") {
+        $data += "&phone=$Phone"
+    }
+
+    if ($Mobile -ne "") {
+        $data += "&mobile=$Mobile"
+    }
+
+    if ($Email -ne "") {
+        $data += "&email=$Email"
+    }
+
+    if ($Sip -ne "") {
+        $data += "&sip=$Sip"
+    }
+
+    if ($Organization -ne "") {
+        $data += "&organization=$Organization"
+    }
+
+    [string]$NewexdirsearchId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoExternalDirectorySearchLocation -ExternalDirectorySearchLocationID $NewexdirsearchId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoExternalDirectorySearchLocation {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$ExternalDirectorySearchLocationID,
+        [parameter(Mandatory=$false)]
+        [string]$LdapServer,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$BaseDN,
+        [parameter(Mandatory=$false)]
+        [string]$FilterFormat,
+        [parameter(Mandatory=$false)]
+        [string]$Label,
+        [parameter(Mandatory=$false)]
+        [string]$Priority,
+        [parameter(Mandatory=$false)]
+        [string]$FirstName,
+        [parameter(Mandatory=$false)]
+        [string]$LastName,
+        [parameter(Mandatory=$false)]
+        [string]$DisplayName,
+        [parameter(Mandatory=$false)]
+        [string]$Phone,
+        [parameter(Mandatory=$false)]
+        [string]$Mobile,
+        [parameter(Mandatory=$false)]
+        [string]$Email,
+        [parameter(Mandatory=$false)]
+        [string]$Sip,
+        [parameter(Mandatory=$false)]
+        [string]$Organization
+    )
+
+    $nodeLocation = "/api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID"
+    $data = ""
+    $modifiers = 0
+
+    if ($Tenant -ne "") {
+        $data += "tenant=$Tenant"
+        $modifiers++
+    }
+
+    if ($LdapServer -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "ldapServer=$LdapServer"
+        $modifiers++
+    }
+
+    if ($BaseDN -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "baseDn=$BaseDN"
+        $modifiers++
+    }
+
+    if ($FilterFormat -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "filterFormat=$FilterFormat"
+        $modifiers++
+    }
+
+    if ($Label -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "label=$Label"
+        $modifiers++
+    }
+
+    if ($Priority -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "priority=$Priority"
+        $modifiers++
+    }
+
+    if ($FirstName -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "firstName=$FirstName"
+        $modifiers++
+    }
+
+    if ($LastName -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "lastName=$LastName"
+        $modifiers++
+    }
+
+    if ($DisplayName -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "displayName=$DisplayName"
+        $modifiers++
+    }
+
+    if ($Phone -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "phone=$Phone"
+        $modifiers++
+    }
+
+    if ($Mobile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "mobile=$Mobile"
+        $modifiers++
+    }
+
+    if ($Email -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "email=$Email"
+        $modifiers++
+    }
+
+    if ($Sip -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "sip=$Sip"
+        $modifiers++
+    }
+
+    if ($Organization -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "organization=$Organization"
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoExternalDirectorySearchLocation -ExternalDirectorySearchLocationID $ExternalDirectorySearchLocationID
+}
+
+function Remove-AcanoExternalDirectorySearchLocation {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$ExternalDirectorySearchLocationID
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID" -DELETE
+
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoTenants {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
