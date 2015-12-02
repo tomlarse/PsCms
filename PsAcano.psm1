@@ -5793,6 +5793,58 @@ function Get-AcanoXmppServer {
     return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp
 }
 
+function Set-AcanoXmppServer {
+     Param (
+        [parameter(Mandatory=$false)]
+        [string]$UniqueName,
+        [parameter(Mandatory=$false)]
+        [string]$Domain,
+        [parameter(Mandatory=$false)]
+        [string]$SharedSecret,
+        [parameter(Mandatory=$false)]
+        [string]$ServerAddressOverride
+    )
+
+    $nodeLocation = "/api/v1/system/configuration/xmpp"
+    $data = ""
+    $modifiers = 0
+
+    if ($UniqueName -ne "") {
+        $data += "uniqueName=$UniqueName"
+        $modifiers++
+    }
+
+    if ($Domain -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "domain=$Domain"
+        $modifiers++
+    }
+
+    if ($SharedSecret -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "sharedSecret=$SharedSecret"
+        $modifiers++
+    }
+
+    if ($ServerAddressOverride -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "serverAddressOverride=$ServerAddressOverride"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoXmppServer
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoSystemDiagnostics {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
