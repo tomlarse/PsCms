@@ -1,4 +1,4 @@
-﻿# .ExternalHelp PsAcano.psm1-Help.xml
+# .ExternalHelp PsAcano.psm1-Help.xml
 function Open-AcanoAPI {
     Param (
         [parameter(ParameterSetName="GET",Mandatory=$true,Position=1)]
@@ -75,71 +75,950 @@ function New-AcanoSession {
 function Get-AcanocoSpaces {
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallLegProfileFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/coSpaces"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($CallLegProfileFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"        } else {            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).coSpaces.coSpace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanocoSpace {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CallLegProfileFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/coSpaces"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($CallLegProfileFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"
+        } else {
+            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).coSpaces.coSpace
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanocoSpace {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction New-AcanocoSpace {    Param (
-        [parameter(Mandatory=$true)]        [string]$Name,
-        [parameter(Mandatory=$true)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$SecondaryUri="",        [parameter(Mandatory=$false)]        [string]$CallId="",        [parameter(Mandatory=$false)]        [string]$CdrTag="",        [parameter(Mandatory=$false)]        [string]$Passcode="",        [parameter(Mandatory=$false)]        [string]$DefaultLayout="",        [parameter(Mandatory=$false)]        [string]$TenantID="",        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [string]$CallProfile="",        [parameter(Mandatory=$false)]        [string]$CallBrandingProfile="",        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$RequireCallID="true",        [parameter(Mandatory=$false)]        [string]$Secret=""    )    $nodeLocation = "/api/v1/coSpaces"    $data = "name=$Name&uri=$Uri"    if ($SecondaryUri -ne "") {        $data += "&secondaryUri=$SecondaryUri"    }    if ($CallID -ne "") {        $data += "&callId=$CallId"    }    if ($CdrTag -ne "") {        $data += "&cdrTag=$CdrTag"    }    if ($Passcode -ne "") {        $data += "&passcode=$Passcode"    }    if ($DefaultLayout -ne "") {        $data += "&defaultLayout=$DefaultLayout"    }    if ($TenantID -ne "") {        $data += "&tenantId=$TenantID"    }    if ($CallLegProfile -ne "") {        $data += "&callLegProfile=$CallLegProfile"    }    if ($CallProfile -ne "") {        $data += "&callProfile=$CallProfile"    }    if ($CallBrandingProfile -ne "") {        $data += "&callBrandingProfile=$CallBrandingProfile"    }    if ($Secret -ne "") {        $data += "&secret=$Secret"    }    $data += "&requireCallID="+$RequireCallID    [string]$NewcoSpaceID = Open-AcanoAPI $nodeLocation -POST -Data $data    Get-AcanocoSpace -coSpaceID $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Set-AcanocoSpace {    Param (
+        [string]$coSpaceID
+    )
+
+    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function New-AcanocoSpace {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Name,
+        [parameter(Mandatory=$true)]
+        [string]$Uri,
+        [parameter(Mandatory=$false)]
+        [string]$SecondaryUri="",
+        [parameter(Mandatory=$false)]
+        [string]$CallId="",
+        [parameter(Mandatory=$false)]
+        [string]$CdrTag="",
+        [parameter(Mandatory=$false)]
+        [string]$Passcode="",
+        [parameter(Mandatory=$false)]
+        [string]$DefaultLayout="",
+        [parameter(Mandatory=$false)]
+        [string]$TenantID="",
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile="",
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile="",
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile="",
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RequireCallID="true",
+        [parameter(Mandatory=$false)]
+        [string]$Secret=""
+    )
+
+    $nodeLocation = "/api/v1/coSpaces"
+    $data = "name=$Name&uri=$Uri"
+
+    if ($SecondaryUri -ne "") {
+        $data += "&secondaryUri=$SecondaryUri"
+    }
+
+    if ($CallID -ne "") {
+        $data += "&callId=$CallId"
+    }
+
+    if ($CdrTag -ne "") {
+        $data += "&cdrTag=$CdrTag"
+    }
+
+    if ($Passcode -ne "") {
+        $data += "&passcode=$Passcode"
+    }
+
+    if ($DefaultLayout -ne "") {
+        $data += "&defaultLayout=$DefaultLayout"
+    }
+
+    if ($TenantID -ne "") {
+        $data += "&tenantId=$TenantID"
+    }
+
+    if ($CallLegProfile -ne "") {
+        $data += "&callLegProfile=$CallLegProfile"
+    }
+
+    if ($CallProfile -ne "") {
+        $data += "&callProfile=$CallProfile"
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        $data += "&callBrandingProfile=$CallBrandingProfile"
+    }
+
+    if ($Secret -ne "") {
+        $data += "&secret=$Secret"
+    }
+
+    $data += "&requireCallID="+$RequireCallID
+
+    [string]$NewcoSpaceID = Open-AcanoAPI $nodeLocation -POST -Data $data
+
+    Get-AcanocoSpace -coSpaceID $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Set-AcanocoSpace {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$coSpaceId,
-        [parameter(Mandatory=$false)]        [string]$Name,
-        [parameter(Mandatory=$false)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$SecondaryUri="",        [parameter(Mandatory=$false)]        [string]$CallId="",        [parameter(Mandatory=$false)]        [string]$CdrTag="",        [parameter(Mandatory=$false)]        [string]$Passcode="",        [parameter(Mandatory=$false)]        [string]$DefaultLayout="",        [parameter(Mandatory=$false)]        [string]$TenantId="",        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [string]$CallProfile="",        [parameter(Mandatory=$false)]        [string]$CallBrandingProfile="",        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$RequireCallId,        [parameter(Mandatory=$false)]        [string]$Secret="",        [parameter(Mandatory=$false)]        [switch]$RegenerateSecret    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId"    $data = ""    $modifiers = 0        if ($Name -ne "") {        if ($modifiers -gt 0) {            $data += "&name=$Name"        } else {            $data += "name=$Name"            $modifiers++        }    }        if ($Uri -ne "") {        if ($modifiers -gt 0) {            $data += "&uri=$Uri"        } else {            $data += "uri=$Uri"            $modifiers++        }    }        if ($SecondaryURI -ne "") {        if ($modifiers -gt 0) {            $data += "&secondaryUri=$SecondaryUri"        } else {            $data += "secondaryUri=$SecondaryUri"            $modifiers++        }    }    if ($CallID -ne "") {        if ($modifiers -gt 0) {            $data += "&callID=$CallId"        } else {            $data += "callID=$CallId"            $modifiers++        }    }    if ($CdrTag -ne "") {        if ($modifiers -gt 0) {            $data += "&cdrTag=$CdrTag"        } else {            $data += "cdrTag=$CdrTag"            $modifiers++        }    }    if ($Passcode -ne "") {        if ($modifiers -gt 0) {            $data += "&passcode=$Passcode"        } else {            $data += "passcode=$Passcode"            $modifiers++        }    }    if ($DefaultLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&defaultLayout=$DefaultLayout"        } else {            $data += "defaultLayout=$DefaultLayout"            $modifiers++        }    }    if ($TenantID -ne "") {        if ($modifiers -gt 0) {            $data += "&tenantId=$TenantId"        } else {            $data += "tenantId=$TenantId"            $modifiers++        }    }    if ($CallLegProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&callLegProfile=$CallLegProfile"        } else {            $data += "callLegProfile=$CallLegProfile"            $modifiers++        }    }    if ($CallProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&callProfile=$CallProfile"        } else {            $data += "callProfile=$CallProfile"            $modifiers++        }    }    if ($CallBrandingProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&callBrandingProfile=$CallBrandingProfile"        } else {            $data += "callBrandingProfile=$CallBrandingProfile"            $modifiers++        }    }    if ($Secret -ne "") {        if ($modifiers -gt 0) {            $data += "&secret=$Secret"        } else {            $data += "secret=$Secret"            $modifiers++        }    }    if ($RequireCallID -ne "") {        if ($modifiers -gt 0) {            $data += "&requireCallID="+$RequireCallId        } else {            $data += "requireCallID="+$RequireCallId            $modifiers++        }    }    if ($modifiers -gt 0) {        $data += "&regenerateSecret="+$RegenerateSecret.toString()    } else {        $data += "regenerateSecret="+$RegenerateSecret.toString()    }    Open-AcanoAPI $nodeLocation -PUT -Data $data}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Remove-AcanocoSpace {    Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceID    )    ### Add confirmation    Open-AcanoAPI "api/v1/coSpaces/$coSpaceID" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanocoSpaceMembers {    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [parameter(Mandatory=$false)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [string]$Uri,
+        [parameter(Mandatory=$false)]
+        [string]$SecondaryUri="",
+        [parameter(Mandatory=$false)]
+        [string]$CallId="",
+        [parameter(Mandatory=$false)]
+        [string]$CdrTag="",
+        [parameter(Mandatory=$false)]
+        [string]$Passcode="",
+        [parameter(Mandatory=$false)]
+        [string]$DefaultLayout="",
+        [parameter(Mandatory=$false)]
+        [string]$TenantId="",
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile="",
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile="",
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile="",
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RequireCallId,
+        [parameter(Mandatory=$false)]
+        [string]$Secret="",
+        [parameter(Mandatory=$false)]
+        [switch]$RegenerateSecret
+    )
+
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId"
+    $data = ""
+    $modifiers = 0
+    
+    if ($Name -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&name=$Name"
+        } else {
+            $data += "name=$Name"
+            $modifiers++
+        }
+    }
+    
+    if ($Uri -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&uri=$Uri"
+        } else {
+            $data += "uri=$Uri"
+            $modifiers++
+        }
+    }
+    
+    if ($SecondaryURI -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&secondaryUri=$SecondaryUri"
+        } else {
+            $data += "secondaryUri=$SecondaryUri"
+            $modifiers++
+        }
+    }
+
+    if ($CallID -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callID=$CallId"
+        } else {
+            $data += "callID=$CallId"
+            $modifiers++
+        }
+    }
+
+    if ($CdrTag -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&cdrTag=$CdrTag"
+        } else {
+            $data += "cdrTag=$CdrTag"
+            $modifiers++
+        }
+    }
+
+    if ($Passcode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&passcode=$Passcode"
+        } else {
+            $data += "passcode=$Passcode"
+            $modifiers++
+        }
+    }
+
+    if ($DefaultLayout -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&defaultLayout=$DefaultLayout"
+        } else {
+            $data += "defaultLayout=$DefaultLayout"
+            $modifiers++
+        }
+    }
+
+    if ($TenantID -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&tenantId=$TenantId"
+        } else {
+            $data += "tenantId=$TenantId"
+            $modifiers++
+        }
+    }
+
+    if ($CallLegProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callLegProfile=$CallLegProfile"
+        } else {
+            $data += "callLegProfile=$CallLegProfile"
+            $modifiers++
+        }
+    }
+
+    if ($CallProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callProfile=$CallProfile"
+        } else {
+            $data += "callProfile=$CallProfile"
+            $modifiers++
+        }
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callBrandingProfile=$CallBrandingProfile"
+        } else {
+            $data += "callBrandingProfile=$CallBrandingProfile"
+            $modifiers++
+        }
+    }
+
+    if ($Secret -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&secret=$Secret"
+        } else {
+            $data += "secret=$Secret"
+            $modifiers++
+        }
+    }
+
+    if ($RequireCallID -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&requireCallID="+$RequireCallId
+        } else {
+            $data += "requireCallID="+$RequireCallId
+            $modifiers++
+        }
+    }
+
+    if ($modifiers -gt 0) {
+        $data += "&regenerateSecret="+$RegenerateSecret.toString()
+    } else {
+        $data += "regenerateSecret="+$RegenerateSecret.toString()
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Remove-AcanocoSpace {
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]        [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]        [string]$coSpaceID,
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallLegProfileFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )        $nodeLocation = "api/v1/coSpaces/$coSpaceID/coSpaceUsers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($CallLegProfileFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"        } else {            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).coSpaceUsers.coSpaceUser | fl}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanocoSpaceMember {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceUserID,        [parameter(Mandatory=$true)]
-        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$coSpaceUserID").coSpaceUser}# .ExternalHelp PsAcano.psm1-Help.xmlfunction New-AcanocoSpaceMember {    Param (
-        [parameter(Mandatory=$true)]        [string]$coSpaceId,
-        [parameter(Mandatory=$true)]        [string]$UserJid,        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanDestroy,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanAddRemoveMember,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanChangeName,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanChangeUri,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanChangeCallId,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanChangePasscode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanPostMessage,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanRemoveSelf,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanDeleteAllMessages    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers"    $data = "userJid=$UserJid"    if ($CallLegProfile -ne "") {        $data += "&callLegProfile=$CallLegProfile"    }    if ($CanDestroy -ne "") {        $data += "&canDestroy="+$CanDestroy    }    if ($CanAddRemoveMember -ne "") {        $data += "&canAddRemoveMember="+$CanAddRemoveMember    }    if ($CanChangeName -ne "") {        $data += "&canChangeName="+$CanChangeName    }    if ($CanChangeUri -ne "") {        $data += "&canChangeUri="+$CanChangeUri    }    if ($CanChangeCallId -ne "") {        $data += "&canChangeCallId="+$CanChangeCallId    }    if ($CanChangePasscode -ne "") {        $data += "&canChangePasscode="+$CanChangePasscode    }    if ($CanPostMessage -ne "") {        $data += "&canPostMessage="+$CanPostMessage    }    if ($CanRemoveSelf -ne "") {        $data += "&canRemoveSelf="+$CanRemoveSelf    }    if ($CanDeleteAllMessages -ne "") {        $data += "&canDeleteAllMessages="+$CanDeleteAllMessages    }    [string]$NewcoSpaceMemberID = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Set-AcanocoSpaceMember {    Param (
+        [string]$coSpaceID
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "api/v1/coSpaces/$coSpaceID" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanocoSpaceMembers {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]
+        [string]$coSpaceID,
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CallLegProfileFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    
+    $nodeLocation = "api/v1/coSpaces/$coSpaceID/coSpaceUsers"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($CallLegProfileFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"
+        } else {
+            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).coSpaceUsers.coSpaceUser | fl
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanocoSpaceMember {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$coSpaceUserID,
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceID
+    )
+
+    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$coSpaceUserID").coSpaceUser
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function New-AcanocoSpaceMember {
+    Param (
         [parameter(Mandatory=$true)]
         [string]$coSpaceId,
         [parameter(Mandatory=$true)]
-        [string]$UserId,        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanDestroy,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanAddRemoveMember,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanChangeName,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanChangeUri,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanChangeCallId,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanChangePasscode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanPostMessage,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanRemoveSelf,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]
-        [string]$CanDeleteAllMessages    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId"    $data = ""    $modifiers = 0        if ($CallLegProfile -ne "") {            $data += "callLegProfile=$CallLegProfile"            $modifiers++    }    if ($CanDestroy -ne "") {        if ($modifiers -gt 0) {            $data += "&canDestroy="+$CanDestroy        } else {            $data += "canDestroy="+$CanDestroy            $modifiers++        }    }    if ($CanAddRemoveMember -ne "") {        if ($modifiers -gt 0) {            $data += "&canAddRemoveMember="+$CanAddRemoveMember        } else {            $data += "canAddRemoveMember="+$CanAddRemoveMember            $modifiers++        }    }    if ($CanChangeName -ne "") {        if ($modifiers -gt 0) {            $data += "&canChangeName="+$CanChangeName        } else {            $data += "canChangeName="+$CanChangeName            $modifiers++        }    }    if ($CanChangeUri -ne "") {        if ($modifiers -gt 0) {            $data += "&canChangeUri="+$CanChangeUri        } else {            $data += "canChangeUri="+$CanChangeUri            $modifiers++        }    }    if ($CanChangeCallId -ne "") {        if ($modifiers -gt 0) {            $data += "&canChangeCallId="+$CanChangeCallId        } else {            $data += "canChangeCallId="+$CanChangeCallId            $modifiers++        }    }    if ($CanChangePasscode -ne "") {        if ($modifiers -gt 0) {            $data += "&canChangePasscode="+$CanChangePasscode        } else {            $data += "canChangePasscode="+$CanChangePasscode            $modifiers++        }    }    if ($CanPostMessage -ne "") {        if ($modifiers -gt 0) {            $data += "&canPostMessage="+$CanPostMessage        } else {            $data += "canPostMessage="+$CanPostMessage            $modifiers++        }    }    if ($CanRemoveSelf -ne "") {        if ($modifiers -gt 0) {            $data += "&canRemoveSelf="+$CanRemoveSelf        } else {            $data += "canRemoveSelf="+$CanRemoveSelf            $modifiers++        }    }    if ($CanDeleteAllMessages -ne "") {        if ($modifiers -gt 0) {            $data += "&canDeleteAllMessages="+$CanDeleteAllMessages        } else {            $data += "canDeleteAllMessages="+$CanDeleteAllMessages            $modifiers++        }    }    Open-AcanoAPI $nodeLocation -PUT -Data $data}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Remove-AcanocoSpaceMember {    Param (
-        [parameter(Mandatory=$true)]
-        [string]$coSpaceId,        [parameter(Mandatory=$true)]
-        [string]$UserId    )    ### Add confirmation    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction New-AcanocoSpaceMessage {    Param (
-        [parameter(Mandatory=$true)]        [string]$coSpaceId,
-        [parameter(Mandatory=$true)]        [string]$Message,        [parameter(Mandatory=$true)]        [string]$From    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/messages"    $data = "message=$Message"    $data += "&from=$From"    [string]$NewcoSpaceMessage = Open-AcanoAPI $nodeLocation -POST -Data $data        ## NOT IMPLEMENTED YET Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMessage.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Remove-AcanocoSpaceMessages {    Param (
-        [parameter(Mandatory=$true)]        [string]$coSpaceId,        [parameter(Mandatory=$false)]        [string]$MinAge,
-        [parameter(Mandatory=$false)]        [string]$MaxAge    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/messages"    $data = ""    $modifiers = 0    if ($MinAge -ne "") {        $data += "minAge=$MinAge"        $modifiers++    }    if ($MaxAge -ne "") {        if ($modifiers -gt 0) {            $data += "&maxAge=$MaxAge"        } else {            $data += "maxAge=$MaxAge"            $modifiers++        }    }    ### Add confirmation    if ($modifiers -gt 0) {        Open-AcanoAPI $nodeLocation -DELETE -Data $data    } else {        Open-AcanoAPI $nodeLocation -DELETE    }    }# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanocoSpaceAccessMethods {    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+        [string]$UserJid,
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile="",
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanDestroy,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanAddRemoveMember,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanChangeName,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanChangeUri,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanChangeCallId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanChangePasscode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanPostMessage,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanRemoveSelf,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanDeleteAllMessages
+    )
+
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers"
+    $data = "userJid=$UserJid"
+
+    if ($CallLegProfile -ne "") {
+        $data += "&callLegProfile=$CallLegProfile"
+    }
+
+    if ($CanDestroy -ne "") {
+        $data += "&canDestroy="+$CanDestroy
+    }
+
+    if ($CanAddRemoveMember -ne "") {
+        $data += "&canAddRemoveMember="+$CanAddRemoveMember
+    }
+
+    if ($CanChangeName -ne "") {
+        $data += "&canChangeName="+$CanChangeName
+    }
+
+    if ($CanChangeUri -ne "") {
+        $data += "&canChangeUri="+$CanChangeUri
+    }
+
+    if ($CanChangeCallId -ne "") {
+        $data += "&canChangeCallId="+$CanChangeCallId
+    }
+
+    if ($CanChangePasscode -ne "") {
+        $data += "&canChangePasscode="+$CanChangePasscode
+    }
+
+    if ($CanPostMessage -ne "") {
+        $data += "&canPostMessage="+$CanPostMessage
+    }
+
+    if ($CanRemoveSelf -ne "") {
+        $data += "&canRemoveSelf="+$CanRemoveSelf
+    }
+
+    if ($CanDeleteAllMessages -ne "") {
+        $data += "&canDeleteAllMessages="+$CanDeleteAllMessages
+    }
+
+    [string]$NewcoSpaceMemberID = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Set-AcanocoSpaceMember {
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]        [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]        [string]$coSpaceID,
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallLegProfileFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )        $nodeLocation = "api/v1/coSpaces/$coSpaceID/accessMethods"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($CallLegProfileFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"        } else {            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).accessMethods.accessMethod | fl}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanocoSpaceAccessMethod {    Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceAccessMethodID,        [parameter(Mandatory=$true)]
-        [string]$coSpaceID    )    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/accessMethods/$coSpaceAccessMethodID").accessMethod}# .ExternalHelp PsAcano.psm1-Help.xmlfunction New-AcanocoSpaceAccessMethod {    Param (
-        [parameter(Mandatory=$true)]        [string]$coSpaceId,
-        [parameter(Mandatory=$false)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$CallId="",        [parameter(Mandatory=$false)]        [string]$Passcode="",        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [string]$Secret="",        [parameter(Mandatory=$false)]        [string]$Scope=""    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"    $modifiers = 0    if ($Uri -ne "") {        $nodeLocation += "?uri=$Uri"        $modifiers++    }    if ($CallId -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callId=$CallId"        } else {            $nodeLocation += "?callId=$CallId"            $modifiers++        }    }    if ($Passcode -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&passcode=$Passcode"        } else {            $nodeLocation += "?passcode=$Passcode"            $modifiers++        }    }    if ($CallLegProfile -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfile=$CallLegProfile"        } else {            $nodeLocation += "?callLegProfile=$CallLegProfile"            $modifiers++        }    }    if ($Secret -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&secret=$Secret"        } else {            $nodeLocation += "?secret=$Secret"            $modifiers++        }    }    if ($Scope -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&scope=$Scope"        } else {            $nodeLocation += "?scope=$Scope"            $modifiers++        }    }    [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanocoSpaceAccessMethod -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") -coSpaceID $coSpaceId ## For some reason POST returns a string starting and ending with a whitespace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Set-AcanocoSpaceAccessMethod {    Param (
-        [parameter(Mandatory=$true)]        [string]$coSpaceId,
-        [parameter(Mandatory=$false)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$CallId="",        [parameter(Mandatory=$false)]        [string]$Passcode="",        [parameter(Mandatory=$false)]        [string]$CallLegProfile="",        [parameter(Mandatory=$false)]        [string]$Secret="",        [parameter(Mandatory=$false)]        [switch]$RegenerateSecret,        [parameter(Mandatory=$false)]        [string]$Scope=""    )    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"    $modifiers = 0    if ($Uri -ne "") {        $nodeLocation += "?uri=$Uri"        $modifiers++    }    if ($CallId -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callId=$CallId"        } else {            $nodeLocation += "?callId=$CallId"            $modifiers++        }    }    if ($Passcode -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&passcode=$Passcode"        } else {            $nodeLocation += "?passcode=$Passcode"            $modifiers++        }    }    if ($CallLegProfile -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callLegProfile=$CallLegProfile"        } else {            $nodeLocation += "?callLegProfile=$CallLegProfile"            $modifiers++        }    }    if ($Secret -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&secret=$Secret"        } else {            $nodeLocation += "?secret=$Secret"            $modifiers++        }    }    if ($RegenerateSecret) {        if ($modifiers -gt 0) {            $nodeLocation += "&regenerateSecret=true"        } else {            $nodeLocation += "?regenerateSecret=true"            $modifiers++        }    }    if ($Scope -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&scope=$Scope"        } else {            $nodeLocation += "?scope=$Scope"            $modifiers++        }    }    [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanocoSpaceAccessMethod -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") -coSpaceID $coSpaceId ## For some reason POST returns a string starting and ending with a whitespace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Remove-AcanocoSpaceAccessMethod {    Param (
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,        [parameter(Mandatory=$true)]
-        [string]$AccessMethodId    )    ### Add confirmation    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/accessMethods/$AccessMethodId" -DELETE}function Start-AcanocoSpaceCallDiagnosticsGeneration {    Param (
+        [string]$coSpaceId,
+        [parameter(Mandatory=$true)]
+        [string]$UserId,
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile="",
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanDestroy,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanAddRemoveMember,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanChangeName,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanChangeUri,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanChangeCallId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanChangePasscode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanPostMessage,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanRemoveSelf,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanDeleteAllMessages
+    )
+
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId"
+    $data = ""
+    $modifiers = 0
+    
+    if ($CallLegProfile -ne "") {
+            $data += "callLegProfile=$CallLegProfile"
+            $modifiers++
+    }
+
+    if ($CanDestroy -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canDestroy="+$CanDestroy
+        } else {
+            $data += "canDestroy="+$CanDestroy
+            $modifiers++
+        }
+    }
+
+    if ($CanAddRemoveMember -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canAddRemoveMember="+$CanAddRemoveMember
+        } else {
+            $data += "canAddRemoveMember="+$CanAddRemoveMember
+            $modifiers++
+        }
+    }
+
+    if ($CanChangeName -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canChangeName="+$CanChangeName
+        } else {
+            $data += "canChangeName="+$CanChangeName
+            $modifiers++
+        }
+    }
+
+    if ($CanChangeUri -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canChangeUri="+$CanChangeUri
+        } else {
+            $data += "canChangeUri="+$CanChangeUri
+            $modifiers++
+        }
+    }
+
+    if ($CanChangeCallId -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canChangeCallId="+$CanChangeCallId
+        } else {
+            $data += "canChangeCallId="+$CanChangeCallId
+            $modifiers++
+        }
+    }
+
+    if ($CanChangePasscode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canChangePasscode="+$CanChangePasscode
+        } else {
+            $data += "canChangePasscode="+$CanChangePasscode
+            $modifiers++
+        }
+    }
+
+    if ($CanPostMessage -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canPostMessage="+$CanPostMessage
+        } else {
+            $data += "canPostMessage="+$CanPostMessage
+            $modifiers++
+        }
+    }
+
+    if ($CanRemoveSelf -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canRemoveSelf="+$CanRemoveSelf
+        } else {
+            $data += "canRemoveSelf="+$CanRemoveSelf
+            $modifiers++
+        }
+    }
+
+    if ($CanDeleteAllMessages -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canDeleteAllMessages="+$CanDeleteAllMessages
+        } else {
+            $data += "canDeleteAllMessages="+$CanDeleteAllMessages
+            $modifiers++
+        }
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Remove-AcanocoSpaceMember {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceId,
+        [parameter(Mandatory=$true)]
+        [string]$UserId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function New-AcanocoSpaceMessage {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceId,
+        [parameter(Mandatory=$true)]
+        [string]$Message,
+        [parameter(Mandatory=$true)]
+        [string]$From
+    )
+
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/messages"
+    $data = "message=$Message"
+    $data += "&from=$From"
+
+    [string]$NewcoSpaceMessage = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    ## NOT IMPLEMENTED YET Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMessage.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Remove-AcanocoSpaceMessages {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceId,
+        [parameter(Mandatory=$false)]
+        [string]$MinAge,
+        [parameter(Mandatory=$false)]
+        [string]$MaxAge
+    )
+
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/messages"
+    $data = ""
+    $modifiers = 0
+
+    if ($MinAge -ne "") {
+        $data += "minAge=$MinAge"
+        $modifiers++
+    }
+
+    if ($MaxAge -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&maxAge=$MaxAge"
+        } else {
+            $data += "maxAge=$MaxAge"
+            $modifiers++
+        }
+    }
+
+    ### Add confirmation
+
+    if ($modifiers -gt 0) {
+        Open-AcanoAPI $nodeLocation -DELETE -Data $data
+    } else {
+        Open-AcanoAPI $nodeLocation -DELETE
+    }    
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanocoSpaceAccessMethods {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]
+        [string]$coSpaceID,
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CallLegProfileFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    
+    $nodeLocation = "api/v1/coSpaces/$coSpaceID/accessMethods"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($CallLegProfileFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"
+        } else {
+            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).accessMethods.accessMethod | fl
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanocoSpaceAccessMethod {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceId    )    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/diagnostics" -POST}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoOutboundDialPlanRules {
+        [string]$coSpaceAccessMethodID,
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceID
+    )
+
+    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/accessMethods/$coSpaceAccessMethodID").accessMethod
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function New-AcanocoSpaceAccessMethod {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceId,
+        [parameter(Mandatory=$false)]
+        [string]$Uri,
+        [parameter(Mandatory=$false)]
+        [string]$CallId="",
+        [parameter(Mandatory=$false)]
+        [string]$Passcode="",
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile="",
+        [parameter(Mandatory=$false)]
+        [string]$Secret="",
+        [parameter(Mandatory=$false)]
+        [string]$Scope=""
+    )
+
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"
+
+    $modifiers = 0
+
+    if ($Uri -ne "") {
+        $nodeLocation += "?uri=$Uri"
+        $modifiers++
+    }
+
+    if ($CallId -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callId=$CallId"
+        } else {
+            $nodeLocation += "?callId=$CallId"
+            $modifiers++
+        }
+    }
+
+    if ($Passcode -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&passcode=$Passcode"
+        } else {
+            $nodeLocation += "?passcode=$Passcode"
+            $modifiers++
+        }
+    }
+
+    if ($CallLegProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callLegProfile=$CallLegProfile"
+        } else {
+            $nodeLocation += "?callLegProfile=$CallLegProfile"
+            $modifiers++
+        }
+    }
+
+    if ($Secret -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&secret=$Secret"
+        } else {
+            $nodeLocation += "?secret=$Secret"
+            $modifiers++
+        }
+    }
+
+    if ($Scope -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&scope=$Scope"
+        } else {
+            $nodeLocation += "?scope=$Scope"
+            $modifiers++
+        }
+    }
+
+    [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanocoSpaceAccessMethod -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") -coSpaceID $coSpaceId ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Set-AcanocoSpaceAccessMethod {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceId,
+        [parameter(Mandatory=$false)]
+        [string]$Uri,
+        [parameter(Mandatory=$false)]
+        [string]$CallId="",
+        [parameter(Mandatory=$false)]
+        [string]$Passcode="",
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile="",
+        [parameter(Mandatory=$false)]
+        [string]$Secret="",
+        [parameter(Mandatory=$false)]
+        [switch]$RegenerateSecret,
+        [parameter(Mandatory=$false)]
+        [string]$Scope=""
+    )
+
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"
+
+    $modifiers = 0
+
+    if ($Uri -ne "") {
+        $nodeLocation += "?uri=$Uri"
+        $modifiers++
+    }
+
+    if ($CallId -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callId=$CallId"
+        } else {
+            $nodeLocation += "?callId=$CallId"
+            $modifiers++
+        }
+    }
+
+    if ($Passcode -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&passcode=$Passcode"
+        } else {
+            $nodeLocation += "?passcode=$Passcode"
+            $modifiers++
+        }
+    }
+
+    if ($CallLegProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callLegProfile=$CallLegProfile"
+        } else {
+            $nodeLocation += "?callLegProfile=$CallLegProfile"
+            $modifiers++
+        }
+    }
+
+    if ($Secret -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&secret=$Secret"
+        } else {
+            $nodeLocation += "?secret=$Secret"
+            $modifiers++
+        }
+    }
+
+    if ($RegenerateSecret) {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&regenerateSecret=true"
+        } else {
+            $nodeLocation += "?regenerateSecret=true"
+            $modifiers++
+        }
+    }
+
+    if ($Scope -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&scope=$Scope"
+        } else {
+            $nodeLocation += "?scope=$Scope"
+            $modifiers++
+        }
+    }
+
+    [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanocoSpaceAccessMethod -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") -coSpaceID $coSpaceId ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Remove-AcanocoSpaceAccessMethod {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceId,
+        [parameter(Mandatory=$true)]
+        [string]$AccessMethodId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/accessMethods/$AccessMethodId" -DELETE
+
+}
+
+function Start-AcanocoSpaceCallDiagnosticsGeneration {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$coSpaceId
+    )
+
+    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/diagnostics" -POST
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoOutboundDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -175,52 +1054,516 @@ function Get-AcanocoSpaces {
     return (Open-AcanoAPI $nodeLocation).outboundDialPlanRules.outboundDialPlanRule
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoOutboundDialPlanRule {
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoOutboundDialPlanRule {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$OutboundDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/outboundDialPlanRules/$OutboundDialPlanRuleID").outboundDialPlanRule}function New-AcanoOutboundDialPlanRule {    [CmdletBinding(DefaultParameterSetName="NoCallbridgeId")]
+        [string]$OutboundDialPlanRuleID
+    )
+
+    return (Open-AcanoAPI "api/v1/outboundDialPlanRules/$OutboundDialPlanRuleID").outboundDialPlanRule
+}
+
+function New-AcanoOutboundDialPlanRule {
+    [CmdletBinding(DefaultParameterSetName="NoCallbridgeId")]
     Param (
         [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$true)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$true)]        [string]$Domain,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$LocalContactDomain,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$LocalFromDomain,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$SipProxy,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [ValidateSet("sip","lync","avaya")]        [string]$TrunkType,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$Priority,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [ValidateSet("stop","continue")]        [string]$FailureAction,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [ValidateSet("auto","encrypted","unencrypted")]        [string]$SipControlEncryption,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$true)]        [ValidateSet("global","callbridge")]        [string]$Scope,
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$CallBridgeId,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$Tenant,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [ValidateSet("default","traversal")]        [string]$CallRouting    )    $nodeLocation = "/api/v1/outboundDialPlanRules"    $data = "domain=$Domain"    if ($LocalContactDomain -ne "") {        $data += "&localContactDomain=$LocalContactDomain"    }    if ($LocalFromDomain -ne "") {        $data += "&localFromDomain=$LocalFromDomain"    }    if ($SipProxy -ne "") {        $data += "&sipProxy=$SipProxy"    }    if ($TrunkType -ne "") {        $data += "&trunkType=$TrunkType"    }    if ($Priority -ne "") {        $data += "&priority=$Priority"    }        if ($FailureAction -ne "") {        $data += "&failureAction=$FailureAction"    }    if ($SipControlEncryption -ne "") {        $data += "&sipControlEncryption=$SipControlEncryption"    }    if ($Scope -ne "") {        $data += "&scope=$Scope"    }    if ($CallBridgeId -ne "") {        $data += "&callBridge=$CallBridgeId"    }    if ($Tenant -ne "") {        $data += "&tenant=$Tenant"    }    if ($CallRouting -ne "") {        $data += "&callRouting=$CallRouting"    }    [string]$NewOutboundDialPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoOutboundDialPlanRule -OutboundDialPlanRuleID $NewOutboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoOutboundDialPlanRule {    [CmdletBinding(DefaultParameterSetName="NoCallbridgeId")]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$true)]
+        [string]$Domain,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$LocalContactDomain,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$LocalFromDomain,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$SipProxy,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [ValidateSet("sip","lync","avaya")]
+        [string]$TrunkType,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$Priority,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [ValidateSet("stop","continue")]
+        [string]$FailureAction,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [ValidateSet("auto","encrypted","unencrypted")]
+        [string]$SipControlEncryption,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$true)]
+        [ValidateSet("global","callbridge")]
+        [string]$Scope,
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$CallBridgeId,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [ValidateSet("default","traversal")]
+        [string]$CallRouting
+    )
+
+    $nodeLocation = "/api/v1/outboundDialPlanRules"
+    $data = "domain=$Domain"
+
+    if ($LocalContactDomain -ne "") {
+        $data += "&localContactDomain=$LocalContactDomain"
+    }
+
+    if ($LocalFromDomain -ne "") {
+        $data += "&localFromDomain=$LocalFromDomain"
+    }
+
+    if ($SipProxy -ne "") {
+        $data += "&sipProxy=$SipProxy"
+    }
+
+    if ($TrunkType -ne "") {
+        $data += "&trunkType=$TrunkType"
+    }
+
+    if ($Priority -ne "") {
+        $data += "&priority=$Priority"
+    }
+    
+    if ($FailureAction -ne "") {
+        $data += "&failureAction=$FailureAction"
+    }
+
+    if ($SipControlEncryption -ne "") {
+        $data += "&sipControlEncryption=$SipControlEncryption"
+    }
+
+    if ($Scope -ne "") {
+        $data += "&scope=$Scope"
+    }
+
+    if ($CallBridgeId -ne "") {
+        $data += "&callBridge=$CallBridgeId"
+    }
+
+    if ($Tenant -ne "") {
+        $data += "&tenant=$Tenant"
+    }
+
+    if ($CallRouting -ne "") {
+        $data += "&callRouting=$CallRouting"
+    }
+
+    [string]$NewOutboundDialPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoOutboundDialPlanRule -OutboundDialPlanRuleID $NewOutboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoOutboundDialPlanRule {
+    [CmdletBinding(DefaultParameterSetName="NoCallbridgeId")]
     Param (
         [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$true,Position=1)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$true,Position=1)]        [string]$OutboundDialPlanRuleId,
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$true,Position=1)]
+        [string]$OutboundDialPlanRuleId,
         [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$Domain,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$LocalContactDomain,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$LocalFromDomain,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$SipProxy,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [ValidateSet("sip","lync","avaya")]        [string]$TrunkType,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$Priority,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [ValidateSet("stop","continue")]        [string]$FailureAction,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [ValidateSet("auto","encrypted","unencrypted")]        [string]$SipControlEncryption,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$true)]        [ValidateSet("global","callbridge")]        [string]$Scope,
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$CallBridgeId,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [string]$Tenant,        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
-        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]        [ValidateSet("default","traversal")]        [string]$CallRouting    )    $nodeLocation = "/api/v1/outboundDialPlanRules/$OutboundDialPlanRuleId"    $modifiers = 0    $data = ""    if ($Domain -ne "") {        if ($modifiers -gt 0) {            $data += "&domain=$Domain"        } else {            $data += "domain=$Domain"            $modifiers++        }    }    if ($LocalContactDomain -ne "") {        if ($modifiers -gt 0) {            $data += "&localContactDomain=$LocalContactDomain"        } else {            $data += "localContactDomain=$LocalContactDomain"            $modifiers++        }    }    if ($LocalFromDomain -ne "") {        if ($modifiers -gt 0) {            $data += "&localFromDomain=$LocalFromDomain"        } else {            $data += "localFromDomain=$LocalFromDomain"            $modifiers++        }    }    if ($SipProxy -ne "") {        if ($modifiers -gt 0) {            $data += "&sipProxy=$SipProxy"        } else {            $data += "sipProxy=$SipProxy"            $modifiers++        }    }    if ($TrunkType -ne "") {        if ($modifiers -gt 0) {            $data += "&trunkType=$TrunkType"        } else {            $data += "trunkType=$TrunkType"            $modifiers++        }    }    if ($Priority -ne "") {        if ($modifiers -gt 0) {            $data += "&priority=$Priority"        } else {            $data += "priority=$Priority"            $modifiers++        }    }        if ($FailureAction -ne "") {        if ($modifiers -gt 0) {            $data += "&failureAction=$FailureAction"        } else {            $data += "failureAction=$FailureAction"            $modifiers++        }    }    if ($SipControlEncryption -ne "") {        if ($modifiers -gt 0) {            $data += "&sipControlEncryption=$SipControlEncryption"        } else {            $data += "sipControlEncryption=$SipControlEncryption"            $modifiers++        }    }    if ($Scope -ne "") {        if ($modifiers -gt 0) {            $data += "&scope=$Scope"        } else {            $data += "scope=$Scope"            $modifiers++        }    }    if ($CallBridgeId -ne "") {        if ($modifiers -gt 0) {            $data += "&callBridge=$CallBridgeId"        } else {            $data += "callBridge=$CallBridgeId"            $modifiers++        }    }    if ($Tenant -ne "") {        if ($modifiers -gt 0) {            $data += "&tenant=$Tenant"        } else {            $data += "tenant=$Tenant"            $modifiers++        }    }    if ($CallRouting -ne "") {        if ($modifiers -gt 0) {            $data += "&callRouting=$CallRouting"        } else {            $data += "&callRouting=$CallRouting"            $modifiers++        }    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoOutboundDialPlanRule $OutboundDialPlanRuleId}function Remove-AcanoOutboundDialPlanRule {    Param (
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$Domain,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$LocalContactDomain,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$LocalFromDomain,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$SipProxy,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [ValidateSet("sip","lync","avaya")]
+        [string]$TrunkType,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$Priority,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [ValidateSet("stop","continue")]
+        [string]$FailureAction,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [ValidateSet("auto","encrypted","unencrypted")]
+        [string]$SipControlEncryption,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$true)]
+        [ValidateSet("global","callbridge")]
+        [string]$Scope,
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$CallBridgeId,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
+        [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
+        [ValidateSet("default","traversal")]
+        [string]$CallRouting
+    )
+
+    $nodeLocation = "/api/v1/outboundDialPlanRules/$OutboundDialPlanRuleId"
+    $modifiers = 0
+    $data = ""
+
+    if ($Domain -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&domain=$Domain"
+        } else {
+            $data += "domain=$Domain"
+            $modifiers++
+        }
+    }
+
+    if ($LocalContactDomain -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&localContactDomain=$LocalContactDomain"
+        } else {
+            $data += "localContactDomain=$LocalContactDomain"
+            $modifiers++
+        }
+    }
+
+    if ($LocalFromDomain -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&localFromDomain=$LocalFromDomain"
+        } else {
+            $data += "localFromDomain=$LocalFromDomain"
+            $modifiers++
+        }
+    }
+
+    if ($SipProxy -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&sipProxy=$SipProxy"
+        } else {
+            $data += "sipProxy=$SipProxy"
+            $modifiers++
+        }
+    }
+
+    if ($TrunkType -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&trunkType=$TrunkType"
+        } else {
+            $data += "trunkType=$TrunkType"
+            $modifiers++
+        }
+    }
+
+    if ($Priority -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&priority=$Priority"
+        } else {
+            $data += "priority=$Priority"
+            $modifiers++
+        }
+    }
+    
+    if ($FailureAction -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&failureAction=$FailureAction"
+        } else {
+            $data += "failureAction=$FailureAction"
+            $modifiers++
+        }
+    }
+
+    if ($SipControlEncryption -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&sipControlEncryption=$SipControlEncryption"
+        } else {
+            $data += "sipControlEncryption=$SipControlEncryption"
+            $modifiers++
+        }
+    }
+
+    if ($Scope -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&scope=$Scope"
+        } else {
+            $data += "scope=$Scope"
+            $modifiers++
+        }
+    }
+
+    if ($CallBridgeId -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callBridge=$CallBridgeId"
+        } else {
+            $data += "callBridge=$CallBridgeId"
+            $modifiers++
+        }
+    }
+
+    if ($Tenant -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&tenant=$Tenant"
+        } else {
+            $data += "tenant=$Tenant"
+            $modifiers++
+        }
+    }
+
+    if ($CallRouting -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callRouting=$CallRouting"
+        } else {
+            $data += "&callRouting=$CallRouting"
+            $modifiers++
+        }
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoOutboundDialPlanRule $OutboundDialPlanRuleId
+}
+
+function Remove-AcanoOutboundDialPlanRule {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$OutboundDialPlanRuleId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/outboundDialPlanRules/$OutboundDialPlanRuleId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoInboundDialPlanRules {
+        [string]$OutboundDialPlanRuleId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/outboundDialPlanRules/$OutboundDialPlanRuleId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoInboundDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/inboundDialPlanRules"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).inboundDialPlanRules.inboundDialPlanRule}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoInboundDialPlanRule {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/inboundDialPlanRules"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).inboundDialPlanRules.inboundDialPlanRule
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoInboundDialPlanRule {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$InboundDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/inboundDialPlanRules/$InboundDialPlanRuleID").inboundDialPlanRule}function New-AcanoInboundDialPlanRule {    Param (
-        [parameter(Mandatory=$true)]        [string]$Domain,        [parameter(Mandatory=$false)]        [string]$Priority,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveToUsers,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveTocoSpaces,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveToIvrs,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveToLyncConferences,        [parameter(Mandatory=$false)]        [string]$Tenant    )    $nodeLocation = "/api/v1/inboundDialPlanRules"    $data = "domain=$Domain"    if ($Priority -ne "") {        $data += "&priority=$Priority"    }        if ($ResolveToUsers -ne "") {        $data += "&resolveToUsers="+$ResolveToUsers    }    if ($ResolveTocoSpaces -ne "") {        $data += "&resolveTocoSpaces="+$ResolveTocoSpaces    }    if ($ResolveToIvrs -ne "") {        $data += "&resolveToIvrs="+$ResolveToIvrs    }    if ($ResolveToLyncConferences -ne "") {        $data += "&resolveToLyncConferences="+$ResolveToLyncConferences    }    if ($Tenant -ne "") {        $data += "&tenant=$Tenant"    }    [string]$NewInboundDialPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoInboundDialPlanRule -InboundDialPlanRuleID $NewInboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoInboundDialPlanRule {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$InboundDialPlanRuleId,
-        [parameter(Mandatory=$false)]        [string]$Domain,        [parameter(Mandatory=$false)]        [string]$Priority,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveToUsers,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveTocoSpaces,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveToIvrs,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveToLyncConferences,        [parameter(Mandatory=$false)]        [string]$Tenant    )    $nodeLocation = "/api/v1/inboundDialPlanRules/$InboundDialPlanRuleId"    $data = ""    $modifiers = 0    if ($Domain -ne "") {        if ($modifiers -gt 0) {            $data += "&domain=$Domain"        } else {            $data += "domain=$Domain"            $modifiers++        }    }    if ($Priority -ne "") {        if ($modifiers -gt 0) {            $data += "&priority=$Priority"        } else {            $data += "priority=$Priority"            $modifiers++        }    }        if ($ResolveToUsers -ne "") {        if ($modifiers -gt 0) {            $data += "&resolveToUsers="+$ResolveToUsers        } else {            $data += "resolveToUsers="+$ResolveToUsers            $modifiers++        }    }    if ($ResolveTocoSpaces -ne "") {        if ($modifiers -gt 0) {            $data += "&resolveTocoSpaces="+$ResolveTocoSpaces        } else {            $data += "resolveTocoSpaces="+$ResolveTocoSpaces            $modifiers++        }    }    if ($ResolveToIvrs -ne "") {        if ($modifiers -gt 0) {            $data += "&resolveToIvrs="+$ResolveToIvrs        } else {            $data += "resolveToIvrs="+$ResolveToIvrs            $modifiers++        }    }    if ($ResolveToLyncConferences -ne "") {        if ($modifiers -gt 0) {            $data += "&resolveToLyncConferences="+$ResolveToLyncConferences        } else {            $data += "resolveToLyncConferences="+$ResolveToLyncConferences            $modifiers++        }    }    if ($Tenant -ne "") {        if ($modifiers -gt 0) {            $data += "&tenant=$Tenant"        } else {            $data += "tenant=$Tenant"            $modifiers++        }    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoInboundDialPlanRule -InboundDialPlanRuleID $InboundDialPlanRuleId}function Remove-AcanoInboundDialPlanRule {    Param (
+        [string]$InboundDialPlanRuleID
+    )
+
+    return (Open-AcanoAPI "api/v1/inboundDialPlanRules/$InboundDialPlanRuleID").inboundDialPlanRule
+
+}
+
+function New-AcanoInboundDialPlanRule {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Domain,
+        [parameter(Mandatory=$false)]
+        [string]$Priority,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveToUsers,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveTocoSpaces,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveToIvrs,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveToLyncConferences,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant
+    )
+
+
+    $nodeLocation = "/api/v1/inboundDialPlanRules"
+    $data = "domain=$Domain"
+
+    if ($Priority -ne "") {
+        $data += "&priority=$Priority"
+    }
+    
+    if ($ResolveToUsers -ne "") {
+        $data += "&resolveToUsers="+$ResolveToUsers
+    }
+
+    if ($ResolveTocoSpaces -ne "") {
+        $data += "&resolveTocoSpaces="+$ResolveTocoSpaces
+    }
+
+    if ($ResolveToIvrs -ne "") {
+        $data += "&resolveToIvrs="+$ResolveToIvrs
+    }
+
+    if ($ResolveToLyncConferences -ne "") {
+        $data += "&resolveToLyncConferences="+$ResolveToLyncConferences
+    }
+
+    if ($Tenant -ne "") {
+        $data += "&tenant=$Tenant"
+    }
+
+    [string]$NewInboundDialPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoInboundDialPlanRule -InboundDialPlanRuleID $NewInboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoInboundDialPlanRule {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$InboundDialPlanRuleId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/inboundDialPlanRules/$InboundDialPlanRuleId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallForwardingDialPlanRules {
+        [string]$InboundDialPlanRuleId,
+        [parameter(Mandatory=$false)]
+        [string]$Domain,
+        [parameter(Mandatory=$false)]
+        [string]$Priority,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveToUsers,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveTocoSpaces,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveToIvrs,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveToLyncConferences,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant
+    )
+
+
+    $nodeLocation = "/api/v1/inboundDialPlanRules/$InboundDialPlanRuleId"
+    $data = ""
+    $modifiers = 0
+
+    if ($Domain -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&domain=$Domain"
+        } else {
+            $data += "domain=$Domain"
+            $modifiers++
+        }
+    }
+
+    if ($Priority -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&priority=$Priority"
+        } else {
+            $data += "priority=$Priority"
+            $modifiers++
+        }
+    }
+    
+    if ($ResolveToUsers -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&resolveToUsers="+$ResolveToUsers
+        } else {
+            $data += "resolveToUsers="+$ResolveToUsers
+            $modifiers++
+        }
+    }
+
+    if ($ResolveTocoSpaces -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&resolveTocoSpaces="+$ResolveTocoSpaces
+        } else {
+            $data += "resolveTocoSpaces="+$ResolveTocoSpaces
+            $modifiers++
+        }
+    }
+
+    if ($ResolveToIvrs -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&resolveToIvrs="+$ResolveToIvrs
+        } else {
+            $data += "resolveToIvrs="+$ResolveToIvrs
+            $modifiers++
+        }
+    }
+
+    if ($ResolveToLyncConferences -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&resolveToLyncConferences="+$ResolveToLyncConferences
+        } else {
+            $data += "resolveToLyncConferences="+$ResolveToLyncConferences
+            $modifiers++
+        }
+    }
+
+    if ($Tenant -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&tenant=$Tenant"
+        } else {
+            $data += "tenant=$Tenant"
+            $modifiers++
+        }
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoInboundDialPlanRule -InboundDialPlanRuleID $InboundDialPlanRuleId
+}
+
+function Remove-AcanoInboundDialPlanRule {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$InboundDialPlanRuleId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/inboundDialPlanRules/$InboundDialPlanRuleId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallForwardingDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -256,137 +1599,3480 @@ function Get-AcanocoSpaces {
     return (Open-AcanoAPI $nodeLocation).forwardingDialPlanRules.forwardingDialPlanRule
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallForwardingDialPlanRule {
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallForwardingDialPlanRule {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ForwardingDialPlanRuleID    )    return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleID").forwardingDialPlanRule}function New-AcanoCallForwardingDialPlanRule {    Param (
-        [parameter(Mandatory=$true)]        [string]$MatchPattern,        [parameter(Mandatory=$false)]        [string]$DestinationDomain,        [parameter(Mandatory=$false)]        [ValidateSet("forward","reject")]        [string]$Action,        [parameter(Mandatory=$false)]        [ValidateSet("regenerate","preserve")]        [string]$CallerIdMode,
-        [parameter(Mandatory=$false)]        [string]$Priority,        [parameter(Mandatory=$false)]        [string]$Tenant    )    $nodeLocation = "/api/v1/forwardingDialPlanRules"    $data = "matchPattern=$MatchPattern"    if ($DestinationDomain -ne "") {        $data += "&destinationDomain=$DestinationDomain"    }    if ($Action -ne "") {        $data += "&action=$Action"    }        if ($CallerIdMode -ne "") {        $data += "&callerIdMode=$CallerIdMode"    }    if ($Priority -ne "") {        $data += "&priority=$Priority"    }    if ($Tenant -ne "") {        $data += "&tenant=$Tenant"    }    [string]$NewCallForwardingPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoCallForwardingDialPlanRule -ForwardingDialPlanRuleID $NewCallForwardingPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoCallForwardingDialPlanRule {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$ForwardingDialPlanRuleId,        [parameter(Mandatory=$false)]        [string]$MatchPattern,        [parameter(Mandatory=$false)]        [string]$DestinationDomain,        [parameter(Mandatory=$false)]        [ValidateSet("forward","reject")]        [string]$Action,        [parameter(Mandatory=$false)]        [ValidateSet("regenerate","preserve")]        [string]$CallerIdMode,
-        [parameter(Mandatory=$false)]        [string]$Priority,        [parameter(Mandatory=$false)]        [string]$Tenant    )    $nodeLocation = "/api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleId"    $modifiers = 0    $data = ""    if ($MatchPattern -ne "") {        if ($modifiers -gt 0) {            $data += "&matchPattern=$MatchPattern"        } else {            $data += "matchPattern=$MatchPattern"            $modifiers++        }    }    if ($DestinationDomain -ne "") {        if ($modifiers -gt 0) {            $data += "&destinationDomain=$DestinationDomain"        } else {            $data += "destinationDomain=$DestinationDomain"            $modifiers++        }    }    if ($Action -ne "") {        if ($modifiers -gt 0) {            $data += "&action=$Action"        } else {            $data += "action=$Action"            $modifiers++        }    }    if ($CallerIdMode -ne "") {        if ($modifiers -gt 0) {            $data += "&callerIdMode=$CallerIdMode"        } else {            $data += "callerIdMode=$CallerIdMode"            $modifiers++        }    }    if ($Priority -ne "") {        if ($modifiers -gt 0) {            $data += "&priority=$Priority"        } else {            $data += "priority=$Priority"            $modifiers++        }    }    if ($Tenant -ne "") {        if ($modifiers -gt 0) {            $data += "&tenant=$Tenant"        } else {            $data += "tenant=$Tenant"            $modifiers++        }    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoCallForwardingDialPlanRule $ForwardingDialPlanRuleId}function Remove-AcanoCallForwardingDialPlanRule {    Param (
+        [string]$ForwardingDialPlanRuleID
+    )
+
+    return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleID").forwardingDialPlanRule
+}
+
+function New-AcanoCallForwardingDialPlanRule {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$MatchPattern,
+        [parameter(Mandatory=$false)]
+        [string]$DestinationDomain,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("forward","reject")]
+        [string]$Action,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("regenerate","preserve")]
+        [string]$CallerIdMode,
+        [parameter(Mandatory=$false)]
+        [string]$Priority,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant
+    )
+
+    $nodeLocation = "/api/v1/forwardingDialPlanRules"
+    $data = "matchPattern=$MatchPattern"
+
+    if ($DestinationDomain -ne "") {
+        $data += "&destinationDomain=$DestinationDomain"
+    }
+
+    if ($Action -ne "") {
+        $data += "&action=$Action"
+    }
+    
+    if ($CallerIdMode -ne "") {
+        $data += "&callerIdMode=$CallerIdMode"
+    }
+
+    if ($Priority -ne "") {
+        $data += "&priority=$Priority"
+    }
+
+    if ($Tenant -ne "") {
+        $data += "&tenant=$Tenant"
+    }
+
+    [string]$NewCallForwardingPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoCallForwardingDialPlanRule -ForwardingDialPlanRuleID $NewCallForwardingPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoCallForwardingDialPlanRule {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ForwardingDialPlanRuleId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCalls {
+        [string]$ForwardingDialPlanRuleId,
+        [parameter(Mandatory=$false)]
+        [string]$MatchPattern,
+        [parameter(Mandatory=$false)]
+        [string]$DestinationDomain,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("forward","reject")]
+        [string]$Action,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("regenerate","preserve")]
+        [string]$CallerIdMode,
+        [parameter(Mandatory=$false)]
+        [string]$Priority,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant
+    )
+
+    $nodeLocation = "/api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleId"
+    $modifiers = 0
+    $data = ""
+
+    if ($MatchPattern -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&matchPattern=$MatchPattern"
+        } else {
+            $data += "matchPattern=$MatchPattern"
+            $modifiers++
+        }
+    }
+
+    if ($DestinationDomain -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&destinationDomain=$DestinationDomain"
+        } else {
+            $data += "destinationDomain=$DestinationDomain"
+            $modifiers++
+        }
+    }
+
+    if ($Action -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&action=$Action"
+        } else {
+            $data += "action=$Action"
+            $modifiers++
+        }
+    }
+
+    if ($CallerIdMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callerIdMode=$CallerIdMode"
+        } else {
+            $data += "callerIdMode=$CallerIdMode"
+            $modifiers++
+        }
+    }
+
+    if ($Priority -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&priority=$Priority"
+        } else {
+            $data += "priority=$Priority"
+            $modifiers++
+        }
+    }
+
+    if ($Tenant -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&tenant=$Tenant"
+        } else {
+            $data += "tenant=$Tenant"
+            $modifiers++
+        }
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoCallForwardingDialPlanRule $ForwardingDialPlanRuleId
+}
+
+function Remove-AcanoCallForwardingDialPlanRule {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$ForwardingDialPlanRuleId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCalls {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$coSpaceFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/calls"    $modifiers = 0    if ($coSpaceFilter -ne "") {        $nodeLocation += "?coSpacefilter=$coSpaceFilter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).calls.call}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCall {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$coSpaceFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/calls"
+    $modifiers = 0
+
+    if ($coSpaceFilter -ne "") {
+        $nodeLocation += "?coSpacefilter=$coSpaceFilter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).calls.call
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCall {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallID    )    return (Open-AcanoAPI "api/v1/calls/$CallID").call}function New-AcanoCall {    Param (
-        [parameter(Mandatory=$true)]        [string]$coSpaceId,        [parameter(Mandatory=$false)]        [string]$Name,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$Locked    )    $nodeLocation = "/api/v1/calls"    $data = "coSpace=$coSpaceId"    if ($Name -ne "") {        $data += "&name=$Name"    }    if ($Locked -ne "") {        $data += "&locked=$Locked"    }    [string]$NewCallId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoCall -CallID $NewCallId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Remove-AcanoCall {    Param (
+        [string]$CallID
+    )
+
+    return (Open-AcanoAPI "api/v1/calls/$CallID").call
+
+}
+
+function New-AcanoCall {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceId,
+        [parameter(Mandatory=$false)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$Locked
+    )
+
+    $nodeLocation = "/api/v1/calls"
+    $data = "coSpace=$coSpaceId"
+
+    if ($Name -ne "") {
+        $data += "&name=$Name"
+    }
+
+    if ($Locked -ne "") {
+        $data += "&locked=$Locked"
+    }
+
+    [string]$NewCallId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoCall -CallID $NewCallId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Remove-AcanoCall {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/calls/$CallId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallProfiles {
-    [CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callProfiles"    $modifiers = 0    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callProfiles.callProfile}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallProfile {    Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CallProfileID    )    return (Open-AcanoAPI "api/v1/callProfiles/$CallProfileID").callProfile | fl}function New-AcanoCallProfile {    Param (
-        [parameter(Mandatory=$false)]        [string]$ParticipantLimit,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MessageBoardEnabled,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$Locked    )    $nodeLocation = "/api/v1/callProfiles"    $data = ""    $modifiers = 0    if ($ParticipantLimit -ne "") {        $data += "participantLimit=$ParticipantLimit"        $modifiers++    }    if ($MessageBoardEnabled -ne "") {        if ($modifiers -gt 0) {            $data += "&messageBoardEnabled=$MessageBoardEnabled"        } else {            $data += "messageBoardEnabled=$MessageBoardEnabled"        }        $modifiers++    }    if ($Locked -ne "") {        if ($modifiers -gt 0) {            $data += "&locked=$Locked"        } else {            $data += "locked=$Locked"        }        $modifiers++    }    [string]$NewCallProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoCallProfile -CallProfileID $NewCallProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoCallProfile {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$CallProfileId,
-        [parameter(Mandatory=$false)]        [string]$ParticipantLimit,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MessageBoardEnabled,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$Locked    )    $nodeLocation = "/api/v1/callProfiles/$CallProfileId"    $data = ""    $modifiers = 0    if ($ParticipantLimit -ne "") {        $data += "participantLimit=$ParticipantLimit"        $modifiers++    }    if ($MessageBoardEnabled -ne "") {        if ($modifiers -gt 0) {            $data += "&messageBoardEnabled=$MessageBoardEnabled"        } else {            $data += "messageBoardEnabled=$MessageBoardEnabled"        }        $modifiers++    }    if ($Locked -ne "") {        if ($modifiers -gt 0) {            $data += "&locked=$Locked"        } else {            $data += "locked=$Locked"        }        $modifiers++    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoCallProfile -CallProfileID $CallProfileId}function Remove-AcanoCallProfile {    Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CallProfileId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/callProfiles/$CallProfileId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallLegs {
+        [string]$CallId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/calls/$CallId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$ParticipantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("true","false","")]        [string]$OwnerIDSet="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("All","packetLoss","excessiveJitter","highRoundTripTime")]        [string[]]$Alarms,        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallID="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    if ($CallID -ne "") {        $nodeLocation = "api/v1/calls/$CallID/callLegs"    } else {        $nodeLocation = "api/v1/callLegs"    }    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($ParticipantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&participantFilter=$ParticipantFilter"        } else {            $nodeLocation += "?participantFilter=$ParticipantFilter"            $modifiers++        }    }    if ($OwnerIdSet -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&ownerIdSet=$OwnerIdSet"        } else {            $nodeLocation += "?ownerIdSet=$OwnerIdSet"            $modifiers++        }    }    if ($Alarms -ne $null) {        if ($Alarms.Contains("All") -or $Alarms.Contains("all")) {            $Alarmstring = "all"        } else {            $i = 0            foreach ($Alarm in $Alarms) {                if ($i -eq 0) {                    $Alarmstring = $Alarm                } else {                    $Alarmstring += "|$Alarm"                }                $i++            }        }        if ($modifiers -gt 0) {            $nodeLocation += "&alarms=$Alarmstring"        } else {            $nodeLocation += "?alarms=$Alarmstring"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callLegs.callLeg}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallLeg {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/callProfiles"
+    $modifiers = 0
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).callProfiles.callProfile
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegID    )    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID").callLeg}function New-AcanoCallLeg {    Param (
-        [parameter(Mandatory=$true)]        [string]$CallId,        [parameter(Mandatory=$true)]        [string]$RemoteParty,        [parameter(Mandatory=$false)]        [string]$Bandwidth,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$Confirmation,        [parameter(Mandatory=$false)]        [string]$OwnerId,        [parameter(Mandatory=$false)]        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]        [string]$ChosenLayout,        [parameter(Mandatory=$false)]        [string]$CallLegProfileId,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$NeedsActivation,        [parameter(Mandatory=$false)]        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]        [string]$DefaultLayout,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$EndCallAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MuteOthersAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$VideoMuteOthersAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MuteSelfAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$VideoMuteSelfAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ChangeLayoutAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ParticipantLabels,        [parameter(Mandatory=$false)]        [ValidateSet("dualStream","singleStream")]        [string]$PresentationDisplayMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$PresentationContributionAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$PresentationViewingAllowed,        [parameter(Mandatory=$false)]        [string]$JoinToneParticipantThreshold,        [parameter(Mandatory=$false)]        [string]$LeaveToneParticipantThreshold,        [parameter(Mandatory=$false)]        [ValidateSet("auto","disabled")]        [string]$VideoMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$RxAudioMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TxAudioMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$RxVideoMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TxVideoMute,        [parameter(Mandatory=$false)]        [ValidateSet("optional","required","prohibited")]        [string]$SipMediaEncryption,        [parameter(Mandatory=$false)]        [string]$AudioPacketSizeMs,        [parameter(Mandatory=$false)]        [ValidateSet("deactivate","disconnect","remainActivated")]        [string]$DeactivationMode,        [parameter(Mandatory=$false)]        [string]$DeactivationModeTime,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TelepresenceCallsAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$SipPresentationChannelEnabled,        [parameter(Mandatory=$false)]        [ValidateSet("serverOnly","serverAndClient")]        [string]$BfcpMode    )    $nodeLocation = "/api/v1/calls/$CallId/callLegs"    $data = "remoteParty=$RemoteParty"    if ($Bandwidth -ne "") {        $data += "&bandwidth=$Bandwidth"    }    if ($Confirmation -ne "") {        $data += "&confirmation=$Confirmation"    }    if ($OwnerId -ne "") {        $data += "&ownerId=$OwnerId"    }    if ($ChosenLayout -ne "") {        $data += "&chosenLayout=$ChosenLayout"    }    if ($CallLegProfileId -ne "") {        $data += "&callLegProfile=$CallLegProfileId"    }    if ($NeedsActivation -ne "") {        $data += "&needsActivation=$NeedsActivation"    }    if ($DefaultLayout -ne "") {        $data += "&defaultLayout=$DefaultLayout"    }    if ($EndCallAllowed -ne "") {        $data += "&endCallAllowed=$EndCallAllowed"    }    if ($MuteOthersAllowed -ne "") {        $data += "&muteOthersAllowed=$MuteOthersAllowed"    }    if ($VideoMuteOthersAllowed -ne "") {        $data += "&videoMuteOthersAllowed=$VideoMuteOthersAllowed"    }    if ($MuteSelfAllowed -ne "") {        $data += "&muteSelfAllowed=$MuteSelfAllowed"    }    if ($VideoMuteSelfAllowed -ne "") {        $data += "&videoMuteSelfAllowed=$VideoMuteSelfAllowed"    }    if ($ChangeLayoutAllowed -ne "") {        $data += "&changeLayoutAllowed=$ChangeLayoutAllowed"    }    if ($ParticipantLabels -ne "") {        $data += "&participantLabels=$ParticipantLabels"    }    if ($PresentationDisplayMode -ne "") {        $data += "&presentationDisplayMode=$PresentationDisplayMode"    }    if ($PresentationContributionAllowed -ne "") {        $data += "&presentationContributionAllowed=$PresentationContributionAllowed"    }    if ($PresentationViewingAllowed -ne "") {        $data += "&presentationViewingAllowed=$PresentationViewingAllowed"    }    if ($JoinToneParticipantThreshold -ne "") {        $data += "&joinToneParticipantThreshold=$JoinToneParticipantThreshold"    }    if ($LeaveToneParticipantThreshold -ne "") {        $data += "&leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"    }    if ($VideoMode -ne "") {        $data += "&videoMode=$VideoMode"    }    if ($RxAudioMute -ne "") {        $data += "&rxAudioMute=$RxAudioMute"    }    if ($TxAudioMute -ne "") {        $data += "&txAudioMute=$TxAudioMute"    }    if ($RxVideoMute -ne "") {        $data += "&rxVideoMute=$RxVideoMute"    }    if ($TxVideoMute -ne "") {        $data += "&txVideoMute=$TxVideoMute"    }    if ($SipMediaEncryption -ne "") {        $data += "&sipMediaEncryption=$SipMediaEncryption"    }    if ($AudioPacketSizeMs -ne "") {        $data += "&audioPacketSizeMs=$AudioPacketSizeMs"    }    if ($DeactivationMode -ne "") {        $data += "&deactivationMode=$DeactivationMode"    }    if ($DeactivationModeTime -ne "") {        $data += "&deactivationModeTime=$DeactivationModeTime"    }    if ($TelepresenceCallsAllowed -ne "") {        $data += "&telepresenceCallsAllowed=$TelepresenceCallsAllowed"    }    if ($SipPresentationChannelEnabled -ne "") {        $data += "&sipPresentationChannelEnabled=$SipPresentationChannelEnabled"    }    if ($BfcpMode -ne "") {        $data += "&bfcpMode=$BfcpMode"    }    [string]$NewCallLegId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoCallLeg -CallLegID $NewCallLegId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoCallLeg {    Param (
-        [parameter(Mandatory=$true)]        [string]$CallLegId,        [parameter(Mandatory=$false)]        [string]$OwnerId,        [parameter(Mandatory=$false)]        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]        [string]$ChosenLayout,        [parameter(Mandatory=$false)]        [string]$CallLegProfileId,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$NeedsActivation,        [parameter(Mandatory=$false)]        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]        [string]$DefaultLayout,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$EndCallAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MuteOthersAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$VideoMuteOthersAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MuteSelfAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$VideoMuteSelfAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ChangeLayoutAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ParticipantLabels,        [parameter(Mandatory=$false)]        [ValidateSet("dualStream","singleStream")]        [string]$PresentationDisplayMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$PresentationContributionAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$PresentationViewingAllowed,        [parameter(Mandatory=$false)]        [string]$JoinToneParticipantThreshold,        [parameter(Mandatory=$false)]        [string]$LeaveToneParticipantThreshold,        [parameter(Mandatory=$false)]        [ValidateSet("auto","disabled")]        [string]$VideoMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$RxAudioMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TxAudioMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$RxVideoMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TxVideoMute,        [parameter(Mandatory=$false)]        [ValidateSet("optional","required","prohibited")]        [string]$SipMediaEncryption,        [parameter(Mandatory=$false)]        [string]$AudioPacketSizeMs,        [parameter(Mandatory=$false)]        [ValidateSet("deactivate","disconnect","remainActivated")]        [string]$DeactivationMode,        [parameter(Mandatory=$false)]        [string]$DeactivationModeTime,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TelepresenceCallsAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$SipPresentationChannelEnabled,        [parameter(Mandatory=$false)]        [ValidateSet("serverOnly","serverAndClient")]        [string]$BfcpMode    )    $nodeLocation = "/api/v1/callLegs/$CallLegId"    $data = ""    $modifiers = 0    if ($OwnerId -ne "") {        $data += "&ownerId=$OwnerId"        $modifiers++    }    if ($ChosenLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&chosenLayout=$ChosenLayout"        } else {            $data += "chosenLayout=$ChosenLayout"        }        $modifiers++    }    if ($CallLegProfileId -ne "") {        if ($modifiers -gt 0) {            $data += "&callLegProfile=$CallLegProfileId"        } else {            $data += "callLegProfile=$CallLegProfileId"        }        $modifiers++    }    if ($NeedsActivation -ne "") {        if ($modifiers -gt 0) {            $data += "&needsActivation=$NeedsActivation"        } else {            $data += "needsActivation=$NeedsActivation"        }        $modifiers++    }    if ($DefaultLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&defaultLayout=$DefaultLayout"        } else {            $data += "defaultLayout=$DefaultLayout"        }        $modifiers++    }    if ($EndCallAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&endCallAllowed=$EndCallAllowed"        } else {            $data += "endCallAllowed=$EndCallAllowed"        }        $modifiers++    }    if ($MuteOthersAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&muteOthersAllowed=$MuteOthersAllowed"        } else {            $data += "muteOthersAllowed=$MuteOthersAllowed"        }        $modifiers++    }    if ($VideoMuteOthersAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&videoMuteOthersAllowed=$VideoMuteOthersAllowed"        } else {            $data += "videoMuteOthersAllowed=$VideoMuteOthersAllowed"        }        $modifiers++    }    if ($MuteSelfAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&muteSelfAllowed=$MuteSelfAllowed"        } else {            $data += "muteSelfAllowed=$MuteSelfAllowed"        }        $modifiers++    }    if ($VideoMuteSelfAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&videoMuteSelfAllowed=$VideoMuteSelfAllowed"        } else {            $data += "videoMuteSelfAllowed=$VideoMuteSelfAllowed"        }        $modifiers++    }    if ($ChangeLayoutAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&changeLayoutAllowed=$ChangeLayoutAllowed"        } else {            $data += "changeLayoutAllowed=$ChangeLayoutAllowed"        }        $modifiers++    }    if ($ParticipantLabels -ne "") {        if ($modifiers -gt 0) {            $data += "&participantLabels=$ParticipantLabels"        } else {            $data += "participantLabels=$ParticipantLabels"        }        $modifiers++    }    if ($PresentationDisplayMode -ne "") {        if ($modifiers -gt 0) {            $data += "&presentationDisplayMode=$PresentationDisplayMode"        } else {            $data += "presentationDisplayMode=$PresentationDisplayMode"        }        $modifiers++    }    if ($PresentationContributionAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&presentationContributionAllowed=$PresentationContributionAllowed"        } else {            $data += "presentationContributionAllowed=$PresentationContributionAllowed"        }        $modifiers++    }    if ($PresentationViewingAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&presentationViewingAllowed=$PresentationViewingAllowed"        } else {            $data += "presentationViewingAllowed=$PresentationViewingAllowed"        }        $modifiers++    }    if ($JoinToneParticipantThreshold -ne "") {        if ($modifiers -gt 0) {            $data += "&joinToneParticipantThreshold=$JoinToneParticipantThreshold"        } else {            $data += "joinToneParticipantThreshold=$JoinToneParticipantThreshold"        }        $modifiers++    }    if ($LeaveToneParticipantThreshold -ne "") {        if ($modifiers -gt 0) {            $data += "&leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"        } else {            $data += "leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"        }        $modifiers++    }    if ($VideoMode -ne "") {        if ($modifiers -gt 0) {            $data += "&videoMode=$VideoMode"        } else {            $data += "videoMode=$VideoMode"        }        $modifiers++    }    if ($RxAudioMute -ne "") {        if ($modifiers -gt 0) {            $data += "&rxAudioMute=$RxAudioMute"        } else {            $data += "rxAudioMute=$RxAudioMute"        }        $modifiers++    }    if ($TxAudioMute -ne "") {        if ($modifiers -gt 0) {            $data += "&txAudioMute=$TxAudioMute"        } else {            $data += "txAudioMute=$TxAudioMute"        }        $modifiers++    }    if ($RxVideoMute -ne "") {        if ($modifiers -gt 0) {            $data += "&rxVideoMute=$RxVideoMute"        } else {            $data += "rxVideoMute=$RxVideoMute"        }        $modifiers++    }    if ($TxVideoMute -ne "") {        if ($modifiers -gt 0) {            $data += "&txVideoMute=$TxVideoMute"        } else {            $data += "txVideoMute=$TxVideoMute"        }        $modifiers++    }    if ($SipMediaEncryption -ne "") {        if ($modifiers -gt 0) {            $data += "&sipMediaEncryption=$SipMediaEncryption"        } else {            $data += "sipMediaEncryption=$SipMediaEncryption"        }        $modifiers++    }    if ($AudioPacketSizeMs -ne "") {        if ($modifiers -gt 0) {            $data += "&audioPacketSizeMs=$AudioPacketSizeMs"        } else {            $data += "audioPacketSizeMs=$AudioPacketSizeMs"        }        $modifiers++    }    if ($DeactivationMode -ne "") {        if ($modifiers -gt 0) {            $data += "&deactivationMode=$DeactivationMode"        } else {            $data += "deactivationMode=$DeactivationMode"        }        $modifiers++    }    if ($DeactivationModeTime -ne "") {        if ($modifiers -gt 0) {            $data += "&deactivationModeTime=$DeactivationModeTime"        } else {            $data += "deactivationModeTime=$DeactivationModeTime"        }        $modifiers++    }    if ($TelepresenceCallsAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&telepresenceCallsAllowed=$TelepresenceCallsAllowed"        } else {            $data += "telepresenceCallsAllowed=$TelepresenceCallsAllowed"        }        $modifiers++    }    if ($SipPresentationChannelEnabled -ne "") {        if ($modifiers -gt 0) {            $data += "&sipPresentationChannelEnabled=$SipPresentationChannelEnabled"        } else {            $data += "sipPresentationChannelEnabled=$SipPresentationChannelEnabled"        }        $modifiers++    }    if ($BfcpMode -ne "") {        if ($modifiers -gt 0) {            $data += "&bfcpMode=$BfcpMode"        } else {            $data += "bfcpMode=$BfcpMode"        }        $modifiers++    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoCallLeg -CallLegID $CallLegId}function Remove-AcanoCallLeg {    Param (
+        [string]$CallProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/callProfiles/$CallProfileID").callProfile | fl
+
+}
+
+function New-AcanoCallProfile {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$ParticipantLimit,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MessageBoardEnabled,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$Locked
+    )
+
+    $nodeLocation = "/api/v1/callProfiles"
+    $data = ""
+    $modifiers = 0
+
+    if ($ParticipantLimit -ne "") {
+        $data += "participantLimit=$ParticipantLimit"
+        $modifiers++
+    }
+
+    if ($MessageBoardEnabled -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&messageBoardEnabled=$MessageBoardEnabled"
+        } else {
+            $data += "messageBoardEnabled=$MessageBoardEnabled"
+        }
+        $modifiers++
+    }
+
+    if ($Locked -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&locked=$Locked"
+        } else {
+            $data += "locked=$Locked"
+        }
+        $modifiers++
+    }
+
+    [string]$NewCallProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoCallProfile -CallProfileID $NewCallProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoCallProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/callLegs/$CallLegId" -DELETE}function New-AcanoCallLegParticipant {    Param (
-        [parameter(Mandatory=$true)]        [string]$CallId,        [parameter(Mandatory=$true)]        [string]$RemoteParty,        [parameter(Mandatory=$false)]        [string]$Bandwidth,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$Confirmation,        [parameter(Mandatory=$false)]        [string]$OwnerId,        [parameter(Mandatory=$false)]        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]        [string]$ChosenLayout,        [parameter(Mandatory=$false)]        [string]$CallLegProfileId,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$NeedsActivation,        [parameter(Mandatory=$false)]        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]        [string]$DefaultLayout,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$EndCallAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MuteOthersAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$VideoMuteOthersAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MuteSelfAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$VideoMuteSelfAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ChangeLayoutAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ParticipantLabels,        [parameter(Mandatory=$false)]        [ValidateSet("dualStream","singleStream")]        [string]$PresentationDisplayMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$PresentationContributionAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$PresentationViewingAllowed,        [parameter(Mandatory=$false)]        [string]$JoinToneParticipantThreshold,        [parameter(Mandatory=$false)]        [string]$LeaveToneParticipantThreshold,        [parameter(Mandatory=$false)]        [ValidateSet("auto","disabled")]        [string]$VideoMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$RxAudioMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TxAudioMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$RxVideoMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TxVideoMute,        [parameter(Mandatory=$false)]        [ValidateSet("optional","required","prohibited")]        [string]$SipMediaEncryption,        [parameter(Mandatory=$false)]        [string]$AudioPacketSizeMs,        [parameter(Mandatory=$false)]        [ValidateSet("deactivate","disconnect","remainActivated")]        [string]$DeactivationMode,        [parameter(Mandatory=$false)]        [string]$DeactivationModeTime,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TelepresenceCallsAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$SipPresentationChannelEnabled,        [parameter(Mandatory=$false)]        [ValidateSet("serverOnly","serverAndClient")]        [string]$BfcpMode    )    $nodeLocation = "/api/v1/calls/$CallId/participants"    $data = "remoteParty=$RemoteParty"    if ($Bandwidth -ne "") {        $data += "&bandwidth=$Bandwidth"    }    if ($Confirmation -ne "") {        $data += "&confirmation=$Confirmation"    }    if ($OwnerId -ne "") {        $data += "&ownerId=$OwnerId"    }    if ($ChosenLayout -ne "") {        $data += "&chosenLayout=$ChosenLayout"    }    if ($CallLegProfileId -ne "") {        $data += "&callLegProfile=$CallLegProfileId"    }    if ($NeedsActivation -ne "") {        $data += "&needsActivation=$NeedsActivation"    }    if ($DefaultLayout -ne "") {        $data += "&defaultLayout=$DefaultLayout"    }    if ($EndCallAllowed -ne "") {        $data += "&endCallAllowed=$EndCallAllowed"    }    if ($MuteOthersAllowed -ne "") {        $data += "&muteOthersAllowed=$MuteOthersAllowed"    }    if ($VideoMuteOthersAllowed -ne "") {        $data += "&videoMuteOthersAllowed=$VideoMuteOthersAllowed"    }    if ($MuteSelfAllowed -ne "") {        $data += "&muteSelfAllowed=$MuteSelfAllowed"    }    if ($VideoMuteSelfAllowed -ne "") {        $data += "&videoMuteSelfAllowed=$VideoMuteSelfAllowed"    }    if ($ChangeLayoutAllowed -ne "") {        $data += "&changeLayoutAllowed=$ChangeLayoutAllowed"    }    if ($ParticipantLabels -ne "") {        $data += "&participantLabels=$ParticipantLabels"    }    if ($PresentationDisplayMode -ne "") {        $data += "&presentationDisplayMode=$PresentationDisplayMode"    }    if ($PresentationContributionAllowed -ne "") {        $data += "&presentationContributionAllowed=$PresentationContributionAllowed"    }    if ($PresentationViewingAllowed -ne "") {        $data += "&presentationViewingAllowed=$PresentationViewingAllowed"    }    if ($JoinToneParticipantThreshold -ne "") {        $data += "&joinToneParticipantThreshold=$JoinToneParticipantThreshold"    }    if ($LeaveToneParticipantThreshold -ne "") {        $data += "&leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"    }    if ($VideoMode -ne "") {        $data += "&videoMode=$VideoMode"    }    if ($RxAudioMute -ne "") {        $data += "&rxAudioMute=$RxAudioMute"    }    if ($TxAudioMute -ne "") {        $data += "&txAudioMute=$TxAudioMute"    }    if ($RxVideoMute -ne "") {        $data += "&rxVideoMute=$RxVideoMute"    }    if ($TxVideoMute -ne "") {        $data += "&txVideoMute=$TxVideoMute"    }    if ($SipMediaEncryption -ne "") {        $data += "&sipMediaEncryption=$SipMediaEncryption"    }    if ($AudioPacketSizeMs -ne "") {        $data += "&audioPacketSizeMs=$AudioPacketSizeMs"    }    if ($DeactivationMode -ne "") {        $data += "&deactivationMode=$DeactivationMode"    }    if ($DeactivationModeTime -ne "") {        $data += "&deactivationModeTime=$DeactivationModeTime"    }    if ($TelepresenceCallsAllowed -ne "") {        $data += "&telepresenceCallsAllowed=$TelepresenceCallsAllowed"    }    if ($SipPresentationChannelEnabled -ne "") {        $data += "&sipPresentationChannelEnabled=$SipPresentationChannelEnabled"    }    if ($BfcpMode -ne "") {        $data += "&bfcpMode=$BfcpMode"    }    [string]$NewCallLegParticipantId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoParticipant -ParticipantID $NewCallLegParticipantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallLegProfiles {
+        [string]$CallProfileId,
+        [parameter(Mandatory=$false)]
+        [string]$ParticipantLimit,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MessageBoardEnabled,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$Locked
+    )
+
+    $nodeLocation = "/api/v1/callProfiles/$CallProfileId"
+    $data = ""
+    $modifiers = 0
+
+    if ($ParticipantLimit -ne "") {
+        $data += "participantLimit=$ParticipantLimit"
+        $modifiers++
+    }
+
+    if ($MessageBoardEnabled -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&messageBoardEnabled=$MessageBoardEnabled"
+        } else {
+            $data += "messageBoardEnabled=$MessageBoardEnabled"
+        }
+        $modifiers++
+    }
+
+    if ($Locked -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&locked=$Locked"
+        } else {
+            $data += "locked=$Locked"
+        }
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoCallProfile -CallProfileID $CallProfileId
+}
+
+function Remove-AcanoCallProfile {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CallProfileId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/callProfiles/$CallProfileId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallLegs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callLegProfiles"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($UsageFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&usageFilter=$UsageFilter"        } else {            $nodeLocation += "?usageFilter=$UsageFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callLegProfiles.callLegProfile}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallLegProfile {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$ParticipantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("true","false","")]
+        [string]$OwnerIDSet="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("All","packetLoss","excessiveJitter","highRoundTripTime")]
+        [string[]]$Alarms,
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CallID="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    if ($CallID -ne "") {
+        $nodeLocation = "api/v1/calls/$CallID/callLegs"
+    } else {
+        $nodeLocation = "api/v1/callLegs"
+    }
+
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($ParticipantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&participantFilter=$ParticipantFilter"
+        } else {
+            $nodeLocation += "?participantFilter=$ParticipantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($OwnerIdSet -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&ownerIdSet=$OwnerIdSet"
+        } else {
+            $nodeLocation += "?ownerIdSet=$OwnerIdSet"
+            $modifiers++
+        }
+    }
+
+    if ($Alarms -ne $null) {
+        if ($Alarms.Contains("All") -or $Alarms.Contains("all")) {
+            $Alarmstring = "all"
+        } else {
+            $i = 0
+            foreach ($Alarm in $Alarms) {
+                if ($i -eq 0) {
+                    $Alarmstring = $Alarm
+                } else {
+                    $Alarmstring += "|$Alarm"
+                }
+                $i++
+            }
+        }
+
+
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&alarms=$Alarmstring"
+        } else {
+            $nodeLocation += "?alarms=$Alarmstring"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).callLegs.callLeg
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallLeg {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegProfileID    )    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID").callLegProfile}function New-AcanoCallLegProfile {    Param (
-        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$NeedsActivation,        [parameter(Mandatory=$false)]        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]        [string]$DefaultLayout,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$EndCallAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MuteOthersAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$VideoMuteOthersAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MuteSelfAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$VideoMuteSelfAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ChangeLayoutAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ParticipantLabels,        [parameter(Mandatory=$false)]        [ValidateSet("dualStream","singleStream")]        [string]$PresentationDisplayMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$PresentationContributionAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$PresentationViewingAllowed,        [parameter(Mandatory=$false)]        [string]$JoinToneParticipantThreshold,        [parameter(Mandatory=$false)]        [string]$LeaveToneParticipantThreshold,        [parameter(Mandatory=$false)]        [ValidateSet("auto","disabled")]        [string]$VideoMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$RxAudioMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TxAudioMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$RxVideoMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TxVideoMute,        [parameter(Mandatory=$false)]        [ValidateSet("optional","required","prohibited")]        [string]$SipMediaEncryption,        [parameter(Mandatory=$false)]        [string]$AudioPacketSizeMs,        [parameter(Mandatory=$false)]        [ValidateSet("deactivate","disconnect","remainActivated")]        [string]$DeactivationMode,        [parameter(Mandatory=$false)]        [string]$DeactivationModeTime,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TelepresenceCallsAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$SipPresentationChannelEnabled,        [parameter(Mandatory=$false)]        [ValidateSet("serverOnly","serverAndClient")]        [string]$BfcpMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$CallLockAllowed    )    $nodeLocation = "/api/v1/callLegProfiles"    $data = ""    $modifiers = 0    if ($NeedsActivation -ne "") {        if ($modifiers -gt 0) {            $data += "&needsActivation=$NeedsActivation"        } else {            $data += "needsActivation=$NeedsActivation"        }        $modifiers++    }    if ($DefaultLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&defaultLayout=$DefaultLayout"        } else {            $data += "defaultLayout=$DefaultLayout"        }        $modifiers++    }    if ($EndCallAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&endCallAllowed=$EndCallAllowed"        } else {            $data += "endCallAllowed=$EndCallAllowed"        }        $modifiers++    }    if ($MuteOthersAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&muteOthersAllowed=$MuteOthersAllowed"        } else {            $data += "muteOthersAllowed=$MuteOthersAllowed"        }        $modifiers++    }    if ($VideoMuteOthersAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&videoMuteOthersAllowed=$VideoMuteOthersAllowed"        } else {            $data += "videoMuteOthersAllowed=$VideoMuteOthersAllowed"        }        $modifiers++    }    if ($MuteSelfAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&muteSelfAllowed=$MuteSelfAllowed"        } else {            $data += "muteSelfAllowed=$MuteSelfAllowed"        }        $modifiers++    }    if ($VideoMuteSelfAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&videoMuteSelfAllowed=$VideoMuteSelfAllowed"        } else {            $data += "videoMuteSelfAllowed=$VideoMuteSelfAllowed"        }        $modifiers++    }    if ($ChangeLayoutAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&changeLayoutAllowed=$ChangeLayoutAllowed"        } else {            $data += "changeLayoutAllowed=$ChangeLayoutAllowed"        }        $modifiers++    }    if ($ParticipantLabels -ne "") {        if ($modifiers -gt 0) {            $data += "&participantLabels=$ParticipantLabels"        } else {            $data += "participantLabels=$ParticipantLabels"        }        $modifiers++    }    if ($PresentationDisplayMode -ne "") {        if ($modifiers -gt 0) {            $data += "&presentationDisplayMode=$PresentationDisplayMode"        } else {            $data += "presentationDisplayMode=$PresentationDisplayMode"        }        $modifiers++    }    if ($PresentationContributionAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&presentationContributionAllowed=$PresentationContributionAllowed"        } else {            $data += "presentationContributionAllowed=$PresentationContributionAllowed"        }        $modifiers++    }    if ($PresentationViewingAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&presentationViewingAllowed=$PresentationViewingAllowed"        } else {            $data += "presentationViewingAllowed=$PresentationViewingAllowed"        }        $modifiers++    }    if ($JoinToneParticipantThreshold -ne "") {        if ($modifiers -gt 0) {            $data += "&joinToneParticipantThreshold=$JoinToneParticipantThreshold"        } else {            $data += "joinToneParticipantThreshold=$JoinToneParticipantThreshold"        }        $modifiers++    }    if ($LeaveToneParticipantThreshold -ne "") {        if ($modifiers -gt 0) {            $data += "&leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"        } else {            $data += "leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"        }        $modifiers++    }    if ($VideoMode -ne "") {        if ($modifiers -gt 0) {            $data += "&videoMode=$VideoMode"        } else {            $data += "videoMode=$VideoMode"        }        $modifiers++    }    if ($RxAudioMute -ne "") {        if ($modifiers -gt 0) {            $data += "&rxAudioMute=$RxAudioMute"        } else {            $data += "rxAudioMute=$RxAudioMute"        }        $modifiers++    }    if ($TxAudioMute -ne "") {        if ($modifiers -gt 0) {            $data += "&txAudioMute=$TxAudioMute"        } else {            $data += "txAudioMute=$TxAudioMute"        }        $modifiers++    }    if ($RxVideoMute -ne "") {        if ($modifiers -gt 0) {            $data += "&rxVideoMute=$RxVideoMute"        } else {            $data += "rxVideoMute=$RxVideoMute"        }        $modifiers++    }    if ($TxVideoMute -ne "") {        if ($modifiers -gt 0) {            $data += "&txVideoMute=$TxVideoMute"        } else {            $data += "txVideoMute=$TxVideoMute"        }        $modifiers++    }    if ($SipMediaEncryption -ne "") {        if ($modifiers -gt 0) {            $data += "&sipMediaEncryption=$SipMediaEncryption"        } else {            $data += "sipMediaEncryption=$SipMediaEncryption"        }        $modifiers++    }    if ($AudioPacketSizeMs -ne "") {        if ($modifiers -gt 0) {            $data += "&audioPacketSizeMs=$AudioPacketSizeMs"        } else {            $data += "audioPacketSizeMs=$AudioPacketSizeMs"        }        $modifiers++    }    if ($DeactivationMode -ne "") {        if ($modifiers -gt 0) {            $data += "&deactivationMode=$DeactivationMode"        } else {            $data += "deactivationMode=$DeactivationMode"        }        $modifiers++    }    if ($DeactivationModeTime -ne "") {        if ($modifiers -gt 0) {            $data += "&deactivationModeTime=$DeactivationModeTime"        } else {            $data += "deactivationModeTime=$DeactivationModeTime"        }        $modifiers++    }    if ($TelepresenceCallsAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&telepresenceCallsAllowed=$TelepresenceCallsAllowed"        } else {            $data += "telepresenceCallsAllowed=$TelepresenceCallsAllowed"        }        $modifiers++    }    if ($SipPresentationChannelEnabled -ne "") {        if ($modifiers -gt 0) {            $data += "&sipPresentationChannelEnabled=$SipPresentationChannelEnabled"        } else {            $data += "sipPresentationChannelEnabled=$SipPresentationChannelEnabled"        }        $modifiers++    }    if ($BfcpMode -ne "") {        if ($modifiers -gt 0) {            $data += "&bfcpMode=$BfcpMode"        } else {            $data += "bfcpMode=$BfcpMode"        }        $modifiers++    }    if ($CallLockAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&callLockAllowed=$CallLockAllowed"        } else {            $data += "callLockAllowed=$CallLockAllowed"        }        $modifiers++    }    [string]$NewCallLegProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoCallLegProfile -CallLegProfileID $NewCallLegProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoCallLegProfile {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$CallLegProfileId,
-        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$NeedsActivation,        [parameter(Mandatory=$false)]        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]        [string]$DefaultLayout,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$EndCallAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MuteOthersAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$VideoMuteOthersAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$MuteSelfAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$VideoMuteSelfAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ChangeLayoutAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ParticipantLabels,        [parameter(Mandatory=$false)]        [ValidateSet("dualStream","singleStream")]        [string]$PresentationDisplayMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$PresentationContributionAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$PresentationViewingAllowed,        [parameter(Mandatory=$false)]        [string]$JoinToneParticipantThreshold,        [parameter(Mandatory=$false)]        [string]$LeaveToneParticipantThreshold,        [parameter(Mandatory=$false)]        [ValidateSet("auto","disabled")]        [string]$VideoMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$RxAudioMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TxAudioMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$RxVideoMute,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TxVideoMute,        [parameter(Mandatory=$false)]        [ValidateSet("optional","required","prohibited")]        [string]$SipMediaEncryption,        [parameter(Mandatory=$false)]        [string]$AudioPacketSizeMs,        [parameter(Mandatory=$false)]        [ValidateSet("deactivate","disconnect","remainActivated")]        [string]$DeactivationMode,        [parameter(Mandatory=$false)]        [string]$DeactivationModeTime,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$TelepresenceCallsAllowed,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$SipPresentationChannelEnabled,        [parameter(Mandatory=$false)]        [ValidateSet("serverOnly","serverAndClient")]        [string]$BfcpMode,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$CallLockAllowed    )    $nodeLocation = "/api/v1/callLegProfiles/$CallLegProfileId"    $data = ""    $modifiers = 0    if ($NeedsActivation -ne "") {        if ($modifiers -gt 0) {            $data += "&needsActivation=$NeedsActivation"        } else {            $data += "needsActivation=$NeedsActivation"        }        $modifiers++    }    if ($DefaultLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&defaultLayout=$DefaultLayout"        } else {            $data += "defaultLayout=$DefaultLayout"        }        $modifiers++    }    if ($EndCallAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&endCallAllowed=$EndCallAllowed"        } else {            $data += "endCallAllowed=$EndCallAllowed"        }        $modifiers++    }    if ($MuteOthersAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&muteOthersAllowed=$MuteOthersAllowed"        } else {            $data += "muteOthersAllowed=$MuteOthersAllowed"        }        $modifiers++    }    if ($VideoMuteOthersAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&videoMuteOthersAllowed=$VideoMuteOthersAllowed"        } else {            $data += "videoMuteOthersAllowed=$VideoMuteOthersAllowed"        }        $modifiers++    }    if ($MuteSelfAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&muteSelfAllowed=$MuteSelfAllowed"        } else {            $data += "muteSelfAllowed=$MuteSelfAllowed"        }        $modifiers++    }    if ($VideoMuteSelfAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&videoMuteSelfAllowed=$VideoMuteSelfAllowed"        } else {            $data += "videoMuteSelfAllowed=$VideoMuteSelfAllowed"        }        $modifiers++    }    if ($ChangeLayoutAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&changeLayoutAllowed=$ChangeLayoutAllowed"        } else {            $data += "changeLayoutAllowed=$ChangeLayoutAllowed"        }        $modifiers++    }    if ($ParticipantLabels -ne "") {        if ($modifiers -gt 0) {            $data += "&participantLabels=$ParticipantLabels"        } else {            $data += "participantLabels=$ParticipantLabels"        }        $modifiers++    }    if ($PresentationDisplayMode -ne "") {        if ($modifiers -gt 0) {            $data += "&presentationDisplayMode=$PresentationDisplayMode"        } else {            $data += "presentationDisplayMode=$PresentationDisplayMode"        }        $modifiers++    }    if ($PresentationContributionAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&presentationContributionAllowed=$PresentationContributionAllowed"        } else {            $data += "presentationContributionAllowed=$PresentationContributionAllowed"        }        $modifiers++    }    if ($PresentationViewingAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&presentationViewingAllowed=$PresentationViewingAllowed"        } else {            $data += "presentationViewingAllowed=$PresentationViewingAllowed"        }        $modifiers++    }    if ($JoinToneParticipantThreshold -ne "") {        if ($modifiers -gt 0) {            $data += "&joinToneParticipantThreshold=$JoinToneParticipantThreshold"        } else {            $data += "joinToneParticipantThreshold=$JoinToneParticipantThreshold"        }        $modifiers++    }    if ($LeaveToneParticipantThreshold -ne "") {        if ($modifiers -gt 0) {            $data += "&leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"        } else {            $data += "leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"        }        $modifiers++    }    if ($VideoMode -ne "") {        if ($modifiers -gt 0) {            $data += "&videoMode=$VideoMode"        } else {            $data += "videoMode=$VideoMode"        }        $modifiers++    }    if ($RxAudioMute -ne "") {        if ($modifiers -gt 0) {            $data += "&rxAudioMute=$RxAudioMute"        } else {            $data += "rxAudioMute=$RxAudioMute"        }        $modifiers++    }    if ($TxAudioMute -ne "") {        if ($modifiers -gt 0) {            $data += "&txAudioMute=$TxAudioMute"        } else {            $data += "txAudioMute=$TxAudioMute"        }        $modifiers++    }    if ($RxVideoMute -ne "") {        if ($modifiers -gt 0) {            $data += "&rxVideoMute=$RxVideoMute"        } else {            $data += "rxVideoMute=$RxVideoMute"        }        $modifiers++    }    if ($TxVideoMute -ne "") {        if ($modifiers -gt 0) {            $data += "&txVideoMute=$TxVideoMute"        } else {            $data += "txVideoMute=$TxVideoMute"        }        $modifiers++    }    if ($SipMediaEncryption -ne "") {        if ($modifiers -gt 0) {            $data += "&sipMediaEncryption=$SipMediaEncryption"        } else {            $data += "sipMediaEncryption=$SipMediaEncryption"        }        $modifiers++    }    if ($AudioPacketSizeMs -ne "") {        if ($modifiers -gt 0) {            $data += "&audioPacketSizeMs=$AudioPacketSizeMs"        } else {            $data += "audioPacketSizeMs=$AudioPacketSizeMs"        }        $modifiers++    }    if ($DeactivationMode -ne "") {        if ($modifiers -gt 0) {            $data += "&deactivationMode=$DeactivationMode"        } else {            $data += "deactivationMode=$DeactivationMode"        }        $modifiers++    }    if ($DeactivationModeTime -ne "") {        if ($modifiers -gt 0) {            $data += "&deactivationModeTime=$DeactivationModeTime"        } else {            $data += "deactivationModeTime=$DeactivationModeTime"        }        $modifiers++    }    if ($TelepresenceCallsAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&telepresenceCallsAllowed=$TelepresenceCallsAllowed"        } else {            $data += "telepresenceCallsAllowed=$TelepresenceCallsAllowed"        }        $modifiers++    }    if ($SipPresentationChannelEnabled -ne "") {        if ($modifiers -gt 0) {            $data += "&sipPresentationChannelEnabled=$SipPresentationChannelEnabled"        } else {            $data += "sipPresentationChannelEnabled=$SipPresentationChannelEnabled"        }        $modifiers++    }    if ($BfcpMode -ne "") {        if ($modifiers -gt 0) {            $data += "&bfcpMode=$BfcpMode"        } else {            $data += "bfcpMode=$BfcpMode"        }        $modifiers++    }    if ($CallLockAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&callLockAllowed=$CallLockAllowed"        } else {            $data += "callLockAllowed=$CallLockAllowed"        }        $modifiers++    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoCallLegProfile -CallLegProfileID $CallLegProfileId}function Remove-AcanoCallLegProfile {    Param (
+        [string]$CallLegID
+    )
+
+    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID").callLeg
+
+}
+
+function New-AcanoCallLeg {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$CallId,
+        [parameter(Mandatory=$true)]
+        [string]$RemoteParty,
+        [parameter(Mandatory=$false)]
+        [string]$Bandwidth,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$Confirmation,
+        [parameter(Mandatory=$false)]
+        [string]$OwnerId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [string]$ChosenLayout,
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfileId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$NeedsActivation,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [string]$DefaultLayout,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$EndCallAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MuteOthersAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoMuteOthersAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoMuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ChangeLayoutAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ParticipantLabels,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("dualStream","singleStream")]
+        [string]$PresentationDisplayMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationContributionAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationViewingAllowed,
+        [parameter(Mandatory=$false)]
+        [string]$JoinToneParticipantThreshold,
+        [parameter(Mandatory=$false)]
+        [string]$LeaveToneParticipantThreshold,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("auto","disabled")]
+        [string]$VideoMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RxAudioMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TxAudioMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RxVideoMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TxVideoMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("optional","required","prohibited")]
+        [string]$SipMediaEncryption,
+        [parameter(Mandatory=$false)]
+        [string]$AudioPacketSizeMs,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("deactivate","disconnect","remainActivated")]
+        [string]$DeactivationMode,
+        [parameter(Mandatory=$false)]
+        [string]$DeactivationModeTime,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TelepresenceCallsAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$SipPresentationChannelEnabled,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("serverOnly","serverAndClient")]
+        [string]$BfcpMode
+    )
+
+    $nodeLocation = "/api/v1/calls/$CallId/callLegs"
+    $data = "remoteParty=$RemoteParty"
+
+    if ($Bandwidth -ne "") {
+        $data += "&bandwidth=$Bandwidth"
+    }
+
+    if ($Confirmation -ne "") {
+        $data += "&confirmation=$Confirmation"
+    }
+
+    if ($OwnerId -ne "") {
+        $data += "&ownerId=$OwnerId"
+    }
+
+    if ($ChosenLayout -ne "") {
+        $data += "&chosenLayout=$ChosenLayout"
+    }
+
+    if ($CallLegProfileId -ne "") {
+        $data += "&callLegProfile=$CallLegProfileId"
+    }
+
+    if ($NeedsActivation -ne "") {
+        $data += "&needsActivation=$NeedsActivation"
+    }
+
+    if ($DefaultLayout -ne "") {
+        $data += "&defaultLayout=$DefaultLayout"
+    }
+
+    if ($EndCallAllowed -ne "") {
+        $data += "&endCallAllowed=$EndCallAllowed"
+    }
+
+    if ($MuteOthersAllowed -ne "") {
+        $data += "&muteOthersAllowed=$MuteOthersAllowed"
+    }
+
+    if ($VideoMuteOthersAllowed -ne "") {
+        $data += "&videoMuteOthersAllowed=$VideoMuteOthersAllowed"
+    }
+
+    if ($MuteSelfAllowed -ne "") {
+        $data += "&muteSelfAllowed=$MuteSelfAllowed"
+    }
+
+    if ($VideoMuteSelfAllowed -ne "") {
+        $data += "&videoMuteSelfAllowed=$VideoMuteSelfAllowed"
+    }
+
+    if ($ChangeLayoutAllowed -ne "") {
+        $data += "&changeLayoutAllowed=$ChangeLayoutAllowed"
+    }
+
+    if ($ParticipantLabels -ne "") {
+        $data += "&participantLabels=$ParticipantLabels"
+    }
+
+    if ($PresentationDisplayMode -ne "") {
+        $data += "&presentationDisplayMode=$PresentationDisplayMode"
+    }
+
+    if ($PresentationContributionAllowed -ne "") {
+        $data += "&presentationContributionAllowed=$PresentationContributionAllowed"
+    }
+
+    if ($PresentationViewingAllowed -ne "") {
+        $data += "&presentationViewingAllowed=$PresentationViewingAllowed"
+    }
+
+    if ($JoinToneParticipantThreshold -ne "") {
+        $data += "&joinToneParticipantThreshold=$JoinToneParticipantThreshold"
+    }
+
+    if ($LeaveToneParticipantThreshold -ne "") {
+        $data += "&leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"
+    }
+
+    if ($VideoMode -ne "") {
+        $data += "&videoMode=$VideoMode"
+    }
+
+    if ($RxAudioMute -ne "") {
+        $data += "&rxAudioMute=$RxAudioMute"
+    }
+
+    if ($TxAudioMute -ne "") {
+        $data += "&txAudioMute=$TxAudioMute"
+    }
+
+    if ($RxVideoMute -ne "") {
+        $data += "&rxVideoMute=$RxVideoMute"
+    }
+
+    if ($TxVideoMute -ne "") {
+        $data += "&txVideoMute=$TxVideoMute"
+    }
+
+    if ($SipMediaEncryption -ne "") {
+        $data += "&sipMediaEncryption=$SipMediaEncryption"
+    }
+
+    if ($AudioPacketSizeMs -ne "") {
+        $data += "&audioPacketSizeMs=$AudioPacketSizeMs"
+    }
+
+    if ($DeactivationMode -ne "") {
+        $data += "&deactivationMode=$DeactivationMode"
+    }
+
+    if ($DeactivationModeTime -ne "") {
+        $data += "&deactivationModeTime=$DeactivationModeTime"
+    }
+
+    if ($TelepresenceCallsAllowed -ne "") {
+        $data += "&telepresenceCallsAllowed=$TelepresenceCallsAllowed"
+    }
+
+    if ($SipPresentationChannelEnabled -ne "") {
+        $data += "&sipPresentationChannelEnabled=$SipPresentationChannelEnabled"
+    }
+
+    if ($BfcpMode -ne "") {
+        $data += "&bfcpMode=$BfcpMode"
+    }
+
+    [string]$NewCallLegId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoCallLeg -CallLegID $NewCallLegId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoCallLeg {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$CallLegId,
+        [parameter(Mandatory=$false)]
+        [string]$OwnerId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [string]$ChosenLayout,
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfileId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$NeedsActivation,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [string]$DefaultLayout,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$EndCallAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MuteOthersAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoMuteOthersAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoMuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ChangeLayoutAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ParticipantLabels,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("dualStream","singleStream")]
+        [string]$PresentationDisplayMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationContributionAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationViewingAllowed,
+        [parameter(Mandatory=$false)]
+        [string]$JoinToneParticipantThreshold,
+        [parameter(Mandatory=$false)]
+        [string]$LeaveToneParticipantThreshold,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("auto","disabled")]
+        [string]$VideoMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RxAudioMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TxAudioMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RxVideoMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TxVideoMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("optional","required","prohibited")]
+        [string]$SipMediaEncryption,
+        [parameter(Mandatory=$false)]
+        [string]$AudioPacketSizeMs,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("deactivate","disconnect","remainActivated")]
+        [string]$DeactivationMode,
+        [parameter(Mandatory=$false)]
+        [string]$DeactivationModeTime,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TelepresenceCallsAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$SipPresentationChannelEnabled,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("serverOnly","serverAndClient")]
+        [string]$BfcpMode
+    )
+
+    $nodeLocation = "/api/v1/callLegs/$CallLegId"
+    $data = ""
+    $modifiers = 0
+
+    if ($OwnerId -ne "") {
+        $data += "&ownerId=$OwnerId"
+        $modifiers++
+    }
+
+    if ($ChosenLayout -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&chosenLayout=$ChosenLayout"
+        } else {
+            $data += "chosenLayout=$ChosenLayout"
+        }
+        $modifiers++
+    }
+
+    if ($CallLegProfileId -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callLegProfile=$CallLegProfileId"
+        } else {
+            $data += "callLegProfile=$CallLegProfileId"
+
+        }
+        $modifiers++
+    }
+
+    if ($NeedsActivation -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&needsActivation=$NeedsActivation"
+        } else {
+            $data += "needsActivation=$NeedsActivation"
+        }
+        $modifiers++
+    }
+
+    if ($DefaultLayout -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&defaultLayout=$DefaultLayout"
+        } else {
+            $data += "defaultLayout=$DefaultLayout"
+        }
+        $modifiers++
+    }
+
+    if ($EndCallAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&endCallAllowed=$EndCallAllowed"
+        } else {
+            $data += "endCallAllowed=$EndCallAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($MuteOthersAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&muteOthersAllowed=$MuteOthersAllowed"
+        } else {
+            $data += "muteOthersAllowed=$MuteOthersAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($VideoMuteOthersAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&videoMuteOthersAllowed=$VideoMuteOthersAllowed"
+        } else {
+            $data += "videoMuteOthersAllowed=$VideoMuteOthersAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($MuteSelfAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&muteSelfAllowed=$MuteSelfAllowed"
+        } else {
+            $data += "muteSelfAllowed=$MuteSelfAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($VideoMuteSelfAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&videoMuteSelfAllowed=$VideoMuteSelfAllowed"
+        } else {
+            $data += "videoMuteSelfAllowed=$VideoMuteSelfAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($ChangeLayoutAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&changeLayoutAllowed=$ChangeLayoutAllowed"
+        } else {
+            $data += "changeLayoutAllowed=$ChangeLayoutAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($ParticipantLabels -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&participantLabels=$ParticipantLabels"
+        } else {
+            $data += "participantLabels=$ParticipantLabels"
+        }
+        $modifiers++
+    }
+
+    if ($PresentationDisplayMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&presentationDisplayMode=$PresentationDisplayMode"
+        } else {
+            $data += "presentationDisplayMode=$PresentationDisplayMode"
+        }
+        $modifiers++
+    }
+
+    if ($PresentationContributionAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&presentationContributionAllowed=$PresentationContributionAllowed"
+        } else {
+            $data += "presentationContributionAllowed=$PresentationContributionAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($PresentationViewingAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&presentationViewingAllowed=$PresentationViewingAllowed"
+        } else {
+            $data += "presentationViewingAllowed=$PresentationViewingAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($JoinToneParticipantThreshold -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&joinToneParticipantThreshold=$JoinToneParticipantThreshold"
+        } else {
+            $data += "joinToneParticipantThreshold=$JoinToneParticipantThreshold"
+        }
+        $modifiers++
+    }
+
+    if ($LeaveToneParticipantThreshold -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"
+        } else {
+            $data += "leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"
+        }
+        $modifiers++
+    }
+
+    if ($VideoMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&videoMode=$VideoMode"
+        } else {
+            $data += "videoMode=$VideoMode"
+        }
+        $modifiers++
+    }
+
+    if ($RxAudioMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&rxAudioMute=$RxAudioMute"
+        } else {
+            $data += "rxAudioMute=$RxAudioMute"
+        }
+        $modifiers++
+    }
+
+    if ($TxAudioMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&txAudioMute=$TxAudioMute"
+        } else {
+            $data += "txAudioMute=$TxAudioMute"
+        }
+        $modifiers++
+    }
+
+    if ($RxVideoMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&rxVideoMute=$RxVideoMute"
+        } else {
+            $data += "rxVideoMute=$RxVideoMute"
+        }
+        $modifiers++
+    }
+
+    if ($TxVideoMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&txVideoMute=$TxVideoMute"
+        } else {
+            $data += "txVideoMute=$TxVideoMute"
+        }
+        $modifiers++
+    }
+
+    if ($SipMediaEncryption -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&sipMediaEncryption=$SipMediaEncryption"
+        } else {
+            $data += "sipMediaEncryption=$SipMediaEncryption"
+        }
+        $modifiers++
+    }
+
+    if ($AudioPacketSizeMs -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&audioPacketSizeMs=$AudioPacketSizeMs"
+        } else {
+            $data += "audioPacketSizeMs=$AudioPacketSizeMs"
+        }
+        $modifiers++
+    }
+
+    if ($DeactivationMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&deactivationMode=$DeactivationMode"
+        } else {
+            $data += "deactivationMode=$DeactivationMode"
+        }
+        $modifiers++
+    }
+
+    if ($DeactivationModeTime -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&deactivationModeTime=$DeactivationModeTime"
+        } else {
+            $data += "deactivationModeTime=$DeactivationModeTime"
+        }
+        $modifiers++
+    }
+
+    if ($TelepresenceCallsAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&telepresenceCallsAllowed=$TelepresenceCallsAllowed"
+        } else {
+            $data += "telepresenceCallsAllowed=$TelepresenceCallsAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($SipPresentationChannelEnabled -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&sipPresentationChannelEnabled=$SipPresentationChannelEnabled"
+        } else {
+            $data += "sipPresentationChannelEnabled=$SipPresentationChannelEnabled"
+        }
+        $modifiers++
+    }
+
+    if ($BfcpMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&bfcpMode=$BfcpMode"
+        } else {
+            $data += "bfcpMode=$BfcpMode"
+        }
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoCallLeg -CallLegID $CallLegId
+}
+
+function Remove-AcanoCallLeg {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegProfileId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/callLegProfiles/$CallLegProfileId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallLegProfileUsages {    Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegProfileID    )    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID/usage").callLegProfileUsage}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallLegProfileTrace {    Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegID    )    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID/callLegProfileTrace").callLegProfileTrace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoDialTransforms {
+        [string]$CallLegId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/callLegs/$CallLegId" -DELETE
+
+}
+
+function New-AcanoCallLegParticipant {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$CallId,
+        [parameter(Mandatory=$true)]
+        [string]$RemoteParty,
+        [parameter(Mandatory=$false)]
+        [string]$Bandwidth,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$Confirmation,
+        [parameter(Mandatory=$false)]
+        [string]$OwnerId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [string]$ChosenLayout,
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfileId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$NeedsActivation,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [string]$DefaultLayout,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$EndCallAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MuteOthersAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoMuteOthersAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoMuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ChangeLayoutAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ParticipantLabels,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("dualStream","singleStream")]
+        [string]$PresentationDisplayMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationContributionAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationViewingAllowed,
+        [parameter(Mandatory=$false)]
+        [string]$JoinToneParticipantThreshold,
+        [parameter(Mandatory=$false)]
+        [string]$LeaveToneParticipantThreshold,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("auto","disabled")]
+        [string]$VideoMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RxAudioMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TxAudioMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RxVideoMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TxVideoMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("optional","required","prohibited")]
+        [string]$SipMediaEncryption,
+        [parameter(Mandatory=$false)]
+        [string]$AudioPacketSizeMs,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("deactivate","disconnect","remainActivated")]
+        [string]$DeactivationMode,
+        [parameter(Mandatory=$false)]
+        [string]$DeactivationModeTime,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TelepresenceCallsAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$SipPresentationChannelEnabled,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("serverOnly","serverAndClient")]
+        [string]$BfcpMode
+    )
+
+    $nodeLocation = "/api/v1/calls/$CallId/participants"
+    $data = "remoteParty=$RemoteParty"
+
+    if ($Bandwidth -ne "") {
+        $data += "&bandwidth=$Bandwidth"
+    }
+
+    if ($Confirmation -ne "") {
+        $data += "&confirmation=$Confirmation"
+    }
+
+    if ($OwnerId -ne "") {
+        $data += "&ownerId=$OwnerId"
+    }
+
+    if ($ChosenLayout -ne "") {
+        $data += "&chosenLayout=$ChosenLayout"
+    }
+
+    if ($CallLegProfileId -ne "") {
+        $data += "&callLegProfile=$CallLegProfileId"
+    }
+
+    if ($NeedsActivation -ne "") {
+        $data += "&needsActivation=$NeedsActivation"
+    }
+
+    if ($DefaultLayout -ne "") {
+        $data += "&defaultLayout=$DefaultLayout"
+    }
+
+    if ($EndCallAllowed -ne "") {
+        $data += "&endCallAllowed=$EndCallAllowed"
+    }
+
+    if ($MuteOthersAllowed -ne "") {
+        $data += "&muteOthersAllowed=$MuteOthersAllowed"
+    }
+
+    if ($VideoMuteOthersAllowed -ne "") {
+        $data += "&videoMuteOthersAllowed=$VideoMuteOthersAllowed"
+    }
+
+    if ($MuteSelfAllowed -ne "") {
+        $data += "&muteSelfAllowed=$MuteSelfAllowed"
+    }
+
+    if ($VideoMuteSelfAllowed -ne "") {
+        $data += "&videoMuteSelfAllowed=$VideoMuteSelfAllowed"
+    }
+
+    if ($ChangeLayoutAllowed -ne "") {
+        $data += "&changeLayoutAllowed=$ChangeLayoutAllowed"
+    }
+
+    if ($ParticipantLabels -ne "") {
+        $data += "&participantLabels=$ParticipantLabels"
+    }
+
+    if ($PresentationDisplayMode -ne "") {
+        $data += "&presentationDisplayMode=$PresentationDisplayMode"
+    }
+
+    if ($PresentationContributionAllowed -ne "") {
+        $data += "&presentationContributionAllowed=$PresentationContributionAllowed"
+    }
+
+    if ($PresentationViewingAllowed -ne "") {
+        $data += "&presentationViewingAllowed=$PresentationViewingAllowed"
+    }
+
+    if ($JoinToneParticipantThreshold -ne "") {
+        $data += "&joinToneParticipantThreshold=$JoinToneParticipantThreshold"
+    }
+
+    if ($LeaveToneParticipantThreshold -ne "") {
+        $data += "&leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"
+    }
+
+    if ($VideoMode -ne "") {
+        $data += "&videoMode=$VideoMode"
+    }
+
+    if ($RxAudioMute -ne "") {
+        $data += "&rxAudioMute=$RxAudioMute"
+    }
+
+    if ($TxAudioMute -ne "") {
+        $data += "&txAudioMute=$TxAudioMute"
+    }
+
+    if ($RxVideoMute -ne "") {
+        $data += "&rxVideoMute=$RxVideoMute"
+    }
+
+    if ($TxVideoMute -ne "") {
+        $data += "&txVideoMute=$TxVideoMute"
+    }
+
+    if ($SipMediaEncryption -ne "") {
+        $data += "&sipMediaEncryption=$SipMediaEncryption"
+    }
+
+    if ($AudioPacketSizeMs -ne "") {
+        $data += "&audioPacketSizeMs=$AudioPacketSizeMs"
+    }
+
+    if ($DeactivationMode -ne "") {
+        $data += "&deactivationMode=$DeactivationMode"
+    }
+
+    if ($DeactivationModeTime -ne "") {
+        $data += "&deactivationModeTime=$DeactivationModeTime"
+    }
+
+    if ($TelepresenceCallsAllowed -ne "") {
+        $data += "&telepresenceCallsAllowed=$TelepresenceCallsAllowed"
+    }
+
+    if ($SipPresentationChannelEnabled -ne "") {
+        $data += "&sipPresentationChannelEnabled=$SipPresentationChannelEnabled"
+    }
+
+    if ($BfcpMode -ne "") {
+        $data += "&bfcpMode=$BfcpMode"
+    }
+
+    [string]$NewCallLegParticipantId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoParticipant -ParticipantID $NewCallLegParticipantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallLegProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/dialTransforms"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).dialTransforms.dialTransform}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoDialTransform {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("unreferenced","referenced","")]
+        [string]$UsageFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/callLegProfiles"
+
+
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($UsageFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&usageFilter=$UsageFilter"
+        } else {
+            $nodeLocation += "?usageFilter=$UsageFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).callLegProfiles.callLegProfile
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallLegProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$DialTransformID    )    return (Open-AcanoAPI "api/v1/dialTransform/$DialTransformID").dialTransform}function New-AcanoDialTransform {    Param (
-        [parameter(Mandatory=$false)]        [ValidateSet("raw","strip","phone")]        [string]$Type="raw",        [parameter(Mandatory=$false)]        [string]$Match,        [parameter(Mandatory=$false)]        [string]$Transform,        [parameter(Mandatory=$false)]        [string]$Priority,        [parameter(Mandatory=$false)]        [ValidateSet("accept","acceptPhone","deny")]        [string]$Action    )    $nodeLocation = "/api/v1/dialTransforms"    $data = "type=$type"    if ($Match -ne "") {        $data += "&match=$Match"    }    if ($Transform -ne "") {        $data += "&transform=$Transform"    }    if ($Priority -ne "") {        $data += "&priority=$Priority"    }    if ($Action -ne "") {        $data += "&Action=$Action"    }    $data    [string]$NewDialTransformId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoDialTransform -DialTransformID $NewDialTransformId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoDialTransform {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$DialTransformId,        [parameter(Mandatory=$false)]        [ValidateSet("raw","strip","phone")]        [string]$Type,        [parameter(Mandatory=$false)]        [string]$Match,        [parameter(Mandatory=$false)]        [string]$Transform,        [parameter(Mandatory=$false)]        [string]$Priority,        [parameter(Mandatory=$false)]        [ValidateSet("accept","acceptPhone","deny")]        [string]$Action    )    $nodeLocation = "/api/v1/dialTransforms/$DialTransformId"    $data=""    $modifiers=0        if ($Type -ne "") {        $data = "type=$Type"        $modifiers++    }    if ($Match -ne "") {        if ($modifiers -gt 0) {            $data += "&match=$Match"        } else {            $data += "match=$Match"        }        $modifiers++    }    if ($Transform -ne "") {        if ($modifiers -gt 0) {            $data += "&transform=$Transform"        } else {            $data += "transform=$Transform"        }        $modifiers++    }    if ($Priority -ne "") {        if ($modifiers -gt 0) {            $data += "&priority=$Priority"        } else {            $data += "priority=$Priority"        }        $modifiers++    }    if ($Action -ne "") {        if ($modifiers -gt 0) {            $data += "&Action=$Action"        } else {            $data += "Action=$Action"        }    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoDialTransform -DialTransformID $DialTransformId}function Remove-AcanoDialTransform {    Param (
+        [string]$CallLegProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID").callLegProfile
+
+}
+
+function New-AcanoCallLegProfile {
+    Param (
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$NeedsActivation,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [string]$DefaultLayout,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$EndCallAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MuteOthersAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoMuteOthersAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoMuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ChangeLayoutAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ParticipantLabels,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("dualStream","singleStream")]
+        [string]$PresentationDisplayMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationContributionAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationViewingAllowed,
+        [parameter(Mandatory=$false)]
+        [string]$JoinToneParticipantThreshold,
+        [parameter(Mandatory=$false)]
+        [string]$LeaveToneParticipantThreshold,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("auto","disabled")]
+        [string]$VideoMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RxAudioMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TxAudioMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RxVideoMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TxVideoMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("optional","required","prohibited")]
+        [string]$SipMediaEncryption,
+        [parameter(Mandatory=$false)]
+        [string]$AudioPacketSizeMs,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("deactivate","disconnect","remainActivated")]
+        [string]$DeactivationMode,
+        [parameter(Mandatory=$false)]
+        [string]$DeactivationModeTime,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TelepresenceCallsAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$SipPresentationChannelEnabled,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("serverOnly","serverAndClient")]
+        [string]$BfcpMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CallLockAllowed
+    )
+
+    $nodeLocation = "/api/v1/callLegProfiles"
+    $data = ""
+    $modifiers = 0
+
+    if ($NeedsActivation -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&needsActivation=$NeedsActivation"
+        } else {
+            $data += "needsActivation=$NeedsActivation"
+        }
+        $modifiers++
+    }
+
+    if ($DefaultLayout -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&defaultLayout=$DefaultLayout"
+        } else {
+            $data += "defaultLayout=$DefaultLayout"
+        }
+        $modifiers++
+    }
+
+    if ($EndCallAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&endCallAllowed=$EndCallAllowed"
+        } else {
+            $data += "endCallAllowed=$EndCallAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($MuteOthersAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&muteOthersAllowed=$MuteOthersAllowed"
+        } else {
+            $data += "muteOthersAllowed=$MuteOthersAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($VideoMuteOthersAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&videoMuteOthersAllowed=$VideoMuteOthersAllowed"
+        } else {
+            $data += "videoMuteOthersAllowed=$VideoMuteOthersAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($MuteSelfAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&muteSelfAllowed=$MuteSelfAllowed"
+        } else {
+            $data += "muteSelfAllowed=$MuteSelfAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($VideoMuteSelfAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&videoMuteSelfAllowed=$VideoMuteSelfAllowed"
+        } else {
+            $data += "videoMuteSelfAllowed=$VideoMuteSelfAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($ChangeLayoutAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&changeLayoutAllowed=$ChangeLayoutAllowed"
+        } else {
+            $data += "changeLayoutAllowed=$ChangeLayoutAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($ParticipantLabels -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&participantLabels=$ParticipantLabels"
+        } else {
+            $data += "participantLabels=$ParticipantLabels"
+        }
+        $modifiers++
+    }
+
+    if ($PresentationDisplayMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&presentationDisplayMode=$PresentationDisplayMode"
+        } else {
+            $data += "presentationDisplayMode=$PresentationDisplayMode"
+        }
+        $modifiers++
+    }
+
+    if ($PresentationContributionAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&presentationContributionAllowed=$PresentationContributionAllowed"
+        } else {
+            $data += "presentationContributionAllowed=$PresentationContributionAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($PresentationViewingAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&presentationViewingAllowed=$PresentationViewingAllowed"
+        } else {
+            $data += "presentationViewingAllowed=$PresentationViewingAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($JoinToneParticipantThreshold -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&joinToneParticipantThreshold=$JoinToneParticipantThreshold"
+        } else {
+            $data += "joinToneParticipantThreshold=$JoinToneParticipantThreshold"
+        }
+        $modifiers++
+    }
+
+    if ($LeaveToneParticipantThreshold -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"
+        } else {
+            $data += "leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"
+        }
+        $modifiers++
+    }
+
+    if ($VideoMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&videoMode=$VideoMode"
+        } else {
+            $data += "videoMode=$VideoMode"
+        }
+        $modifiers++
+    }
+
+    if ($RxAudioMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&rxAudioMute=$RxAudioMute"
+        } else {
+            $data += "rxAudioMute=$RxAudioMute"
+        }
+        $modifiers++
+    }
+
+    if ($TxAudioMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&txAudioMute=$TxAudioMute"
+        } else {
+            $data += "txAudioMute=$TxAudioMute"
+        }
+        $modifiers++
+    }
+
+    if ($RxVideoMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&rxVideoMute=$RxVideoMute"
+        } else {
+            $data += "rxVideoMute=$RxVideoMute"
+        }
+        $modifiers++
+    }
+
+    if ($TxVideoMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&txVideoMute=$TxVideoMute"
+        } else {
+            $data += "txVideoMute=$TxVideoMute"
+        }
+        $modifiers++
+    }
+
+    if ($SipMediaEncryption -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&sipMediaEncryption=$SipMediaEncryption"
+        } else {
+            $data += "sipMediaEncryption=$SipMediaEncryption"
+        }
+        $modifiers++
+    }
+
+    if ($AudioPacketSizeMs -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&audioPacketSizeMs=$AudioPacketSizeMs"
+        } else {
+            $data += "audioPacketSizeMs=$AudioPacketSizeMs"
+        }
+        $modifiers++
+    }
+
+    if ($DeactivationMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&deactivationMode=$DeactivationMode"
+        } else {
+            $data += "deactivationMode=$DeactivationMode"
+        }
+        $modifiers++
+    }
+
+    if ($DeactivationModeTime -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&deactivationModeTime=$DeactivationModeTime"
+        } else {
+            $data += "deactivationModeTime=$DeactivationModeTime"
+        }
+        $modifiers++
+    }
+
+    if ($TelepresenceCallsAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&telepresenceCallsAllowed=$TelepresenceCallsAllowed"
+        } else {
+            $data += "telepresenceCallsAllowed=$TelepresenceCallsAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($SipPresentationChannelEnabled -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&sipPresentationChannelEnabled=$SipPresentationChannelEnabled"
+        } else {
+            $data += "sipPresentationChannelEnabled=$SipPresentationChannelEnabled"
+        }
+        $modifiers++
+    }
+
+    if ($BfcpMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&bfcpMode=$BfcpMode"
+        } else {
+            $data += "bfcpMode=$BfcpMode"
+        }
+        $modifiers++
+    }
+
+    if ($CallLockAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callLockAllowed=$CallLockAllowed"
+        } else {
+            $data += "callLockAllowed=$CallLockAllowed"
+        }
+        $modifiers++
+    }
+
+    [string]$NewCallLegProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoCallLegProfile -CallLegProfileID $NewCallLegProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoCallLegProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$DialTransformId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/dialTransforms/$DialTransformId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallBrandingProfiles {
-    [CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callBrandingProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callBrandingProfiles.callBrandingProfile}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallBrandingProfile {    Param (
+        [string]$CallLegProfileId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$NeedsActivation,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [string]$DefaultLayout,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$EndCallAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MuteOthersAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoMuteOthersAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$MuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoMuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ChangeLayoutAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ParticipantLabels,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("dualStream","singleStream")]
+        [string]$PresentationDisplayMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationContributionAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationViewingAllowed,
+        [parameter(Mandatory=$false)]
+        [string]$JoinToneParticipantThreshold,
+        [parameter(Mandatory=$false)]
+        [string]$LeaveToneParticipantThreshold,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("auto","disabled")]
+        [string]$VideoMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RxAudioMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TxAudioMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RxVideoMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TxVideoMute,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("optional","required","prohibited")]
+        [string]$SipMediaEncryption,
+        [parameter(Mandatory=$false)]
+        [string]$AudioPacketSizeMs,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("deactivate","disconnect","remainActivated")]
+        [string]$DeactivationMode,
+        [parameter(Mandatory=$false)]
+        [string]$DeactivationModeTime,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$TelepresenceCallsAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$SipPresentationChannelEnabled,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("serverOnly","serverAndClient")]
+        [string]$BfcpMode,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CallLockAllowed
+    )
+
+    $nodeLocation = "/api/v1/callLegProfiles/$CallLegProfileId"
+    $data = ""
+    $modifiers = 0
+
+    if ($NeedsActivation -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&needsActivation=$NeedsActivation"
+        } else {
+            $data += "needsActivation=$NeedsActivation"
+        }
+        $modifiers++
+    }
+
+    if ($DefaultLayout -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&defaultLayout=$DefaultLayout"
+        } else {
+            $data += "defaultLayout=$DefaultLayout"
+        }
+        $modifiers++
+    }
+
+    if ($EndCallAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&endCallAllowed=$EndCallAllowed"
+        } else {
+            $data += "endCallAllowed=$EndCallAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($MuteOthersAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&muteOthersAllowed=$MuteOthersAllowed"
+        } else {
+            $data += "muteOthersAllowed=$MuteOthersAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($VideoMuteOthersAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&videoMuteOthersAllowed=$VideoMuteOthersAllowed"
+        } else {
+            $data += "videoMuteOthersAllowed=$VideoMuteOthersAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($MuteSelfAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&muteSelfAllowed=$MuteSelfAllowed"
+        } else {
+            $data += "muteSelfAllowed=$MuteSelfAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($VideoMuteSelfAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&videoMuteSelfAllowed=$VideoMuteSelfAllowed"
+        } else {
+            $data += "videoMuteSelfAllowed=$VideoMuteSelfAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($ChangeLayoutAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&changeLayoutAllowed=$ChangeLayoutAllowed"
+        } else {
+            $data += "changeLayoutAllowed=$ChangeLayoutAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($ParticipantLabels -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&participantLabels=$ParticipantLabels"
+        } else {
+            $data += "participantLabels=$ParticipantLabels"
+        }
+        $modifiers++
+    }
+
+    if ($PresentationDisplayMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&presentationDisplayMode=$PresentationDisplayMode"
+        } else {
+            $data += "presentationDisplayMode=$PresentationDisplayMode"
+        }
+        $modifiers++
+    }
+
+    if ($PresentationContributionAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&presentationContributionAllowed=$PresentationContributionAllowed"
+        } else {
+            $data += "presentationContributionAllowed=$PresentationContributionAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($PresentationViewingAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&presentationViewingAllowed=$PresentationViewingAllowed"
+        } else {
+            $data += "presentationViewingAllowed=$PresentationViewingAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($JoinToneParticipantThreshold -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&joinToneParticipantThreshold=$JoinToneParticipantThreshold"
+        } else {
+            $data += "joinToneParticipantThreshold=$JoinToneParticipantThreshold"
+        }
+        $modifiers++
+    }
+
+    if ($LeaveToneParticipantThreshold -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"
+        } else {
+            $data += "leaveToneParticipantThreshold=$LeaveToneParticipantThreshold"
+        }
+        $modifiers++
+    }
+
+    if ($VideoMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&videoMode=$VideoMode"
+        } else {
+            $data += "videoMode=$VideoMode"
+        }
+        $modifiers++
+    }
+
+    if ($RxAudioMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&rxAudioMute=$RxAudioMute"
+        } else {
+            $data += "rxAudioMute=$RxAudioMute"
+        }
+        $modifiers++
+    }
+
+    if ($TxAudioMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&txAudioMute=$TxAudioMute"
+        } else {
+            $data += "txAudioMute=$TxAudioMute"
+        }
+        $modifiers++
+    }
+
+    if ($RxVideoMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&rxVideoMute=$RxVideoMute"
+        } else {
+            $data += "rxVideoMute=$RxVideoMute"
+        }
+        $modifiers++
+    }
+
+    if ($TxVideoMute -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&txVideoMute=$TxVideoMute"
+        } else {
+            $data += "txVideoMute=$TxVideoMute"
+        }
+        $modifiers++
+    }
+
+    if ($SipMediaEncryption -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&sipMediaEncryption=$SipMediaEncryption"
+        } else {
+            $data += "sipMediaEncryption=$SipMediaEncryption"
+        }
+        $modifiers++
+    }
+
+    if ($AudioPacketSizeMs -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&audioPacketSizeMs=$AudioPacketSizeMs"
+        } else {
+            $data += "audioPacketSizeMs=$AudioPacketSizeMs"
+        }
+        $modifiers++
+    }
+
+    if ($DeactivationMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&deactivationMode=$DeactivationMode"
+        } else {
+            $data += "deactivationMode=$DeactivationMode"
+        }
+        $modifiers++
+    }
+
+    if ($DeactivationModeTime -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&deactivationModeTime=$DeactivationModeTime"
+        } else {
+            $data += "deactivationModeTime=$DeactivationModeTime"
+        }
+        $modifiers++
+    }
+
+    if ($TelepresenceCallsAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&telepresenceCallsAllowed=$TelepresenceCallsAllowed"
+        } else {
+            $data += "telepresenceCallsAllowed=$TelepresenceCallsAllowed"
+        }
+        $modifiers++
+    }
+
+    if ($SipPresentationChannelEnabled -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&sipPresentationChannelEnabled=$SipPresentationChannelEnabled"
+        } else {
+            $data += "sipPresentationChannelEnabled=$SipPresentationChannelEnabled"
+        }
+        $modifiers++
+    }
+
+    if ($BfcpMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&bfcpMode=$BfcpMode"
+        } else {
+            $data += "bfcpMode=$BfcpMode"
+        }
+        $modifiers++
+    }
+
+    if ($CallLockAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&callLockAllowed=$CallLockAllowed"
+        } else {
+            $data += "callLockAllowed=$CallLockAllowed"
+        }
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoCallLegProfile -CallLegProfileID $CallLegProfileId
+}
+
+function Remove-AcanoCallLegProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBrandingProfileID    )    return (Open-AcanoAPI "api/v1/callBrandingProfiles/$CallBrandingProfileID").callBrandingProfile}function New-AcanoCallBrandingProfile {    Param (
-        [parameter(Mandatory=$false)]        [string]$InvitationTemplate,        [parameter(Mandatory=$false)]        [string]$ResourceLocation    )    $nodeLocation = "/api/v1/callBrandingProfiles"    $data = ""    $modifiers = 0    if ($InvitationTemplate -ne "") {        $data += "invitationTemplate=$InvitationTemplate"        $modifiers++    }    if ($ResourceLocation -ne "") {        if ($modifiers -gt 0) {            $data += "&resourceLocation=$ResourceLocation"        } else {            $data += "resourceLocation=$ResourceLocation"        }        $modifiers++    }    [string]$NewCallBrandingProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoCallBrandingProfile -CallBrandingProfileID $NewCallBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoCallBrandingProfile {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$CallBrandingProfileId,
-        [parameter(Mandatory=$false)]        [string]$InvitationTemplate,        [parameter(Mandatory=$false)]        [string]$ResourceLocation    )    $nodeLocation = "/api/v1/callBrandingProfiles/$CallBrandingProfileId"    $data = ""    $modifiers = 0    if ($InvitationTemplate -ne "") {        $data += "invitationTemplate=$InvitationTemplate"        $modifiers++    }    if ($ResourceLocation -ne "") {        if ($modifiers -gt 0) {            $data += "&resourceLocation=$ResourceLocation"        } else {            $data += "resourceLocation=$ResourceLocation"        }        $modifiers++    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoCallBrandingProfile -CallBrandingProfileID $CallBrandingProfileId}function Remove-AcanoCallBrandingProfile {    Param (
+        [string]$CallLegProfileId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/callLegProfiles/$CallLegProfileId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallLegProfileUsages {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBrandingProfileId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/CallBrandingProfiles/$CallBrandingProfileId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoDtmfProfiles {
-    [CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/dtmfProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).dtmfProfiles.dtmfProfile}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoDtmfProfile {    Param (
+        [string]$CallLegProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID/usage").callLegProfileUsage
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallLegProfileTrace {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$DtmfProfileID    )    return (Open-AcanoAPI "api/v1/dtmfProfiles/$DtmfProfileID").dtmfProfile}function New-AcanoDtmfProfile {    Param (
-        [parameter(Mandatory=$false)]        [string]$LockCall,        [parameter(Mandatory=$false)]        [string]$UnlockCall,        [parameter(Mandatory=$false)]        [string]$NextLayout,        [parameter(Mandatory=$false)]        [string]$PreviousLayout,        [parameter(Mandatory=$false)]        [string]$MuteSelfAudio,        [parameter(Mandatory=$false)]        [string]$UnmuteSelfAudio,        [parameter(Mandatory=$false)]        [string]$ToggleMuteSelfAudio,        [parameter(Mandatory=$false)]        [string]$MuteAllExceptSelfAudio,        [parameter(Mandatory=$false)]        [string]$UnMuteAllExceptSelfAudio,        [parameter(Mandatory=$false)]        [string]$EndCall    )    $nodeLocation = "/api/v1/dtmfProfiles"    $data = ""    $modifiers = 0    if ($LockCall -ne "") {        $data += "lockCall=$LockCall"        $modifiers++    }    if ($UnlockCall -ne "") {        if ($modifiers -gt 0) {            $data += "&unlockCall=$UnlockCall"        } else {            $data += "unlockCall=$UnlockCall"        }        $modifiers++    }    if ($NextLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&nextLayout=$NextLayout"        } else {            $data += "nextLayout=$NextLayout"        }        $modifiers++    }    if ($PreviousLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&previousLayout=$PreviousLayout"        } else {            $data += "previousLayout=$PreviousLayout"        }        $modifiers++    }    if ($MuteSelfAudio -ne "") {        if ($modifiers -gt 0) {            $data += "&muteSelfAudio=$MuteSelfAudio"        } else {            $data += "muteSelfAudio=$MuteSelfAudio"        }        $modifiers++    }    if ($UnMuteSelfAudio -ne "") {        if ($modifiers -gt 0) {            $data += "&unmuteSelfAudio=$UnMuteSelfAudio"        } else {            $data += "unmuteSelfAudio=$UnMuteSelfAudio"        }        $modifiers++    }    if ($ToggleMuteSelfAudio -ne "") {        if ($modifiers -gt 0) {            $data += "&toggleMuteSelfAudio=$ToggleMuteSelfAudio"        } else {            $data += "toggleMuteSelfAudio=$ToggleMuteSelfAudio"        }        $modifiers++    }    if ($MuteAllExceptSelfAudio -ne "") {        if ($modifiers -gt 0) {            $data += "&muteAllExceptSelfAudio=$MuteAllExceptSelfAudio"        } else {            $data += "muteAllExceptSelfAudio=$MuteAllExceptSelfAudio"        }        $modifiers++    }    if ($UnMuteAllExceptSelfAudio -ne "") {        if ($modifiers -gt 0) {            $data += "&unmuteAllExceptSelfAudio=$UnMuteAllExceptSelfAudio"        } else {            $data += "unmuteAllExceptSelfAudio=$UnMuteAllExceptSelfAudio"        }        $modifiers++    }    if ($EndCall -ne "") {        if ($modifiers -gt 0) {            $data += "&endCall=$EndCall"        } else {            $data += "endCall=$EndCall"        }        $modifiers++    }    [string]$NewDtmfProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoDtmfProfile -DtmfProfileID $NewDtmfProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoDtmfProfile {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$DtmfProfileId,
-        [parameter(Mandatory=$false)]        [string]$LockCall,        [parameter(Mandatory=$false)]        [string]$UnlockCall,        [parameter(Mandatory=$false)]        [string]$NextLayout,        [parameter(Mandatory=$false)]        [string]$PreviousLayout,        [parameter(Mandatory=$false)]        [string]$MuteSelfAudio,        [parameter(Mandatory=$false)]        [string]$UnmuteSelfAudio,        [parameter(Mandatory=$false)]        [string]$ToggleMuteSelfAudio,        [parameter(Mandatory=$false)]        [string]$MuteAllExceptSelfAudio,        [parameter(Mandatory=$false)]        [string]$UnMuteAllExceptSelfAudio,        [parameter(Mandatory=$false)]        [string]$EndCall    )    $nodeLocation = "/api/v1/dtmfProfiles/$DtmfProfileId"    $data = ""    $modifiers = 0    if ($LockCall -ne "") {        $data += "lockCall=$LockCall"        $modifiers++    }    if ($UnlockCall -ne "") {        if ($modifiers -gt 0) {            $data += "&unlockCall=$UnlockCall"        } else {            $data += "unlockCall=$UnlockCall"        }        $modifiers++    }    if ($NextLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&nextLayout=$NextLayout"        } else {            $data += "nextLayout=$NextLayout"        }        $modifiers++    }    if ($PreviousLayout -ne "") {        if ($modifiers -gt 0) {            $data += "&previousLayout=$PreviousLayout"        } else {            $data += "previousLayout=$PreviousLayout"        }        $modifiers++    }    if ($MuteSelfAudio -ne "") {        if ($modifiers -gt 0) {            $data += "&muteSelfAudio=$MuteSelfAudio"        } else {            $data += "muteSelfAudio=$MuteSelfAudio"        }        $modifiers++    }    if ($UnMuteSelfAudio -ne "") {        if ($modifiers -gt 0) {            $data += "&unmuteSelfAudio=$UnMuteSelfAudio"        } else {            $data += "unmuteSelfAudio=$UnMuteSelfAudio"        }        $modifiers++    }    if ($ToggleMuteSelfAudio -ne "") {        if ($modifiers -gt 0) {            $data += "&toggleMuteSelfAudio=$ToggleMuteSelfAudio"        } else {            $data += "toggleMuteSelfAudio=$ToggleMuteSelfAudio"        }        $modifiers++    }    if ($MuteAllExceptSelfAudio -ne "") {        if ($modifiers -gt 0) {            $data += "&muteAllExceptSelfAudio=$MuteAllExceptSelfAudio"        } else {            $data += "muteAllExceptSelfAudio=$MuteAllExceptSelfAudio"        }        $modifiers++    }    if ($UnMuteAllExceptSelfAudio -ne "") {        if ($modifiers -gt 0) {            $data += "&unmuteAllExceptSelfAudio=$UnMuteAllExceptSelfAudio"        } else {            $data += "unmuteAllExceptSelfAudio=$UnMuteAllExceptSelfAudio"        }        $modifiers++    }    if ($EndCall -ne "") {        if ($modifiers -gt 0) {            $data += "&endCall=$EndCall"        } else {            $data += "endCall=$EndCall"        }        $modifiers++    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoDtmfProfile -DtmfProfileID $DtmfProfileId}function Remove-AcanoDtmfProfile {    Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$DtmfProfileId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/dtmfProfiles/$DtmfProfileId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoIvrs {
+        [string]$CallLegID
+    )
+
+    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID/callLegProfileTrace").callLegProfileTrace
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoDialTransforms {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ivrs"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ivrs.ivr}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoIvr {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/dialTransforms"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).dialTransforms.dialTransform
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoDialTransform {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrID    )    return (Open-AcanoAPI "api/v1/ivrs/$IvrID").ivr}function New-AcanoIvr {    Param (
-        [parameter(Mandatory=$true)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$Tenant,        [parameter(Mandatory=$false)]        [string]$TenantGroup,        [parameter(Mandatory=$false)]        [string]$IvrBrandingProfile,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveCoSpaceCallIds,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveLyncConferenceIds    )    $nodeLocation = "/api/v1/ivrs"    $data = "uri=$Uri"    if ($Tenant -ne "") {        $data += "&tenant=$Tenant"    }    if ($TenantGroup -ne "") {        $data += "&tenantgroup=$TenantGroup"    }    if ($IvrBrandingProfile -ne "") {        $data += "&ivrBrandingProfile=$IvrBrandingProfile"    }    if ($ResolveCoSpaceCallIds -ne "") {        $data += "&resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"    }    if ($ResolveLyncConferenceIds -ne "") {        $data += "&reesolveLyncConferenceIds=$ResolveLyncConferenceIds"    }    [string]$NewIvrId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoIvr -IvrID $NewIvrId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoIvr {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$IvrId,
-        [parameter(Mandatory=$false)]        [string]$Uri,        [parameter(Mandatory=$false)]        [string]$Tenant,        [parameter(Mandatory=$false)]        [string]$TenantGroup,        [parameter(Mandatory=$false)]        [string]$IvrBrandingProfile,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveCoSpaceCallIds,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$ResolveLyncConferenceIds    )    $nodeLocation = "/api/v1/ivrs/$IvrId"    $data = ""    $modifiers = 0    if ($Uri -ne "") {        $data += "uri=$Uri"        $modifiers++    }    if ($Tenant -ne "") {        if ($modifiers -gt 0) {            $data += "&tenant=$Tenant"        } else {            $data += "tenant=$Tenant"        }        $modifiers++    }    if ($TenantGroup -ne "") {        if ($modifiers -gt 0) {            $data += "&tenantGroup=$TenantGroup"        } else {            $data += "tenantGroup=$TenantGroup"        }        $modifiers++    }    if ($IvrBrandingProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&ivrBrandingProfile=$IvrBrandingProfile"        } else {            $data += "ivrBrandingProfile=$IvrBrandingProfile"        }        $modifiers++    }    if ($ResolveCoSpaceCallIds -ne "") {        if ($modifiers -gt 0) {            $data += "&resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"        } else {            $data += "resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"        }        $modifiers++    }    if ($ResolveLyncConferenceIds -ne "") {        if ($modifiers -gt 0) {            $data += "&resolveLyncConferenceIds=$ResolveLyncConferenceIds"        } else {            $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"        }        $modifiers++    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoIvr -IvrID $IvrId}function Remove-AcanoIvr {    Param (
+        [string]$DialTransformID
+    )
+
+    return (Open-AcanoAPI "api/v1/dialTransform/$DialTransformID").dialTransform
+
+}
+
+function New-AcanoDialTransform {
+    Param (
+        [parameter(Mandatory=$false)]
+        [ValidateSet("raw","strip","phone")]
+        [string]$Type="raw",
+        [parameter(Mandatory=$false)]
+        [string]$Match,
+        [parameter(Mandatory=$false)]
+        [string]$Transform,
+        [parameter(Mandatory=$false)]
+        [string]$Priority,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("accept","acceptPhone","deny")]
+        [string]$Action
+    )
+
+    $nodeLocation = "/api/v1/dialTransforms"
+    $data = "type=$type"
+
+    if ($Match -ne "") {
+        $data += "&match=$Match"
+    }
+
+    if ($Transform -ne "") {
+        $data += "&transform=$Transform"
+    }
+
+    if ($Priority -ne "") {
+        $data += "&priority=$Priority"
+    }
+
+    if ($Action -ne "") {
+        $data += "&Action=$Action"
+    }
+
+    $data
+
+    [string]$NewDialTransformId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoDialTransform -DialTransformID $NewDialTransformId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoDialTransform {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/ivrs/$IvrId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoIvrBrandingProfiles {
+        [string]$DialTransformId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("raw","strip","phone")]
+        [string]$Type,
+        [parameter(Mandatory=$false)]
+        [string]$Match,
+        [parameter(Mandatory=$false)]
+        [string]$Transform,
+        [parameter(Mandatory=$false)]
+        [string]$Priority,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("accept","acceptPhone","deny")]
+        [string]$Action
+    )
+
+    $nodeLocation = "/api/v1/dialTransforms/$DialTransformId"
+    $data=""
+    $modifiers=0
+    
+
+    if ($Type -ne "") {
+        $data = "type=$Type"
+        $modifiers++
+    }
+
+    if ($Match -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&match=$Match"
+        } else {
+            $data += "match=$Match"
+        }
+        $modifiers++
+    }
+
+    if ($Transform -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&transform=$Transform"
+        } else {
+            $data += "transform=$Transform"
+        }
+        $modifiers++
+    }
+
+    if ($Priority -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&priority=$Priority"
+        } else {
+            $data += "priority=$Priority"
+        }
+        $modifiers++
+    }
+
+    if ($Action -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&Action=$Action"
+        } else {
+            $data += "Action=$Action"
+        }
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoDialTransform -DialTransformID $DialTransformId
+}
+
+function Remove-AcanoDialTransform {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$DialTransformId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/dialTransforms/$DialTransformId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallBrandingProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ivrBrandingProfiles"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ivrBrandingProfiles.ivrBrandingProfile}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoIvrBrandingProfile {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("unreferenced","referenced","")]
+        [string]$UsageFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/callBrandingProfiles"
+
+
+    $modifiers = 0
+
+    if ($UsageFilter -ne "") {
+        $nodeLocation += "?usageFilter=$UsageFilter"
+        $modifiers++
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).callBrandingProfiles.callBrandingProfile
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallBrandingProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrBrandingProfileID    )    return (Open-AcanoAPI "api/v1/ivrBrandingProfiles/$IvrBrandingProfileID").ivrBrandingProfile}function New-AcanoIvrBrandingProfile {    Param (
-        [parameter(Mandatory=$false)]        [string]$ResourceLocation    )    $nodeLocation = "/api/v1/ivrBrandingProfiles"    $data = ""    $modifiers = 0    if ($ResourceLocation -ne "") {        $data += "resourceLocation=$ResourceLocation"        $modifiers++    }    [string]$NewIvrBrandingProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoIvrBrandingProfile -IvrBrandingProfileID $NewIvrBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoIvrBrandingProfile {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$IvrBrandingProfileId,
-        [parameter(Mandatory=$false)]        [string]$ResourceLocation    )    $nodeLocation = "/api/v1/ivrBrandingProfiles/$IvrBrandingProfileId"    $data = ""    $modifiers = 0    if ($ResourceLocation -ne "") {        $data += "resourceLocation=$ResourceLocation"        $modifiers++    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoIvrBrandingProfile -IvrBrandingProfileID $IvrBrandingProfileId}function Remove-AcanoIvrBrandingProfile {    Param (
+        [string]$CallBrandingProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/callBrandingProfiles/$CallBrandingProfileID").callBrandingProfile
+
+}
+
+function New-AcanoCallBrandingProfile {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$InvitationTemplate,
+        [parameter(Mandatory=$false)]
+        [string]$ResourceLocation
+    )
+
+    $nodeLocation = "/api/v1/callBrandingProfiles"
+    $data = ""
+    $modifiers = 0
+
+    if ($InvitationTemplate -ne "") {
+        $data += "invitationTemplate=$InvitationTemplate"
+        $modifiers++
+    }
+
+    if ($ResourceLocation -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&resourceLocation=$ResourceLocation"
+        } else {
+            $data += "resourceLocation=$ResourceLocation"
+        }
+        $modifiers++
+    }
+
+    [string]$NewCallBrandingProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoCallBrandingProfile -CallBrandingProfileID $NewCallBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoCallBrandingProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrBrandingProfileId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/ivrBrandingProfiles/$IvrBrandingProfileId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoParticipants {
+        [string]$CallBrandingProfileId,
+        [parameter(Mandatory=$false)]
+        [string]$InvitationTemplate,
+        [parameter(Mandatory=$false)]
+        [string]$ResourceLocation
+    )
+
+    $nodeLocation = "/api/v1/callBrandingProfiles/$CallBrandingProfileId"
+    $data = ""
+    $modifiers = 0
+
+    if ($InvitationTemplate -ne "") {
+        $data += "invitationTemplate=$InvitationTemplate"
+        $modifiers++
+    }
+
+    if ($ResourceLocation -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&resourceLocation=$ResourceLocation"
+        } else {
+            $data += "resourceLocation=$ResourceLocation"
+        }
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoCallBrandingProfile -CallBrandingProfileID $CallBrandingProfileId
+}
+
+function Remove-AcanoCallBrandingProfile {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CallBrandingProfileId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/CallBrandingProfiles/$CallBrandingProfileId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoDtmfProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$callBridgeFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/participants"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($CallBridgeFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callBridgeFilter=$CallBridgeFilter"        } else {            $nodeLocation += "?callBridgeFilter=$CallBridgeFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).participants.participant}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoParticipant {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("unreferenced","referenced","")]
+        [string]$UsageFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/dtmfProfiles"
+
+
+    $modifiers = 0
+
+    if ($UsageFilter -ne "") {
+        $nodeLocation += "?usageFilter=$UsageFilter"
+        $modifiers++
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).dtmfProfiles.dtmfProfile
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoDtmfProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ParticipantID    )    return (Open-AcanoAPI "api/v1/participants/$ParticipantID").participant}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoParticipantCallLegs {    Param (
+        [string]$DtmfProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/dtmfProfiles/$DtmfProfileID").dtmfProfile
+
+}
+
+function New-AcanoDtmfProfile {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$LockCall,
+        [parameter(Mandatory=$false)]
+        [string]$UnlockCall,
+        [parameter(Mandatory=$false)]
+        [string]$NextLayout,
+        [parameter(Mandatory=$false)]
+        [string]$PreviousLayout,
+        [parameter(Mandatory=$false)]
+        [string]$MuteSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$UnmuteSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$ToggleMuteSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$MuteAllExceptSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$UnMuteAllExceptSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$EndCall
+    )
+
+    $nodeLocation = "/api/v1/dtmfProfiles"
+    $data = ""
+    $modifiers = 0
+
+    if ($LockCall -ne "") {
+        $data += "lockCall=$LockCall"
+        $modifiers++
+    }
+
+    if ($UnlockCall -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&unlockCall=$UnlockCall"
+        } else {
+            $data += "unlockCall=$UnlockCall"
+        }
+        $modifiers++
+    }
+
+    if ($NextLayout -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&nextLayout=$NextLayout"
+        } else {
+            $data += "nextLayout=$NextLayout"
+        }
+        $modifiers++
+    }
+
+    if ($PreviousLayout -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&previousLayout=$PreviousLayout"
+        } else {
+            $data += "previousLayout=$PreviousLayout"
+        }
+        $modifiers++
+    }
+
+    if ($MuteSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&muteSelfAudio=$MuteSelfAudio"
+        } else {
+            $data += "muteSelfAudio=$MuteSelfAudio"
+        }
+        $modifiers++
+    }
+
+    if ($UnMuteSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&unmuteSelfAudio=$UnMuteSelfAudio"
+        } else {
+            $data += "unmuteSelfAudio=$UnMuteSelfAudio"
+        }
+        $modifiers++
+    }
+
+    if ($ToggleMuteSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&toggleMuteSelfAudio=$ToggleMuteSelfAudio"
+        } else {
+            $data += "toggleMuteSelfAudio=$ToggleMuteSelfAudio"
+        }
+        $modifiers++
+    }
+
+    if ($MuteAllExceptSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&muteAllExceptSelfAudio=$MuteAllExceptSelfAudio"
+        } else {
+            $data += "muteAllExceptSelfAudio=$MuteAllExceptSelfAudio"
+        }
+        $modifiers++
+    }
+
+    if ($UnMuteAllExceptSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&unmuteAllExceptSelfAudio=$UnMuteAllExceptSelfAudio"
+        } else {
+            $data += "unmuteAllExceptSelfAudio=$UnMuteAllExceptSelfAudio"
+        }
+        $modifiers++
+    }
+
+    if ($EndCall -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&endCall=$EndCall"
+        } else {
+            $data += "endCall=$EndCall"
+        }
+        $modifiers++
+    }
+
+    [string]$NewDtmfProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoDtmfProfile -DtmfProfileID $NewDtmfProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoDtmfProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ParticipantID    )    return (Open-AcanoAPI "api/v1/participants/$ParticipantID/callLegs").callLeg}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoUsers {
+        [string]$DtmfProfileId,
+        [parameter(Mandatory=$false)]
+        [string]$LockCall,
+        [parameter(Mandatory=$false)]
+        [string]$UnlockCall,
+        [parameter(Mandatory=$false)]
+        [string]$NextLayout,
+        [parameter(Mandatory=$false)]
+        [string]$PreviousLayout,
+        [parameter(Mandatory=$false)]
+        [string]$MuteSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$UnmuteSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$ToggleMuteSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$MuteAllExceptSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$UnMuteAllExceptSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$EndCall
+    )
+
+    $nodeLocation = "/api/v1/dtmfProfiles/$DtmfProfileId"
+    $data = ""
+    $modifiers = 0
+
+    if ($LockCall -ne "") {
+        $data += "lockCall=$LockCall"
+        $modifiers++
+    }
+
+    if ($UnlockCall -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&unlockCall=$UnlockCall"
+        } else {
+            $data += "unlockCall=$UnlockCall"
+        }
+        $modifiers++
+    }
+
+    if ($NextLayout -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&nextLayout=$NextLayout"
+        } else {
+            $data += "nextLayout=$NextLayout"
+        }
+        $modifiers++
+    }
+
+    if ($PreviousLayout -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&previousLayout=$PreviousLayout"
+        } else {
+            $data += "previousLayout=$PreviousLayout"
+        }
+        $modifiers++
+    }
+
+    if ($MuteSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&muteSelfAudio=$MuteSelfAudio"
+        } else {
+            $data += "muteSelfAudio=$MuteSelfAudio"
+        }
+        $modifiers++
+    }
+
+    if ($UnMuteSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&unmuteSelfAudio=$UnMuteSelfAudio"
+        } else {
+            $data += "unmuteSelfAudio=$UnMuteSelfAudio"
+        }
+        $modifiers++
+    }
+
+    if ($ToggleMuteSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&toggleMuteSelfAudio=$ToggleMuteSelfAudio"
+        } else {
+            $data += "toggleMuteSelfAudio=$ToggleMuteSelfAudio"
+        }
+        $modifiers++
+    }
+
+    if ($MuteAllExceptSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&muteAllExceptSelfAudio=$MuteAllExceptSelfAudio"
+        } else {
+            $data += "muteAllExceptSelfAudio=$MuteAllExceptSelfAudio"
+        }
+        $modifiers++
+    }
+
+    if ($UnMuteAllExceptSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&unmuteAllExceptSelfAudio=$UnMuteAllExceptSelfAudio"
+        } else {
+            $data += "unmuteAllExceptSelfAudio=$UnMuteAllExceptSelfAudio"
+        }
+        $modifiers++
+    }
+
+    if ($EndCall -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&endCall=$EndCall"
+        } else {
+            $data += "endCall=$EndCall"
+        }
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoDtmfProfile -DtmfProfileID $DtmfProfileId
+}
+
+function Remove-AcanoDtmfProfile {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$DtmfProfileId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/dtmfProfiles/$DtmfProfileId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoIvrs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/users"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).users.user}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoUser {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ivrs"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ivrs.ivr
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoIvr {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID").user}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoUsercoSpaces {    Param (
+        [string]$IvrID
+    )
+
+    return (Open-AcanoAPI "api/v1/ivrs/$IvrID").ivr
+
+}
+
+function New-AcanoIvr {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Uri,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$TenantGroup,
+        [parameter(Mandatory=$false)]
+        [string]$IvrBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveCoSpaceCallIds,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveLyncConferenceIds
+    )
+
+    $nodeLocation = "/api/v1/ivrs"
+    $data = "uri=$Uri"
+
+    if ($Tenant -ne "") {
+        $data += "&tenant=$Tenant"
+    }
+
+    if ($TenantGroup -ne "") {
+        $data += "&tenantgroup=$TenantGroup"
+    }
+
+    if ($IvrBrandingProfile -ne "") {
+        $data += "&ivrBrandingProfile=$IvrBrandingProfile"
+    }
+
+    if ($ResolveCoSpaceCallIds -ne "") {
+        $data += "&resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"
+    }
+
+    if ($ResolveLyncConferenceIds -ne "") {
+        $data += "&reesolveLyncConferenceIds=$ResolveLyncConferenceIds"
+    }
+
+    [string]$NewIvrId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoIvr -IvrID $NewIvrId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoIvr {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserID    )    return (Open-AcanoAPI "api/v1/users/$UserID/usercoSpaces").userCoSpaces.userCoSpace}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoUserProfiles {
+        [string]$IvrId,
+        [parameter(Mandatory=$false)]
+        [string]$Uri,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$TenantGroup,
+        [parameter(Mandatory=$false)]
+        [string]$IvrBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveCoSpaceCallIds,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$ResolveLyncConferenceIds
+    )
+
+    $nodeLocation = "/api/v1/ivrs/$IvrId"
+    $data = ""
+    $modifiers = 0
+
+    if ($Uri -ne "") {
+        $data += "uri=$Uri"
+        $modifiers++
+    }
+
+    if ($Tenant -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&tenant=$Tenant"
+        } else {
+            $data += "tenant=$Tenant"
+        }
+        $modifiers++
+    }
+
+    if ($TenantGroup -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&tenantGroup=$TenantGroup"
+        } else {
+            $data += "tenantGroup=$TenantGroup"
+        }
+        $modifiers++
+    }
+
+    if ($IvrBrandingProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&ivrBrandingProfile=$IvrBrandingProfile"
+        } else {
+            $data += "ivrBrandingProfile=$IvrBrandingProfile"
+        }
+        $modifiers++
+    }
+
+    if ($ResolveCoSpaceCallIds -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"
+        } else {
+            $data += "resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"
+        }
+        $modifiers++
+    }
+
+    if ($ResolveLyncConferenceIds -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&resolveLyncConferenceIds=$ResolveLyncConferenceIds"
+        } else {
+            $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"
+        }
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoIvr -IvrID $IvrId
+}
+
+function Remove-AcanoIvr {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$IvrId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/ivrs/$IvrId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoIvrBrandingProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [ValidateSet("unreferenced","referenced","")]        [string]$UsageFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/userProfiles"    $modifiers = 0    if ($UsageFilter -ne "") {        $nodeLocation += "?usageFilter=$UsageFilter"        $modifiers++    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).userProfiles.userProfile}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoUserProfile {    Param (
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ivrBrandingProfiles"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ivrBrandingProfiles.ivrBrandingProfile
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoIvrBrandingProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserProfileID    )    return (Open-AcanoAPI "api/v1/userProfiles/$UserProfileID").userProfile}function New-AcanoUserProfile {    Param (        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$canCreateCoSpaces,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$CanCreateCalls,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$CanUseExternalDevices,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$CanMakePhoneCalls,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$UserToUserMessagingAllowed    )    $nodeLocation = "/api/v1/userProfiles"    $data = ""    $modifiers = 0    if ($canCreateCoSpaces -ne "") {        $data += "canCreateCoSpaces=$canCreateCoSpaces"        $modifiers++    }    if ($CanCreateCalls -ne "") {        if ($modifiers -gt 0) {            $data += "&canCreateCalls=$canCreateCalls"        } else {            $data += "canCreateCalls=$canCreateCalls"        }        $modifiers++    }    if ($CanUseExternalDevices -ne "") {        if ($modifiers -gt 0) {            $data += "&canUseExternalDevices=$CanUseExternalDevices"        } else {            $data += "canUseExternalDevices=$CanUseExternalDevices"        }        $modifiers++    }    if ($CanMakePhoneCalls -ne "") {        if ($modifiers -gt 0) {            $data += "&canMakePhoneCalls=$CanMakePhoneCalls"        } else {            $data += "canMakePhoneCalls=$CanMakePhoneCalls"        }        $modifiers++    }    if ($UserToUserMessagingAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&userToUserMessagingAllowed=$UserToUserMessagingAllowed"        } else {            $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"        }        $modifiers++    }    [string]$NewUserProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoUserProfile -UserProfileID $NewUserProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoUserProfile {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$UserProfileId,
-        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$canCreateCoSpaces,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$CanCreateCalls,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$CanUseExternalDevices,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$CanMakePhoneCalls,        [parameter(Mandatory=$false)]        [ValidateSet("true","false")]        [string]$UserToUserMessagingAllowed    )    $nodeLocation = "/api/v1/userProfiles/$UserProfileId"    $data = ""    $modifiers = 0    if ($canCreateCoSpaces -ne "") {        $data += "canCreateCoSpaces=$canCreateCoSpaces"        $modifiers++    }    if ($CanCreateCalls -ne "") {        if ($modifiers -gt 0) {            $data += "&canCreateCalls=$canCreateCalls"        } else {            $data += "canCreateCalls=$canCreateCalls"        }        $modifiers++    }    if ($CanUseExternalDevices -ne "") {        if ($modifiers -gt 0) {            $data += "&canUseExternalDevices=$CanUseExternalDevices"        } else {            $data += "canUseExternalDevices=$CanUseExternalDevices"        }        $modifiers++    }    if ($CanMakePhoneCalls -ne "") {        if ($modifiers -gt 0) {            $data += "&canMakePhoneCalls=$CanMakePhoneCalls"        } else {            $data += "canMakePhoneCalls=$CanMakePhoneCalls"        }        $modifiers++    }    if ($UserToUserMessagingAllowed -ne "") {        if ($modifiers -gt 0) {            $data += "&userToUserMessagingAllowed=$UserToUserMessagingAllowed"        } else {            $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"        }        $modifiers++    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoUserProfile -UserProfileID $UserProfileId}function Remove-AcanoUserProfile {    Param (
+        [string]$IvrBrandingProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/ivrBrandingProfiles/$IvrBrandingProfileID").ivrBrandingProfile
+
+}
+
+function New-AcanoIvrBrandingProfile {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$ResourceLocation
+    )
+
+    $nodeLocation = "/api/v1/ivrBrandingProfiles"
+    $data = ""
+    $modifiers = 0
+
+    if ($ResourceLocation -ne "") {
+        $data += "resourceLocation=$ResourceLocation"
+        $modifiers++
+    }
+
+    [string]$NewIvrBrandingProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoIvrBrandingProfile -IvrBrandingProfileID $NewIvrBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoIvrBrandingProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserProfileId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/userProfiles/$UserProfileId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemStatus {    return (Open-AcanoAPI "api/v1/system/status").status}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemAlarms {    return (Open-AcanoAPI "api/v1/system/alarms").alarms.alarm}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemAlarm {    Param (
+        [string]$IvrBrandingProfileId,
+        [parameter(Mandatory=$false)]
+        [string]$ResourceLocation
+    )
+
+    $nodeLocation = "/api/v1/ivrBrandingProfiles/$IvrBrandingProfileId"
+    $data = ""
+    $modifiers = 0
+
+    if ($ResourceLocation -ne "") {
+        $data += "resourceLocation=$ResourceLocation"
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoIvrBrandingProfile -IvrBrandingProfileID $IvrBrandingProfileId
+}
+
+function Remove-AcanoIvrBrandingProfile {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$AlarmID    )    return (Open-AcanoAPI "api/v1/system/alarms/$AlarmID").alarm}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemDatabaseStatus {    return (Open-AcanoAPI "api/v1/system/database").database}function Get-AcanoCdrRecieverUris {
+        [string]$IvrBrandingProfileId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/ivrBrandingProfiles/$IvrBrandingProfileId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoParticipants {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/system/cdrRecievers"    $modifiers = 0    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).cdrRecievers.cdrReciever}function Get-AcanoCdrRecieverUri {    Param (
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$callBridgeFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/participants"
+
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($CallBridgeFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callBridgeFilter=$CallBridgeFilter"
+        } else {
+            $nodeLocation += "?callBridgeFilter=$CallBridgeFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).participants.participant
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoParticipant {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CdrRecieverUriID    )    return (Open-AcanoAPI "api/v1/system/cdrRecievers/$CdrRecieverUriID").cdrReciever}function New-AcanoCdrRecieverUri {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$Uri    )    $nodeLocation = "/api/v1/system/cdrRecievers"    $data = "uri=$Uri"    [string]$NewCdrRecieverUriId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoCdrRecieverUri -CdrRecieverUriID $NewCdrRecieverUriId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoCdrRecieverUri {    Param (
-        [parameter(Mandatory=$true,Position=1)]        [string]$CdrRecieverUriId,
-        [parameter(Mandatory=$false)]        [string]$Uri    )    $nodeLocation = "/api/v1/system/cdrRecievers/$CdrRecieverUriId"    $data = ""    if ($Uri -ne "") {        $data += "uri=$Uri"    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoCdrRecieverUri -CdrRecieverUriID $CdrRecieverUriId}function Remove-AcanoCdrRecieverUri {    Param (
+        [string]$ParticipantID
+    )
+
+    return (Open-AcanoAPI "api/v1/participants/$ParticipantID").participant
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoParticipantCallLegs {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CdrRecieverUriId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/system/cdrRecievers/$CdrRecieverUriId" -DELETE}
+        [string]$ParticipantID
+    )
+
+    return (Open-AcanoAPI "api/v1/participants/$ParticipantID/callLegs").callLeg
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoUsers {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/users"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).users.user
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoUser {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$UserID
+    )
+
+    return (Open-AcanoAPI "api/v1/users/$UserID").user
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoUsercoSpaces {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$UserID
+    )
+
+    return (Open-AcanoAPI "api/v1/users/$UserID/usercoSpaces").userCoSpaces.userCoSpace
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoUserProfiles {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [ValidateSet("unreferenced","referenced","")]
+        [string]$UsageFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/userProfiles"
+
+
+    $modifiers = 0
+
+    if ($UsageFilter -ne "") {
+        $nodeLocation += "?usageFilter=$UsageFilter"
+        $modifiers++
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).userProfiles.userProfile
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoUserProfile {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$UserProfileID
+    )
+
+    return (Open-AcanoAPI "api/v1/userProfiles/$UserProfileID").userProfile
+
+}
+
+function New-AcanoUserProfile {
+    Param (
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$canCreateCoSpaces,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanCreateCalls,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanUseExternalDevices,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanMakePhoneCalls,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$UserToUserMessagingAllowed
+    )
+
+    $nodeLocation = "/api/v1/userProfiles"
+    $data = ""
+    $modifiers = 0
+
+    if ($canCreateCoSpaces -ne "") {
+        $data += "canCreateCoSpaces=$canCreateCoSpaces"
+        $modifiers++
+    }
+
+    if ($CanCreateCalls -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canCreateCalls=$canCreateCalls"
+        } else {
+            $data += "canCreateCalls=$canCreateCalls"
+        }
+        $modifiers++
+    }
+
+    if ($CanUseExternalDevices -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canUseExternalDevices=$CanUseExternalDevices"
+        } else {
+            $data += "canUseExternalDevices=$CanUseExternalDevices"
+        }
+        $modifiers++
+    }
+
+    if ($CanMakePhoneCalls -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canMakePhoneCalls=$CanMakePhoneCalls"
+        } else {
+            $data += "canMakePhoneCalls=$CanMakePhoneCalls"
+        }
+        $modifiers++
+    }
+
+    if ($UserToUserMessagingAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&userToUserMessagingAllowed=$UserToUserMessagingAllowed"
+        } else {
+            $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"
+        }
+        $modifiers++
+    }
+
+    [string]$NewUserProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoUserProfile -UserProfileID $NewUserProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoUserProfile {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$UserProfileId,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$canCreateCoSpaces,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanCreateCalls,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanUseExternalDevices,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$CanMakePhoneCalls,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$UserToUserMessagingAllowed
+    )
+
+    $nodeLocation = "/api/v1/userProfiles/$UserProfileId"
+    $data = ""
+    $modifiers = 0
+
+    if ($canCreateCoSpaces -ne "") {
+        $data += "canCreateCoSpaces=$canCreateCoSpaces"
+        $modifiers++
+    }
+
+    if ($CanCreateCalls -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canCreateCalls=$canCreateCalls"
+        } else {
+            $data += "canCreateCalls=$canCreateCalls"
+        }
+        $modifiers++
+    }
+
+    if ($CanUseExternalDevices -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canUseExternalDevices=$CanUseExternalDevices"
+        } else {
+            $data += "canUseExternalDevices=$CanUseExternalDevices"
+        }
+        $modifiers++
+    }
+
+    if ($CanMakePhoneCalls -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&canMakePhoneCalls=$CanMakePhoneCalls"
+        } else {
+            $data += "canMakePhoneCalls=$CanMakePhoneCalls"
+        }
+        $modifiers++
+    }
+
+    if ($UserToUserMessagingAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&userToUserMessagingAllowed=$UserToUserMessagingAllowed"
+        } else {
+            $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"
+        }
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoUserProfile -UserProfileID $UserProfileId
+}
+
+function Remove-AcanoUserProfile {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$UserProfileId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/userProfiles/$UserProfileId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoSystemStatus {
+    return (Open-AcanoAPI "api/v1/system/status").status
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoSystemAlarms {
+    return (Open-AcanoAPI "api/v1/system/alarms").alarms.alarm
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoSystemAlarm {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$AlarmID
+    )
+
+    return (Open-AcanoAPI "api/v1/system/alarms/$AlarmID").alarm
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoSystemDatabaseStatus {
+    return (Open-AcanoAPI "api/v1/system/database").database
+}
+
+function Get-AcanoCdrRecieverUris {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/system/cdrRecievers"
+    $modifiers = 0
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).cdrRecievers.cdrReciever
+}
+
+function Get-AcanoCdrRecieverUri {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CdrRecieverUriID
+    )
+
+    return (Open-AcanoAPI "api/v1/system/cdrRecievers/$CdrRecieverUriID").cdrReciever
+
+}
+
+function New-AcanoCdrRecieverUri {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$Uri
+    )
+
+    $nodeLocation = "/api/v1/system/cdrRecievers"
+    $data = "uri=$Uri"
+
+    [string]$NewCdrRecieverUriId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoCdrRecieverUri -CdrRecieverUriID $NewCdrRecieverUriId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoCdrRecieverUri {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CdrRecieverUriId,
+        [parameter(Mandatory=$false)]
+        [string]$Uri
+    )
+
+    $nodeLocation = "/api/v1/system/cdrRecievers/$CdrRecieverUriId"
+    $data = ""
+
+    if ($Uri -ne "") {
+        $data += "uri=$Uri"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoCdrRecieverUri -CdrRecieverUriID $CdrRecieverUriId
+}
+
+function Remove-AcanoCdrRecieverUri {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$CdrRecieverUriId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/system/cdrRecievers/$CdrRecieverUriId" -DELETE
+
+}
+
 function Get-AcanoLegacyCdrReceiverUri {
     return (Open-AcanoAPI "api/v1/system/cdrReceiver").cdrReceiver
 }
@@ -415,62 +5101,1044 @@ function Set-AcanoLegacyCdrRecieverUri {
 
 function Remove-AcanoLegacyCdrRecieverUri {
     Set-AcanoLegacyCdrRecieverUri
-}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoGlobalProfile {    return (Open-AcanoAPI "api/v1/system/profiles").profiles}function Set-AcanoGlobalProfile {    Param (        [parameter(Mandatory=$false)]        [string]$CallLegProfile,        [parameter(Mandatory=$false)]        [string]$CallProfile,        [parameter(Mandatory=$false)]        [string]$DtmfProfile,        [parameter(Mandatory=$false)]        [string]$UserProfile,        [parameter(Mandatory=$false)]        [string]$IvrBrandingProfile,        [parameter(Mandatory=$false)]        [string]$CallBrandingProfile    )    $nodeLocation = "/api/v1/system/profiles"    $data = ""    $modifiers = 0    if ($CallLegProfile -ne "") {        if ($CallLegProfile -eq $null){            $data += "callLegProfile="        }        else {            $data += "callLegProfile=$CallLegProfile"        }        $modifiers++    }    if ($CallProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        if ($CallProfile -eq $null){            $data += "callProfile="        }        else {            $data += "callProfile=$CallProfile"        }        $modifiers++    }    if ($DtmfProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        if ($DtmfProfile -eq $null){            $data += "dtmfProfile="        }        else {            $data += "dtmfProfile=$DtmfProfile"        }        $modifiers++    }    if ($UserProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        if ($UserProfile -eq $null){            $data += "userProfile="        }        else {            $data += "userProfile=$UserProfile"        }        $modifiers++    }    if ($IvrBrandingProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        if ($IvrBrandingProfile -eq $null){            $data += "ivrBrandingProfile="        }        else {            $data += "ivrBrandingProfile=$IvrBrandingProfile"        }        $modifiers++    }    if ($CallBrandingProfile -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        if ($CallBrandingProfile -eq $null){            $data += "callBrandingProfile="        }        else {            $data += "callBrandingProfile=$CallBrandingProfile"        }        $modifiers++    }    Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoGlobalProfile}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTurnServers {
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoGlobalProfile {
+    return (Open-AcanoAPI "api/v1/system/profiles").profiles
+}
+
+function Set-AcanoGlobalProfile {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile,
+        [parameter(Mandatory=$false)]
+        [string]$DtmfProfile,
+        [parameter(Mandatory=$false)]
+        [string]$UserProfile,
+        [parameter(Mandatory=$false)]
+        [string]$IvrBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile
+    )
+
+    $nodeLocation = "/api/v1/system/profiles"
+    $data = ""
+    $modifiers = 0
+
+    if ($CallLegProfile -ne "") {
+        if ($CallLegProfile -eq $null){
+            $data += "callLegProfile="
+        }
+        else {
+            $data += "callLegProfile=$CallLegProfile"
+        }
+        $modifiers++
+    }
+
+    if ($CallProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        if ($CallProfile -eq $null){
+            $data += "callProfile="
+        }
+        else {
+            $data += "callProfile=$CallProfile"
+        }
+
+        $modifiers++
+    }
+
+    if ($DtmfProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        if ($DtmfProfile -eq $null){
+            $data += "dtmfProfile="
+        }
+        else {
+            $data += "dtmfProfile=$DtmfProfile"
+        }
+
+        $modifiers++
+    }
+
+    if ($UserProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        if ($UserProfile -eq $null){
+            $data += "userProfile="
+        }
+        else {
+            $data += "userProfile=$UserProfile"
+        }
+
+        $modifiers++
+    }
+
+    if ($IvrBrandingProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        if ($IvrBrandingProfile -eq $null){
+            $data += "ivrBrandingProfile="
+        }
+        else {
+            $data += "ivrBrandingProfile=$IvrBrandingProfile"
+        }
+
+        $modifiers++
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        if ($CallBrandingProfile -eq $null){
+            $data += "callBrandingProfile="
+        }
+        else {
+            $data += "callBrandingProfile=$CallBrandingProfile"
+        }
+
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoGlobalProfile
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoTurnServers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/turnServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).turnServers.turnServer}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTurnServer {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/turnServers"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).turnServers.turnServer
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoTurnServer {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TurnServerID    )    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID").turnServer}function Get-AcanoTurnServerStatus {    Param (
+        [string]$TurnServerID
+    )
+
+    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID").turnServer
+}
+
+function Get-AcanoTurnServerStatus {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TurnServerID    )    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID/status").turnServer.host}function New-AcanoTurnServer {    Param (        [parameter(Mandatory=$false)]        [string]$ServerAddress,        [parameter(Mandatory=$false)]        [string]$ClientAddress,        [parameter(Mandatory=$false)]        [string]$Username,        [parameter(Mandatory=$false)]        [string]$Password,        [parameter(Mandatory=$false)]        [ValidateSet("acano","lyncEdge","standard")]        [string]$Type,        [parameter(Mandatory=$false)]        [string]$NumRegistrations,        [parameter(Mandatory=$false)]        [string]$TcpPortNumberOverride    )    $nodeLocation = "/api/v1/turnServers"    $data = ""    $modifiers = 0    if ($ServerAddress -ne "") {        $data += "serverAddress=$ServerAddress"        $modifiers++    }    if ($ClientAddress -ne "") {        if ($modifiers -gt 0) {            $data += "&clientAddress=$ClientAddress"        } else {            $data += "clientAddress=$ClientAddress"        }        $modifiers++    }    if ($Username -ne "") {        if ($modifiers -gt 0) {            $data += "&username=$Username"        } else {            $data += "username=$Username"        }        $modifiers++    }    if ($Password -ne "") {        if ($modifiers -gt 0) {            $data += "&password=$Password"        } else {            $data += "password=$Password"        }        $modifiers++    }    if ($Type -ne "") {        if ($modifiers -gt 0) {            $data += "&type=$Type"        } else {            $data += "type=$Type"        }        $modifiers++    }    if ($NumRegistrations -ne "") {        if ($modifiers -gt 0) {            $data += "&numRegistrations=$NumRegistrations"        } else {            $data += "numRegistrations=$NumRegistrations"        }        $modifiers++    }    if ($TcpPortNumberOverride -ne "") {        if ($modifiers -gt 0) {            $data += "&tcpPortNumberOverride=$TcpPortNumberOverride"        } else {            $data += "tcpPortNumberOverride=$TcpPortNumberOverride"        }        $modifiers++    }    [string]$NewTurnServerId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoTurnServer -TurnServerID $NewTurnServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoTurnServer {    Param (        [parameter(Mandatory=$true,Position=1)]        [string]$TurnServerID,        [parameter(Mandatory=$false)]        [string]$ServerAddress,        [parameter(Mandatory=$false)]        [string]$ClientAddress,        [parameter(Mandatory=$false)]        [string]$Username,        [parameter(Mandatory=$false)]        [string]$Password,        [parameter(Mandatory=$false)]        [ValidateSet("acano","lyncEdge","standard")]        [string]$Type,        [parameter(Mandatory=$false)]        [string]$NumRegistrations,        [parameter(Mandatory=$false)]        [string]$TcpPortNumberOverride    )    $nodeLocation = "/api/v1/turnServers/$TurnServerID"    $data = ""    $modifiers = 0    if ($ServerAddress -ne "") {        $data += "serverAddress=$ServerAddress"        $modifiers++    }    if ($ClientAddress -ne "") {        if ($modifiers -gt 0) {            $data += "&clientAddress=$ClientAddress"        } else {            $data += "clientAddress=$ClientAddress"        }        $modifiers++    }    if ($Username -ne "") {        if ($modifiers -gt 0) {            $data += "&username=$Username"        } else {            $data += "username=$Username"        }        $modifiers++    }    if ($Password -ne "") {        if ($modifiers -gt 0) {            $data += "&password=$Password"        } else {            $data += "password=$Password"        }        $modifiers++    }    if ($Type -ne "") {        if ($modifiers -gt 0) {            $data += "&type=$Type"        } else {            $data += "type=$Type"        }        $modifiers++    }    if ($NumRegistrations -ne "") {        if ($modifiers -gt 0) {            $data += "&numRegistrations=$NumRegistrations"        } else {            $data += "numRegistrations=$NumRegistrations"        }        $modifiers++    }    if ($TcpPortNumberOverride -ne "") {        if ($modifiers -gt 0) {            $data += "&tcpPortNumberOverride=$TcpPortNumberOverride"        } else {            $data += "tcpPortNumberOverride=$TcpPortNumberOverride"        }        $modifiers++    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoTurnServer -TurnServerID $TurnServerID}function Remove-AcanoTurnServer {    Param (
+        [string]$TurnServerID
+    )
+
+    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID/status").turnServer.host
+}
+
+function New-AcanoTurnServer {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$ServerAddress,
+        [parameter(Mandatory=$false)]
+        [string]$ClientAddress,
+        [parameter(Mandatory=$false)]
+        [string]$Username,
+        [parameter(Mandatory=$false)]
+        [string]$Password,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("acano","lyncEdge","standard")]
+        [string]$Type,
+        [parameter(Mandatory=$false)]
+        [string]$NumRegistrations,
+        [parameter(Mandatory=$false)]
+        [string]$TcpPortNumberOverride
+    )
+
+    $nodeLocation = "/api/v1/turnServers"
+    $data = ""
+    $modifiers = 0
+
+    if ($ServerAddress -ne "") {
+        $data += "serverAddress=$ServerAddress"
+        $modifiers++
+    }
+
+    if ($ClientAddress -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&clientAddress=$ClientAddress"
+        } else {
+            $data += "clientAddress=$ClientAddress"
+        }
+        $modifiers++
+    }
+
+    if ($Username -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&username=$Username"
+        } else {
+            $data += "username=$Username"
+        }
+        $modifiers++
+    }
+
+    if ($Password -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&password=$Password"
+        } else {
+            $data += "password=$Password"
+        }
+        $modifiers++
+    }
+
+    if ($Type -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&type=$Type"
+        } else {
+            $data += "type=$Type"
+        }
+        $modifiers++
+    }
+
+    if ($NumRegistrations -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&numRegistrations=$NumRegistrations"
+        } else {
+            $data += "numRegistrations=$NumRegistrations"
+        }
+        $modifiers++
+    }
+
+    if ($TcpPortNumberOverride -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&tcpPortNumberOverride=$TcpPortNumberOverride"
+        } else {
+            $data += "tcpPortNumberOverride=$TcpPortNumberOverride"
+        }
+        $modifiers++
+    }
+
+    [string]$NewTurnServerId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoTurnServer -TurnServerID $NewTurnServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoTurnServer {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TurnServerId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/turnServers/$TurnServerId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoWebBridges {
+        [string]$TurnServerID,
+        [parameter(Mandatory=$false)]
+        [string]$ServerAddress,
+        [parameter(Mandatory=$false)]
+        [string]$ClientAddress,
+        [parameter(Mandatory=$false)]
+        [string]$Username,
+        [parameter(Mandatory=$false)]
+        [string]$Password,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("acano","lyncEdge","standard")]
+        [string]$Type,
+        [parameter(Mandatory=$false)]
+        [string]$NumRegistrations,
+        [parameter(Mandatory=$false)]
+        [string]$TcpPortNumberOverride
+    )
+
+    $nodeLocation = "/api/v1/turnServers/$TurnServerID"
+    $data = ""
+    $modifiers = 0
+
+    if ($ServerAddress -ne "") {
+        $data += "serverAddress=$ServerAddress"
+        $modifiers++
+    }
+
+    if ($ClientAddress -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&clientAddress=$ClientAddress"
+        } else {
+            $data += "clientAddress=$ClientAddress"
+        }
+        $modifiers++
+    }
+
+    if ($Username -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&username=$Username"
+        } else {
+            $data += "username=$Username"
+        }
+        $modifiers++
+    }
+
+    if ($Password -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&password=$Password"
+        } else {
+            $data += "password=$Password"
+        }
+        $modifiers++
+    }
+
+    if ($Type -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&type=$Type"
+        } else {
+            $data += "type=$Type"
+        }
+        $modifiers++
+    }
+
+    if ($NumRegistrations -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&numRegistrations=$NumRegistrations"
+        } else {
+            $data += "numRegistrations=$NumRegistrations"
+        }
+        $modifiers++
+    }
+
+    if ($TcpPortNumberOverride -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&tcpPortNumberOverride=$TcpPortNumberOverride"
+        } else {
+            $data += "tcpPortNumberOverride=$TcpPortNumberOverride"
+        }
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoTurnServer -TurnServerID $TurnServerID
+}
+
+function Remove-AcanoTurnServer {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TurnServerId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/turnServers/$TurnServerId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoWebBridges {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/webBridges"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).webBridges.webBridge}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoWebBridge {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/webBridges"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).webBridges.webBridge
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoWebBridge {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$WebBridgeID    )    return (Open-AcanoAPI "api/v1/webBridges/$WebBridgeID").webBridge}function New-AcanoWebBridge {    Param (        [parameter(Mandatory=$false)]        [string]$Url,        [parameter(Mandatory=$false)]        [string]$ResourceArchive,        [parameter(Mandatory=$false)]        [string]$Tenant,        [parameter(Mandatory=$false)]        [string]$TenantGroup,        [parameter(Mandatory=$false)]        [ValidateSet("disabled","secure","legacy")]        [string]$IdEntryMode,        [ValidateSet("true","false")]        [string]$AllowWebLinkAccess,        [ValidateSet("true","false")]        [string]$ShowSignIn,        [ValidateSet("true","false")]        [string]$ResolveCoSpaceCallIds,        [ValidateSet("true","false")]        [string]$ResolveLyncConferenceIds    )    $nodeLocation = "/api/v1/webBridges"    $data = ""    $modifiers = 0    if ($Url -ne "") {        $data += "url=$Url"        $modifiers++    }    if ($ResourceArchive -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "resourceArchive=$ResourceArchive"        $modifiers++    }    if ($Tenant -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "tenant=$Tenant"        $modifiers++    }    if ($TenantGroup -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "tenantGroup=$TenantGroup"        $modifiers++    }    if ($IdEntryMode -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "idEntryMode=$IdEntryMode"        $modifiers++    }    if ($AllowWebLinkAccess -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "allowWebLinkAccess=$AllowWebLinkAccess"        $modifiers++    }    if ($ShowSignIn -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "showSignIn=$ShowSignIn"        $modifiers++    }    if ($ResolveCoSpaceCallIds -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"        $modifiers++    }    if ($ResolveLyncConferenceIds -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"        $modifiers++    }    [string]$NewWebBridgeId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoWebBridge -WebBridgeID $NewWebBridgeId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoWebBridge {    Param (        [parameter(Mandatory=$true,Position=1)]        [string]$WebBridgeId,        [parameter(Mandatory=$false)]        [string]$Url,        [parameter(Mandatory=$false)]        [string]$ResourceArchive,        [parameter(Mandatory=$false)]        [string]$Tenant,        [parameter(Mandatory=$false)]        [string]$TenantGroup,        [parameter(Mandatory=$false)]        [ValidateSet("disabled","secure","legacy")]        [string]$IdEntryMode,        [ValidateSet("true","false")]        [string]$AllowWebLinkAccess,        [ValidateSet("true","false")]        [string]$ShowSignIn,        [ValidateSet("true","false")]        [string]$ResolveCoSpaceCallIds,        [ValidateSet("true","false")]        [string]$ResolveLyncConferenceIds    )    $nodeLocation = "/api/v1/webBridges/$WebBridgeId"    $data = ""    $modifiers = 0    if ($Url -ne "") {        $data += "url=$Url"        $modifiers++    }    if ($ResourceArchive -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "resourceArchive=$ResourceArchive"        $modifiers++    }    if ($Tenant -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "tenant=$Tenant"        $modifiers++    }    if ($TenantGroup -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "tenantGroup=$TenantGroup"        $modifiers++    }    if ($IdEntryMode -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "idEntryMode=$IdEntryMode"        $modifiers++    }    if ($AllowWebLinkAccess -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "allowWebLinkAccess=$AllowWebLinkAccess"        $modifiers++    }    if ($ShowSignIn -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "showSignIn=$ShowSignIn"        $modifiers++    }    if ($ResolveCoSpaceCallIds -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"        $modifiers++    }    if ($ResolveLyncConferenceIds -ne "") {        if ($modifiers -gt 0) {            $data += "&"        }        $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"        $modifiers++    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoWebBridge -WebBridgeID $WebBridgeId}function Remove-AcanoWebBridge {    Param (
+        [string]$WebBridgeID
+    )
+
+    return (Open-AcanoAPI "api/v1/webBridges/$WebBridgeID").webBridge
+}
+
+function New-AcanoWebBridge {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$Url,
+        [parameter(Mandatory=$false)]
+        [string]$ResourceArchive,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$TenantGroup,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("disabled","secure","legacy")]
+        [string]$IdEntryMode,
+        [ValidateSet("true","false")]
+        [string]$AllowWebLinkAccess,
+        [ValidateSet("true","false")]
+        [string]$ShowSignIn,
+        [ValidateSet("true","false")]
+        [string]$ResolveCoSpaceCallIds,
+        [ValidateSet("true","false")]
+        [string]$ResolveLyncConferenceIds
+    )
+
+    $nodeLocation = "/api/v1/webBridges"
+    $data = ""
+    $modifiers = 0
+
+    if ($Url -ne "") {
+        $data += "url=$Url"
+        $modifiers++
+    }
+
+    if ($ResourceArchive -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "resourceArchive=$ResourceArchive"
+        $modifiers++
+    }
+
+    if ($Tenant -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "tenant=$Tenant"
+        $modifiers++
+    }
+
+    if ($TenantGroup -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "tenantGroup=$TenantGroup"
+        $modifiers++
+    }
+
+    if ($IdEntryMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "idEntryMode=$IdEntryMode"
+        $modifiers++
+    }
+
+    if ($AllowWebLinkAccess -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "allowWebLinkAccess=$AllowWebLinkAccess"
+        $modifiers++
+    }
+
+    if ($ShowSignIn -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "showSignIn=$ShowSignIn"
+        $modifiers++
+    }
+
+    if ($ResolveCoSpaceCallIds -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"
+        $modifiers++
+    }
+
+    if ($ResolveLyncConferenceIds -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"
+        $modifiers++
+    }
+
+    [string]$NewWebBridgeId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoWebBridge -WebBridgeID $NewWebBridgeId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoWebBridge {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$WebBridgeId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/webBridges/$WebBridgeId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallBridges {
+        [string]$WebBridgeId,
+        [parameter(Mandatory=$false)]
+        [string]$Url,
+        [parameter(Mandatory=$false)]
+        [string]$ResourceArchive,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$TenantGroup,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("disabled","secure","legacy")]
+        [string]$IdEntryMode,
+        [ValidateSet("true","false")]
+        [string]$AllowWebLinkAccess,
+        [ValidateSet("true","false")]
+        [string]$ShowSignIn,
+        [ValidateSet("true","false")]
+        [string]$ResolveCoSpaceCallIds,
+        [ValidateSet("true","false")]
+        [string]$ResolveLyncConferenceIds
+    )
+
+    $nodeLocation = "/api/v1/webBridges/$WebBridgeId"
+    $data = ""
+    $modifiers = 0
+
+    if ($Url -ne "") {
+        $data += "url=$Url"
+        $modifiers++
+    }
+
+    if ($ResourceArchive -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "resourceArchive=$ResourceArchive"
+        $modifiers++
+    }
+
+    if ($Tenant -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "tenant=$Tenant"
+        $modifiers++
+    }
+
+    if ($TenantGroup -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "tenantGroup=$TenantGroup"
+        $modifiers++
+    }
+
+    if ($IdEntryMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "idEntryMode=$IdEntryMode"
+        $modifiers++
+    }
+
+    if ($AllowWebLinkAccess -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "allowWebLinkAccess=$AllowWebLinkAccess"
+        $modifiers++
+    }
+
+    if ($ShowSignIn -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "showSignIn=$ShowSignIn"
+        $modifiers++
+    }
+
+    if ($ResolveCoSpaceCallIds -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"
+        $modifiers++
+    }
+
+    if ($ResolveLyncConferenceIds -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoWebBridge -WebBridgeID $WebBridgeId
+}
+
+function Remove-AcanoWebBridge {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$WebBridgeId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/webBridges/$WebBridgeId" -DELETE
+
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallBridges {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/callBridges"    if ($Limit -ne "") {        $nodeLocation += "?limit=$Limit"                if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).callBridges.callBridge}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCallBridge {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/callBridges"
+
+    if ($Limit -ne "") {
+        $nodeLocation += "?limit=$Limit"
+        
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).callBridges.callBridge
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoCallBridge {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBridgeID    )    return (Open-AcanoAPI "api/v1/callBridges/$CallBridgeID").callBridge}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoXmppServer {    return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemDiagnostics {
+        [string]$CallBridgeID
+    )
+
+    return (Open-AcanoAPI "api/v1/callBridges/$CallBridgeID").callBridge
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoXmppServer {
+    return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoSystemDiagnostics {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CoSpaceFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$CallCorrelatorFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/system/diagnostics"    $modifiers = 0    if ($CoSpaceFilter -ne "") {        $nodeLocation += "?coSpacefilter=$CoSpaceFilter"        $modifiers++    }    if ($CallCorrelatorFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&callCorrelatorFilter=$CallCorrelatorFilter"        } else {            $nodeLocation += "?callCorrelatorFilter=$CallCorrelatorFilter"            $modifiers++        }    }    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).diagnostics.diagnostic}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemDiagnostic {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CoSpaceFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$CallCorrelatorFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/system/diagnostics"
+    $modifiers = 0
+
+    if ($CoSpaceFilter -ne "") {
+        $nodeLocation += "?coSpacefilter=$CoSpaceFilter"
+        $modifiers++
+    }
+
+    if ($CallCorrelatorFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&callCorrelatorFilter=$CallCorrelatorFilter"
+        } else {
+            $nodeLocation += "?callCorrelatorFilter=$CallCorrelatorFilter"
+            $modifiers++
+        }
+    }
+
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).diagnostics.diagnostic
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoSystemDiagnostic {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$SystemDiagnosticID    )    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID").diagnostic}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemDiagnosticContent {    Param (
+        [string]$SystemDiagnosticID
+    )
+
+    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID").diagnostic
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoSystemDiagnosticContent {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$SystemDiagnosticID    )    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID/contents").diagnostic}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapServers {
+        [string]$SystemDiagnosticID
+    )
+
+    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID/contents").diagnostic
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoLdapServers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapServers.ldapServer}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapServer {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ldapServers"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ldapServers.ldapServer
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoLdapServer {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapServerID    )    return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapMappings {
+        [string]$LdapServerID
+    )
+
+    return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoLdapMappings {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapMappings"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapMappings.ldapMapping}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapMapping {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ldapMappings"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ldapMappings.ldapMapping
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoLdapMapping {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapMappingID    )    return (Open-AcanoAPI "api/v1/ldapMappings/$LdapMappingID").ldapMapping}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapSources {
+        [string]$LdapMappingID
+    )
+
+    return (Open-AcanoAPI "api/v1/ldapMappings/$LdapMappingID").ldapMapping
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoLdapSources {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapMappings"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }    if ($TenantFilter -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&tenantFilter=$TenantFilter"        } else {            $nodeLocation += "?tenantFilter=$TenantFilter"            $modifiers++        }    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapSources.ldapSource}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapSource {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ldapMappings"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+
+    if ($TenantFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&tenantFilter=$TenantFilter"
+        } else {
+            $nodeLocation += "?tenantFilter=$TenantFilter"
+            $modifiers++
+        }
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ldapSources.ldapSource
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoLdapSource {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSourceID    )    return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapSyncs {
+        [string]$LdapSourceID
+    )
+
+    return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoLdapSyncs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/ldapSyncs"    if ($Limit -ne "") {        $nodeLocation += "?limit=$Limit"                if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).ldapSyncs.ldapSync}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoLdapSync {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/ldapSyncs"
+
+    if ($Limit -ne "") {
+        $nodeLocation += "?limit=$Limit"
+        
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).ldapSyncs.ldapSync
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoLdapSync {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSyncID    )    return (Open-AcanoAPI "api/v1/ldapSyncs/$LdapSyncID").ldapSync}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoExternalDirectorySearchLocations {
+        [string]$LdapSyncID
+    )
+
+    return (Open-AcanoAPI "api/v1/ldapSyncs/$LdapSyncID").ldapSync
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoExternalDirectorySearchLocations {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$TenantFilter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/directorySearchLocations"    $modifiers = 0    if ($TenantFilter -ne "") {        $nodeLocation += "?tenantFilter=$TenantFilter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).directorySearchLocations.directorySearchLocation}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoExternalDirectorySearchLocation {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$TenantFilter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/directorySearchLocations"
+    $modifiers = 0
+
+    if ($TenantFilter -ne "") {
+        $nodeLocation += "?tenantFilter=$TenantFilter"
+        $modifiers++
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).directorySearchLocations.directorySearchLocation
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoExternalDirectorySearchLocation {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ExternalDirectorySearchLocationID    )    return (Open-AcanoAPI "api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID").directorySearchLocation}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTenants {
+        [string]$ExternalDirectorySearchLocationID
+    )
+
+    return (Open-AcanoAPI "api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID").directorySearchLocation
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoTenants {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
-        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/tenants"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).tenants.tenant}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTenant {    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Filter="",
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/tenants"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $nodeLocation += "?filter=$Filter"
+        $modifiers++
+    }
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).tenants.tenant
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoTenant {
+    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TenantID    )    return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenants}
+        [string]$TenantID
+    )
+
+    return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenants
+}
