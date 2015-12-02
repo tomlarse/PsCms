@@ -377,16 +377,45 @@ function Get-AcanocoSpaces {
         [parameter(Mandatory=$true,Position=1)]
         [string]$UserProfileId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/userProfiles/$UserProfileId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemStatus {    return (Open-AcanoAPI "api/v1/system/status").status}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemAlarms {    return (Open-AcanoAPI "api/v1/system/alarms").alarms.alarm}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemAlarm {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$AlarmID    )    return (Open-AcanoAPI "api/v1/system/alarms/$AlarmID").alarm}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemDatabaseStatus {    return (Open-AcanoAPI "api/v1/system/database").database}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCdrRecieverUris {
+        [string]$AlarmID    )    return (Open-AcanoAPI "api/v1/system/alarms/$AlarmID").alarm}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoSystemDatabaseStatus {    return (Open-AcanoAPI "api/v1/system/database").database}function Get-AcanoCdrRecieverUris {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
-    Param (        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/system/cdrRecievers"    $modifiers = 0    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).cdrRecievers.cdrReciever}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoCdrRecieverUri {    Param (
+    Param (        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/system/cdrRecievers"    $modifiers = 0    if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).cdrRecievers.cdrReciever}function Get-AcanoCdrRecieverUri {    Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$CdrRecieverUriID    )    return (Open-AcanoAPI "api/v1/system/cdrRecievers/$CdrRecieverUriID").cdrReciever}function New-AcanoCdrRecieverUri {    Param (
         [parameter(Mandatory=$true,Position=1)]        [string]$Uri    )    $nodeLocation = "/api/v1/system/cdrRecievers"    $data = "uri=$Uri"    [string]$NewCdrRecieverUriId = Open-AcanoAPI $nodeLocation -POST -Data $data        Get-AcanoCdrRecieverUri -CdrRecieverUriID $NewCdrRecieverUriId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace}function Set-AcanoCdrRecieverUri {    Param (
         [parameter(Mandatory=$true,Position=1)]        [string]$CdrRecieverUriId,
         [parameter(Mandatory=$false)]        [string]$Uri    )    $nodeLocation = "/api/v1/system/cdrRecievers/$CdrRecieverUriId"    $data = ""    if ($Uri -ne "") {        $data += "uri=$Uri"    }    Open-AcanoAPI $nodeLocation -PUT -Data $data        Get-AcanoCdrRecieverUri -CdrRecieverUriID $CdrRecieverUriId}function Remove-AcanoCdrRecieverUri {    Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CdrRecieverUriId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/system/cdrRecievers/$CdrRecieverUriId" -DELETE}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoGlobalProfile {    return (Open-AcanoAPI "api/v1/system/profiles").profiles}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTurnServers {
+        [string]$CdrRecieverUriId    )    ### Add confirmation    Open-AcanoAPI "/api/v1/system/cdrRecievers/$CdrRecieverUriId" -DELETE}
+function Get-AcanoLegacyCdrReceiverUri {
+    return (Open-AcanoAPI "api/v1/system/cdrReceiver").cdrReceiver
+}
+
+function Set-AcanoLegacyCdrRecieverUri {
+     Param (
+        [parameter(Mandatory=$false,Position=1)]
+        [string]$Uri
+    )
+
+    $nodeLocation = "/api/v1/system/cdrReciever"
+    $data = ""
+
+    if ($Uri -ne "") {
+        $data += "&uri=$Uri"
+        
+        [string]$NewCdrRecieverUri = Open-AcanoAPI $nodeLocation -POST -Data $data
+    } 
+    
+    else {
+        Open-AcanoAPI $nodeLocation -PUT -Data $data
+    }
+
+    Get-AcanoLegacyCdrReceiverUri
+}
+
+function Remove-AcanoLegacyCdrRecieverUri {
+    Set-AcanoLegacyCdrRecieverUri
+}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoGlobalProfile {    return (Open-AcanoAPI "api/v1/system/profiles").profiles}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTurnServers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Filter="",        [parameter(ParameterSetName="Offset",Mandatory=$true)]        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]        [string]$Limit="",        [parameter(ParameterSetName="Offset",Mandatory=$false)]        [string]$Offset=""    )    $nodeLocation = "api/v1/turnServers"    $modifiers = 0    if ($Filter -ne "") {        $nodeLocation += "?filter=$Filter"        $modifiers++    }        if ($Limit -ne "") {        if ($modifiers -gt 0) {            $nodeLocation += "&limit=$Limit"        } else {            $nodeLocation += "?limit=$Limit"        }        if($Offset -ne ""){            $nodeLocation += "&offset=$Offset"        }    }    return (Open-AcanoAPI $nodeLocation).turnServers.turnServer}# .ExternalHelp PsAcano.psm1-Help.xmlfunction Get-AcanoTurnServer {    Param (
