@@ -5451,6 +5451,18 @@ function Set-AcanoTurnServer {
     Get-AcanoTurnServer -TurnServerID $TurnServerID
 }
 
+function Remove-AcanoTurnServer {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TurnServerId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/turnServers/$TurnServerId" -DELETE
+
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoWebBridges {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
