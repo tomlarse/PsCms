@@ -5845,6 +5845,40 @@ function Set-AcanoXmppServer {
     Get-AcanoXmppServer
 }
 
+function Get-AcanoCallBridgeCluster {
+    return (Open-AcanoAPI "api/v1/system/configuration/cluster").cluster
+}
+
+function Set-AcanoCallBridgeCluster {
+     Param (
+        [parameter(Mandatory=$false)]
+        [string]$UniqueName,
+        [parameter(Mandatory=$false)]
+        [string]$PeerLinkBitRate
+    )
+
+    $nodeLocation = "/api/v1/system/configuration/cluster"
+    $data = ""
+    $modifiers = 0
+
+    if ($UniqueName -ne "") {
+        $data += "uniqueName=$UniqueName"
+        $modifiers++
+    }
+
+    if ($PeerLinkBitRate -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "peerLinkBitRate=$PeerLinkBitRate"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoCallBridgeCluster
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoSystemDiagnostics {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
