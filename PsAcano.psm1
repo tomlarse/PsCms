@@ -15,23 +15,30 @@ function Open-AcanoAPI {
         [parameter(ParameterSetName="POST",Mandatory=$false)]
         [parameter(ParameterSetName="PUT",Mandatory=$false)]
         [parameter(ParameterSetName="DELETE",Mandatory=$false)]
-        [string]$Data
+        [string]$Data,
+        [parameter(ParameterSetName="POST",Mandatory=$false)]
+        [switch]$ReturnResponse
     )
 
     $webclient = New-Object System.Net.WebClient
     $credCache = new-object System.Net.CredentialCache
     $credCache.Add($script:APIAddress, "Basic", $script:creds)
 
-    $webclient.Headers.Add("user-agent", "Windows Powershell WebClient")
+    $webclient.Headers.Add("user-agent", "PSAcano Powershell Module")
     $webclient.Credentials = $credCache
 
     if ($POST) {
         $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
-        $webclient.UploadString($script:APIAddress+$NodeLocation,"POST",$Data)
+        $response = $webclient.UploadString($script:APIAddress+$NodeLocation,"POST",$Data)
 
-        $res = $webclient.ResponseHeaders.Get("Location")
+        if ($ReturnResponse) {
+            return [xml]$response
+        }
+        else {
+            $res = $webclient.ResponseHeaders.Get("Location")
 
-        return $res.Substring($res.Length-36)
+            return $res.Substring($res.Length-36)
+        }
     } elseif ($PUT) {
         $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
 
@@ -5535,12 +5542,16 @@ function New-AcanoWebBridge {
         [parameter(Mandatory=$false)]
         [ValidateSet("disabled","secure","legacy")]
         [string]$IdEntryMode,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$AllowWebLinkAccess,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ShowSignIn,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ResolveCoSpaceCallIds,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ResolveLyncConferenceIds
     )
@@ -5646,12 +5657,16 @@ function Set-AcanoWebBridge {
         [parameter(Mandatory=$false)]
         [ValidateSet("disabled","secure","legacy")]
         [string]$IdEntryMode,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$AllowWebLinkAccess,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ShowSignIn,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ResolveCoSpaceCallIds,
+        [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$ResolveLyncConferenceIds
     )
@@ -5793,6 +5808,92 @@ function Get-AcanoXmppServer {
     return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp
 }
 
+function Set-AcanoXmppServer {
+     Param (
+        [parameter(Mandatory=$false)]
+        [string]$UniqueName,
+        [parameter(Mandatory=$false)]
+        [string]$Domain,
+        [parameter(Mandatory=$false)]
+        [string]$SharedSecret,
+        [parameter(Mandatory=$false)]
+        [string]$ServerAddressOverride
+    )
+
+    $nodeLocation = "/api/v1/system/configuration/xmpp"
+    $data = ""
+    $modifiers = 0
+
+    if ($UniqueName -ne "") {
+        $data += "uniqueName=$UniqueName"
+        $modifiers++
+    }
+
+    if ($Domain -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "domain=$Domain"
+        $modifiers++
+    }
+
+    if ($SharedSecret -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "sharedSecret=$SharedSecret"
+        $modifiers++
+    }
+
+    if ($ServerAddressOverride -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "serverAddressOverride=$ServerAddressOverride"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoXmppServer
+}
+
+function Get-AcanoCallBridgeCluster {
+    return (Open-AcanoAPI "api/v1/system/configuration/cluster").cluster
+}
+
+function Set-AcanoCallBridgeCluster {
+     Param (
+        [parameter(Mandatory=$false)]
+        [string]$UniqueName,
+        [parameter(Mandatory=$false)]
+        [string]$PeerLinkBitRate
+    )
+
+    $nodeLocation = "/api/v1/system/configuration/cluster"
+    $data = ""
+    $modifiers = 0
+
+    if ($UniqueName -ne "") {
+        $data += "uniqueName=$UniqueName"
+        $modifiers++
+    }
+
+    if ($PeerLinkBitRate -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "peerLinkBitRate=$PeerLinkBitRate"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoCallBridgeCluster
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoSystemDiagnostics {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
@@ -5909,6 +6010,116 @@ function Get-AcanoLdapServer {
     return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer
 }
 
+function New-AcanoLdapServer {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Address,
+        [parameter(Mandatory=$true)]
+        [string]$PortNumber,
+        [parameter(Mandatory=$false)]
+        [string]$Username,
+        [parameter(Mandatory=$false)]
+        [string]$Password,
+        [parameter(Mandatory=$true)]
+        [ValidateSet("true","false")]
+        [string]$Secure
+    )
+
+    $nodeLocation = "/api/v1/ldapServers"
+    $data = "address=$Address&portNumber=$PortNumber&secure=$Secure"
+    $modifiers = 0
+
+    if ($Username -ne "") {
+        $data += "&username=$Username"
+    }
+
+    if ($Password -ne "") {
+        $data += "&password=$Password"
+    }
+
+    [string]$NewLdapServerId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoLdapServer -LdapServerID $NewLdapServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoLdapServer {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapServerId,
+        [parameter(Mandatory=$false)]
+        [string]$Address,
+        [parameter(Mandatory=$false)]
+        [string]$PortNumber,
+        [parameter(Mandatory=$false)]
+        [string]$Username,
+        [parameter(Mandatory=$false)]
+        [string]$Password,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$Secure
+    )
+
+    $nodeLocation = "/api/v1/ldapServers/$LdapServerId"
+    $data = ""
+    $modifiers = 0
+
+    if ($Address -ne "") {
+        $data += "address=$Address"
+        $modifiers++
+    }
+
+    if ($PortNumber -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "portNumber=$PortNumber"
+        $modifiers++
+    }
+
+    if ($Username -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "username=$Username"
+        $modifiers++
+    }
+
+    if ($Password -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "password=$Password"
+        $modifiers++
+    }
+
+    if ($Secure -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "secure=$Secure"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoLdapServer -LdapServerID $LdapServerId
+}
+
+function Remove-AcanoLdapServer {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapServerId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/ldapServers/$LdapServerId" -DELETE
+
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoLdapMappings {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
@@ -5954,6 +6165,214 @@ function Get-AcanoLdapMapping {
     )
 
     return (Open-AcanoAPI "api/v1/ldapMappings/$LdapMappingID").ldapMapping
+}
+
+function New-AcanoLdapMapping {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$JidMapping,
+        [parameter(Mandatory=$false)]
+        [string]$NameMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CdrTagMapping,
+        [parameter(Mandatory=$false)]
+        [string]$AuthenticationMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceUriMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceSecondaryUriMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceNameMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceCallIdMapping
+    )
+
+    $nodeLocation = "/api/v1/ldapMappings"
+    $data = ""
+    $modifiers = 0
+
+    if ($JidMapping -ne "") {
+        $data += "jidMapping=$JidMapping"
+        $modifiers++
+    }
+
+    if ($NameMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "nameMapping=$NameMapping"
+        $modifiers++
+    }
+
+    if ($CdrTagMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "cdrTagMapping=$CdrTagMapping"
+        $modifiers++
+    }
+
+    if ($AuthenticationMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "authenticationMapping=$AuthenticationMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceUriMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceUriMapping=$CoSpaceUriMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceSecondaryUriMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceSecondaryUriMapping=$CoSpaceSecondaryUriMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceNameMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceNameMapping=$CoSpaceNameMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceCallIdMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceCallIdMapping=$CoSpaceCallIdMapping"
+        $modifiers++
+    }
+
+    [string]$NewLdapMappingId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoLdapMapping -LdapMappingID $NewLdapMappingId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoLdapMapping {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapMappingId,
+        [parameter(Mandatory=$false)]
+        [string]$JidMapping,
+        [parameter(Mandatory=$false)]
+        [string]$NameMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CdrTagMapping,
+        [parameter(Mandatory=$false)]
+        [string]$AuthenticationMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceUriMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceSecondaryUriMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceNameMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceCallIdMapping
+    )
+
+    $nodeLocation = "/api/v1/ldapMappings/$LdapMappingId"
+    $data = ""
+    $modifiers = 0
+
+    if ($JidMapping -ne "") {
+        $data += "jidMapping=$JidMapping"
+        $modifiers++
+    }
+
+    if ($NameMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "nameMapping=$NameMapping"
+        $modifiers++
+    }
+
+    if ($CdrTagMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "cdrTagMapping=$CdrTagMapping"
+        $modifiers++
+    }
+
+    if ($AuthenticationMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "authenticationMapping=$AuthenticationMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceUriMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceUriMapping=$CoSpaceUriMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceSecondaryUriMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceSecondaryUriMapping=$CoSpaceSecondaryUriMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceNameMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceNameMapping=$CoSpaceNameMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceCallIdMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "coSpaceCallIdMapping=$CoSpaceCallIdMapping"
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoLdapMapping -LdapMappingID $LdapMappingId
+}
+
+function Remove-AcanoLdapMapping {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapMappingId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/ldapMappings/$LdapMappingId" -DELETE
+
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -6015,6 +6434,114 @@ function Get-AcanoLdapSource {
     return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource
 }
 
+function New-AcanoLdapSource {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Server,
+        [parameter(Mandatory=$true)]
+        [string]$Mapping,
+        [parameter(Mandatory=$true)]
+        [string]$BaseDN,
+        [parameter(Mandatory=$false)]
+        [string]$Filter,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant
+    )
+
+    $nodeLocation = "/api/v1/ldapSources"
+    $data = "server=$Server&mapping=$Mapping&baseDN=$BaseDN"
+    $modifiers = 0
+
+    if ($Filter -ne "") {
+        $data += "&filter=$Filter"
+    }
+
+    if ($Tenant -ne "") {
+        $data += "&tenant=$Tenant"
+    }
+
+    [string]$NewLdapSourceId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoLdapSource -LdapSourceID $NewLdapSourceId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoLdapSource {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapSourceId,
+        [parameter(Mandatory=$false)]
+        [string]$Server,
+        [parameter(Mandatory=$false)]
+        [string]$Mapping,
+        [parameter(Mandatory=$false)]
+        [string]$BaseDN,
+        [parameter(Mandatory=$false)]
+        [string]$Filter,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant
+    )
+
+    $nodeLocation = "/api/v1/ldapSources/$LdapSourceId"
+    $data = ""
+    $modifiers = 0
+
+    if ($Server -ne "") {
+        $data += "server=$Server"
+        $modifiers++
+    }
+
+    if ($Mapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "mapping=$Mapping"
+        $modifiers++
+    }
+
+    if ($BaseDN -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "baseDn=$BaseDN"
+        $modifiers++
+    }
+
+    if ($Filter -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "filter=$Filter"
+        $modifiers++
+    }
+
+    if ($Tenant -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "tenant=$Tenant"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoLdapSource -LdapSourceID $LdapSourceId
+}
+
+function Remove-AcanoLdapSource {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapSourceId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/ldapSources/$LdapSourceId" -DELETE
+
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoLdapSyncs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
@@ -6047,6 +6574,59 @@ function Get-AcanoLdapSync {
     )
 
     return (Open-AcanoAPI "api/v1/ldapSyncs/$LdapSyncID").ldapSync
+}
+
+function New-AcanoLdapSync {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$LdapSource,
+        [parameter(Mandatory=$false)]
+        [string]$RemoveWhenFinished
+    )
+
+    $nodeLocation = "/api/v1/ldapSyncs"
+    $data = ""
+    $modifiers = 0
+
+    if ($Tenant -ne "") {
+        $data += "tenant=$Tenant"
+        $modifiers++
+    }
+
+    if ($LdapSource -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "ldapSource=$LdapSource"
+        $modifiers++
+    }
+
+    if ($RemoveWhenFinished -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "removeWhenFinished=$RemoveWhenFinished"
+    }
+
+    [string]$NewLdapSyncId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoLdapSync -LdapSyncID $NewLdapSyncId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Remove-AcanoLdapSync {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$LdapSyncId
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/ldapSyncs/$LdapSyncId" -DELETE
+
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -6096,6 +6676,275 @@ function Get-AcanoExternalDirectorySearchLocation {
     return (Open-AcanoAPI "api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID").directorySearchLocation
 }
 
+function New-AcanoExternalDirectorySearchLocation {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$LdapServer,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$BaseDN,
+        [parameter(Mandatory=$false)]
+        [string]$FilterFormat,
+        [parameter(Mandatory=$false)]
+        [string]$Label,
+        [parameter(Mandatory=$false)]
+        [string]$Priority,
+        [parameter(Mandatory=$false)]
+        [string]$FirstName,
+        [parameter(Mandatory=$false)]
+        [string]$LastName,
+        [parameter(Mandatory=$false)]
+        [string]$DisplayName,
+        [parameter(Mandatory=$false)]
+        [string]$Phone,
+        [parameter(Mandatory=$false)]
+        [string]$Mobile,
+        [parameter(Mandatory=$false)]
+        [string]$Email,
+        [parameter(Mandatory=$false)]
+        [string]$Sip,
+        [parameter(Mandatory=$false)]
+        [string]$Organization
+    )
+
+    $nodeLocation = "/api/v1/directorySearchLocations"
+    $data = "ldapServer=$LdapServer"
+
+    if ($Tenant -ne "") {
+        $data += "&tenant=$Tenant"
+    }
+
+    if ($BaseDN -ne "") {
+        $data += "&baseDn=$BaseDN"
+    }
+
+    if ($FilterFormat -ne "") {
+        $data += "&filterFormat=$FilterFormat"
+    }
+
+    if ($Label -ne "") {
+        $data += "&label=$Label"
+    }
+
+    if ($Priority -ne "") {
+        $data += "&priority=$Priority"
+    }
+
+    if ($FirstName -ne "") {
+        $data += "&firstName=$FirstName"
+    }
+
+    if ($LastName -ne "") {
+        $data += "&lastName=$LastName"
+    }
+
+    if ($DisplayName -ne "") {
+        $data += "&displayName=$DisplayName"
+    }
+
+    if ($Phone -ne "") {
+        $data += "&phone=$Phone"
+    }
+
+    if ($Mobile -ne "") {
+        $data += "&mobile=$Mobile"
+    }
+
+    if ($Email -ne "") {
+        $data += "&email=$Email"
+    }
+
+    if ($Sip -ne "") {
+        $data += "&sip=$Sip"
+    }
+
+    if ($Organization -ne "") {
+        $data += "&organization=$Organization"
+    }
+
+    [string]$NewexdirsearchId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoExternalDirectorySearchLocation -ExternalDirectorySearchLocationID $NewexdirsearchId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoExternalDirectorySearchLocation {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$ExternalDirectorySearchLocationID,
+        [parameter(Mandatory=$false)]
+        [string]$LdapServer,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$BaseDN,
+        [parameter(Mandatory=$false)]
+        [string]$FilterFormat,
+        [parameter(Mandatory=$false)]
+        [string]$Label,
+        [parameter(Mandatory=$false)]
+        [string]$Priority,
+        [parameter(Mandatory=$false)]
+        [string]$FirstName,
+        [parameter(Mandatory=$false)]
+        [string]$LastName,
+        [parameter(Mandatory=$false)]
+        [string]$DisplayName,
+        [parameter(Mandatory=$false)]
+        [string]$Phone,
+        [parameter(Mandatory=$false)]
+        [string]$Mobile,
+        [parameter(Mandatory=$false)]
+        [string]$Email,
+        [parameter(Mandatory=$false)]
+        [string]$Sip,
+        [parameter(Mandatory=$false)]
+        [string]$Organization
+    )
+
+    $nodeLocation = "/api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID"
+    $data = ""
+    $modifiers = 0
+
+    if ($Tenant -ne "") {
+        $data += "tenant=$Tenant"
+        $modifiers++
+    }
+
+    if ($LdapServer -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "ldapServer=$LdapServer"
+        $modifiers++
+    }
+
+    if ($BaseDN -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "baseDn=$BaseDN"
+        $modifiers++
+    }
+
+    if ($FilterFormat -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "filterFormat=$FilterFormat"
+        $modifiers++
+    }
+
+    if ($Label -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "label=$Label"
+        $modifiers++
+    }
+
+    if ($Priority -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "priority=$Priority"
+        $modifiers++
+    }
+
+    if ($FirstName -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "firstName=$FirstName"
+        $modifiers++
+    }
+
+    if ($LastName -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "lastName=$LastName"
+        $modifiers++
+    }
+
+    if ($DisplayName -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "displayName=$DisplayName"
+        $modifiers++
+    }
+
+    if ($Phone -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "phone=$Phone"
+        $modifiers++
+    }
+
+    if ($Mobile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "mobile=$Mobile"
+        $modifiers++
+    }
+
+    if ($Email -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "email=$Email"
+        $modifiers++
+    }
+
+    if ($Sip -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "sip=$Sip"
+        $modifiers++
+    }
+
+    if ($Organization -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "organization=$Organization"
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoExternalDirectorySearchLocation -ExternalDirectorySearchLocationID $ExternalDirectorySearchLocationID
+}
+
+function Remove-AcanoExternalDirectorySearchLocation {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$ExternalDirectorySearchLocationID
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID" -DELETE
+
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoTenants {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
@@ -6141,4 +6990,286 @@ function Get-AcanoTenant {
     )
 
     return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenants
+}
+
+function New-AcanoTenant {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [string]$TenantGroup,
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile,
+        [parameter(Mandatory=$false)]
+        [string]$DtmfProfile,
+        [parameter(Mandatory=$false)]
+        [string]$IvrBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [string]$ParticipantLimit,
+        [parameter(Mandatory=$false)]
+        [string]$UserProfile
+    )
+
+    $nodeLocation = "/api/v1/tenants"
+    $data = "name=$Name"
+
+    if ($TenantGroup -ne "") {
+        $data += "&tenantGroup=$TenantGroup"
+    }
+
+    if ($CallLegProfile -ne "") {
+        $data += "&callLegProfile=$CallLegProfile"
+    }
+
+    if ($CallProfile -ne "") {
+        $data += "&callProfile=$CallProfile"
+    }
+
+    if ($DtmfProfile -ne "") {
+        $data += "&dtmfProfile=$DtmfProfile"
+    }
+
+    if ($IvrBrandingProfile -ne "") {
+        $data += "&ivrBrandingProfile=$IvrBrandingProfile"
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        $data += "&callBrandingProfile=$CallBrandingProfile"
+    }
+
+    if ($ParticipantLimit -ne "") {
+        $data += "&participantLimit=$ParticipantLimit"
+    }
+
+    if ($UserProfile -ne "") {
+        $data += "&userProfile=$UserProfile"
+    }
+
+    [string]$NewTenantId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoTenant -TenantID $NewTenantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoTenant {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TenantId,
+        [parameter(Mandatory=$false)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [string]$TenantGroup,
+        [parameter(Mandatory=$false)]
+        [string]$CallLegProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile,
+        [parameter(Mandatory=$false)]
+        [string]$DtmfProfile,
+        [parameter(Mandatory=$false)]
+        [string]$IvrBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [string]$ParticipantLimit,
+        [parameter(Mandatory=$false)]
+        [string]$UserProfile
+    )
+
+    $nodeLocation = "/api/v1/Tenants/$TenantId"
+    $data = ""
+    $modifiers = 0
+
+    if ($TenantGroup -ne "") {
+        $data += "tenantgroup=$TenantGroup"
+        $modifiers++
+    }
+
+    if ($Name -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "name=$Name"
+        $modifiers++
+    }
+
+    if ($CallLegProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "callLegProfile=$CallLegProfile"
+        $modifiers++
+    }
+
+    if ($CallProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "callProfile=$CallProfile"
+        $modifiers++
+    }
+
+    if ($DtmfProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "dtmfProfile=$DtmfProfile"
+        $modifiers++
+    }
+
+    if ($IvrBrandingProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "ivrBrandingProfile=$IvrBrandingProfile"
+        $modifiers++
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "callBrandingProfile=$CallBrandingProfile"
+        $modifiers++
+    }
+
+    if ($ParticipantLimit -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "participantLimit=$ParticipantLimit"
+        $modifiers++
+    }
+
+    if ($UserProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "userProfile=$UserProfile"
+        $modifiers++
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoTenant -TenantID $TenantId
+}
+
+function Remove-AcanoTenant {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TenantID
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/tenants/$TenantID" -DELETE
+
+}
+
+function Get-AcanoTenantGroups {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset=""
+    )
+
+    $nodeLocation = "api/v1/tenantGroups"
+    $modifiers = 0
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&limit=$Limit"
+        } else {
+            $nodeLocation += "?limit=$Limit"
+        }
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).tenantGroups.tenantGroup
+}
+
+function Get-AcanoTenantGroup {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TenantGroupID
+    )
+
+    return (Open-AcanoAPI "api/v1/tenantGroups/$TenantGroupID").tenantGroup
+}
+
+function New-AcanoTenantGroup {
+
+    $nodeLocation = "/api/v1/tenantGroups"
+    $data = ""
+
+    [string]$NewTenantGroupId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoTenantGroup -TenantGroupID $NewTenantGroupId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Remove-AcanoTenantGroup {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$TenantGroupID
+    )
+
+    ### Add confirmation
+
+    Open-AcanoAPI "/api/v1/tenantGroups/$TenantGroupID" -DELETE
+
+}
+
+function New-AcanoAccessQuery {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$Uri,
+        [parameter(Mandatory=$false)]
+        [string]$CallId
+    )
+
+    $nodeLocation = "/api/v1/accessQuery"
+    $data = ""
+    $modifiers = 0
+
+    if ($Tenant -ne "") {
+        $data += "tenant=$Tenant"
+        $modifiers++
+    }
+
+    if ($Uri -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "uri=$Uri"
+        $modifiers++
+    }
+
+    if ($CallId -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "callId=$CallId"
+    }
+
+    return (Open-AcanoAPI $nodeLocation -POST -Data $data -ReturnResponse).accessQuery
 }
