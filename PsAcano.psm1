@@ -15,23 +15,30 @@ function Open-AcanoAPI {
         [parameter(ParameterSetName="POST",Mandatory=$false)]
         [parameter(ParameterSetName="PUT",Mandatory=$false)]
         [parameter(ParameterSetName="DELETE",Mandatory=$false)]
-        [string]$Data
+        [string]$Data,
+        [parameter(ParameterSetName="POST",Mandatory=$false)]
+        [switch]$ReturnResponse
     )
 
     $webclient = New-Object System.Net.WebClient
     $credCache = new-object System.Net.CredentialCache
     $credCache.Add($script:APIAddress, "Basic", $script:creds)
 
-    $webclient.Headers.Add("user-agent", "Windows Powershell WebClient")
+    $webclient.Headers.Add("user-agent", "PSAcano Powershell Module")
     $webclient.Credentials = $credCache
 
     if ($POST) {
         $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
-        $webclient.UploadString($script:APIAddress+$NodeLocation,"POST",$Data)
+        $response = $webclient.UploadString($script:APIAddress+$NodeLocation,"POST",$Data)
 
-        $res = $webclient.ResponseHeaders.Get("Location")
+        if ($ReturnResponse) {
+            return [xml]$response
+        }
+        else {
+            $res = $webclient.ResponseHeaders.Get("Location")
 
-        return $res.Substring($res.Length-36)
+            return $res.Substring($res.Length-36)
+        }
     } elseif ($PUT) {
         $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
 
@@ -7226,4 +7233,43 @@ function Remove-AcanoTenantGroup {
 
     Open-AcanoAPI "/api/v1/tenantGroups/$TenantGroupID" -DELETE
 
+}
+
+function New-AcanoAccessQuery {
+    Param (
+        [parameter(Mandatory=$false)]
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$Uri,
+        [parameter(Mandatory=$false)]
+        [string]$CallId
+    )
+
+    $nodeLocation = "/api/v1/accessQuery"
+    $data = ""
+    $modifiers = 0
+
+    if ($Tenant -ne "") {
+        $data += "tenant=$Tenant"
+        $modifiers++
+    }
+
+    if ($Uri -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "uri=$Uri"
+        $modifiers++
+    }
+
+    if ($CallId -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+
+        $data += "callId=$CallId"
+    }
+
+    return (Open-AcanoAPI $nodeLocation -POST -Data $data -ReturnResponse).accessQuery
 }
