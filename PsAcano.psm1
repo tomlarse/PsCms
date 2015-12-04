@@ -2022,6 +2022,15 @@ function Get-AcanoCallLegs {
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
         [string]$CallID="",
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$ActiveLayoutFilter,
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$AvailableVideoStreamsLowerBound,
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$AvailableVideoStreamsUpperBound,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
         [string]$Limit="",
@@ -2091,6 +2100,39 @@ function Get-AcanoCallLegs {
             $nodeLocation += "?alarms=$Alarmstring"
             $modifiers++
         }
+    }
+
+    if ($ActiveLayoutFilter -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&"
+        } else {
+            $nodeLocation += "?"
+        }
+        
+        $nodeLocation += "activeLayoutFilter=$ActiveLayoutFilter"
+        $modifiers++
+    }
+
+    if ($AvailableVideoStreamsLowerBound -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&"
+        } else {
+            $nodeLocation += "?"
+        }
+        
+        $nodeLocation += "availableVideoStreamsLowerBound=$AvailableVideoStreamsLowerBound"
+        $modifiers++
+    }
+
+    if ($AvailableVideoStreamsUpperBound -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&"
+        } else {
+            $nodeLocation += "?"
+        }
+        
+        $nodeLocation += "availableVideoStreamsUpperBound=$AvailableVideoStreamsUpperBound"
+        $modifiers++
     }
 
     if ($Limit -ne "") {
