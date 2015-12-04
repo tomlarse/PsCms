@@ -34,7 +34,13 @@ Start-AcanocoSpaceCallDiagnosticsGeneration
 
 ## Installation
 
-To import this module, unpack or clone the PsAcano folder and run
+To install, simply run
+```posh
+iex (New-Object Net.WebClient).DownloadString("https://gist.githubusercontent.com/tomlarse/5f43bbe0e763cea379ca/raw/0c75c884c2d8899441d05c320d644e874eec282f/installmodule")
+```
+to install the latest release.
+
+To install from master or dev and manually import this module, unpack or clone the PsAcano folder and run
 
 ```posh
 Import-Module .\PsAcano.psd1
