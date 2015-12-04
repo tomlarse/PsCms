@@ -54,7 +54,7 @@ $env:PsModulePath
 
 ## Use
 
-To start a new session against an Acano server, use the `Open-AcanoSession` cmdlet. To see an example, run
+To start a new session against an Acano server, use the `New-AcanoSession` cmdlet. To see an example, run
 
 ```posh
 help New-AcanoSession -Examples
