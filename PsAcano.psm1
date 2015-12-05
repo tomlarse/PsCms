@@ -399,16 +399,16 @@ function Set-AcanocoSpace {
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
-function Remove-AcanocoSpace {
+function Remove-AcanocoSpace { 
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$coSpaceID
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "api/v1/coSpaces/$coSpaceID" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$coSpaceID","Remove coSpace")) {
+        Open-AcanoAPI "api/v1/coSpaces/$coSpaceID" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -696,6 +696,7 @@ function Set-AcanocoSpaceMember {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Remove-AcanocoSpaceMember {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true)]
         [string]$coSpaceId,
@@ -703,10 +704,9 @@ function Remove-AcanocoSpaceMember {
         [string]$UserId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$UserId","Remove user from cospace with id $coSpaceId")) {
+        Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -730,6 +730,7 @@ function New-AcanocoSpaceMessage {
 }
 
 function Remove-AcanocoSpaceMessages {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true)]
         [string]$coSpaceId,
@@ -757,13 +758,13 @@ function Remove-AcanocoSpaceMessages {
         }
     }
 
-    ### Add confirmation
-
-    if ($modifiers -gt 0) {
-        Open-AcanoAPI $nodeLocation -DELETE -Data $data
-    } else {
-        Open-AcanoAPI $nodeLocation -DELETE
-    }    
+    if ($PSCmdlet.ShouldProcess("$coSpaceId","Remove messages in coSpace")) {
+        if ($modifiers -gt 0) {
+            Open-AcanoAPI $nodeLocation -DELETE -Data $data
+        } else {
+            Open-AcanoAPI $nodeLocation -DELETE
+        }
+    } 
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -1001,6 +1002,7 @@ function Set-AcanocoSpaceAccessMethod {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Remove-AcanocoSpaceAccessMethod {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true)]
         [string]$coSpaceId,
@@ -1008,10 +1010,9 @@ function Remove-AcanocoSpaceAccessMethod {
         [string]$AccessMethodId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/accessMethods/$AccessMethodId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$AccessMethodId","Remove access method from coSpace $coSpaceId")) {
+        Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/accessMethods/$AccessMethodId" -DELETE
+    }
 }
 
 function Start-AcanocoSpaceCallDiagnosticsGeneration {
