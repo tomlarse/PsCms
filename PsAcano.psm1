@@ -1335,15 +1335,15 @@ function Set-AcanoOutboundDialPlanRule {
 }
 
 function Remove-AcanoOutboundDialPlanRule {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$OutboundDialPlanRuleId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/outboundDialPlanRules/$OutboundDialPlanRuleId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$OutboundDialPlanRuleId","Remove outbound dial plan rule")) {
+        Open-AcanoAPI "/api/v1/outboundDialPlanRules/$OutboundDialPlanRuleId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -1559,15 +1559,15 @@ function Set-AcanoInboundDialPlanRule {
 }
 
 function Remove-AcanoInboundDialPlanRule {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$InboundDialPlanRuleId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/inboundDialPlanRules/$InboundDialPlanRuleId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$InboundDialPlanRuleId","Remove inbound dial plan rule")) {
+        Open-AcanoAPI "/api/v1/inboundDialPlanRules/$InboundDialPlanRuleId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -1747,15 +1747,15 @@ function Set-AcanoCallForwardingDialPlanRule {
 }
 
 function Remove-AcanoCallForwardingDialPlanRule {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$ForwardingDialPlanRuleId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$ForwardingDialPlanRuleId","Remove call forwarding rule")) {
+        Open-AcanoAPI "/api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -1846,15 +1846,15 @@ function New-AcanoCall {
 }
 
 function Remove-AcanoCall {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$CallId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/calls/$CallId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$CallId","Remove call")) {
+        Open-AcanoAPI "/api/v1/calls/$CallId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -1988,15 +1988,15 @@ function Set-AcanoCallProfile {
 }
 
 function Remove-AcanoCallProfile {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$CallProfileId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/callProfiles/$CallProfileId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$CallProfileId","Remove call profile")) {
+        Open-AcanoAPI "/api/v1/callProfiles/$CallProfileId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -2743,15 +2743,15 @@ function Set-AcanoCallLeg {
 }
 
 function Remove-AcanoCallLeg {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$CallLegId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/callLegs/$CallLegId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$CallLegId","Remove call leg")) {
+        Open-AcanoAPI "/api/v1/callLegs/$CallLegId" -DELETE
+    }
 }
 
 function New-AcanoCallLegParticipant {
@@ -3712,15 +3712,15 @@ function Set-AcanoCallLegProfile {
 }
 
 function Remove-AcanoCallLegProfile {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$CallLegProfileId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/callLegProfiles/$CallLegProfileId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$CallLegProfileId","Remove call leg profile")) {
+        Open-AcanoAPI "/api/v1/callLegProfiles/$CallLegProfileId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -3904,15 +3904,15 @@ function Set-AcanoDialTransform {
 }
 
 function Remove-AcanoDialTransform {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$DialTransformId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/dialTransforms/$DialTransformId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$DialTransformId","Remove dial transform rule")) {
+        Open-AcanoAPI "/api/v1/dialTransforms/$DialTransformId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -4031,15 +4031,15 @@ function Set-AcanoCallBrandingProfile {
 }
 
 function Remove-AcanoCallBrandingProfile {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$CallBrandingProfileId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/CallBrandingProfiles/$CallBrandingProfileId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$CallBrandingProfileId","Remove call branding profile")) {
+        Open-AcanoAPI "/api/v1/CallBrandingProfiles/$CallBrandingProfileId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
