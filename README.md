@@ -60,7 +60,9 @@ To start a new session against an Acano server, use the `New-AcanoSession` cmdle
 New-AcanoSession -APIAddress acanoserverfqdn.contoso.com -Credential (Get-Credential)
 ```
 
-Default, this will try to connect to the API on port 443. If the webadmin is deployed on the same server as the webbridge, webadmin will often be configured to use another port than 443, in that case use the `-Port` parameter to define the port. If the server is deployed in a lab or there is another reason its certificate is not trusted, you can use the `-IgnoreSSLTrust` parameter to connect.
+Default, this configure the module to connect to the API on port 443. If the webadmin is deployed on the same server as the webbridge, webadmin will often be configured to use another port than 443, in that case use the `-Port` parameter to define the port. If the server is deployed in a lab or there is another reason its certificate is not trusted, you can use the `-IgnoreSSLTrust` parameter to connect.
+
+NOTE: No actual connecting is done by the `New-AcanoSession`cmdlet at the moment, it just configures parameters for the rest of the cmdlets to use. 
 
 To display a list of possible commands use
 
