@@ -54,17 +54,21 @@ $env:PsModulePath
 
 ## Use
 
-To start a new session against an Acano server, use the `New-AcanoSession` cmdlet. To see an example, run
+To start a new session against an Acano server, use the `New-AcanoSession` cmdlet:
 
 ```posh
-help New-AcanoSession -Examples
+New-AcanoSession -APIAddress acanoserverfqdn.contoso.com -Credential (Get-Credential)
 ```
 
-To get a list of possible commands use
+Default, this will try to connect to the API on port 443. If the webadmin is deployed on the same server as the webbridge, webadmin will often be configured to use another port than 443, in that case use the `-Port` parameter to define the port. If the server is deployed in a lab or there is another reason its certificate is not trusted, you can use the `-IgnoreSSLTrust` parameter to connect.
+
+To display a list of possible commands use
 
 ```posh
 Get-Command -Module PsAcano
 ```
+
+The Acano server uses a 128-bit GUID to identify objects, use these when accessing objects with `Get-`, `Set-` and `Delete-` Cmdlets.
 
 ## Caveats
 
