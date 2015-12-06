@@ -68,7 +68,7 @@ To display a list of possible commands use
 Get-Command -Module PsAcano
 ```
 
-The Acano server uses a 128-bit GUID to identify objects, use these when accessing objects with `Get-`, `Set-` and `Delete-` Cmdlets.
+The Acano server uses a 128-bit GUID to identify objects, use these when accessing objects with `Get-`, `Set-` and `Remove-` Cmdlets.
 
 ## Caveats
 
