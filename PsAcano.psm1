@@ -4334,15 +4334,15 @@ function Set-AcanoDtmfProfile {
 }
 
 function Remove-AcanoDtmfProfile {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$DtmfProfileId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/dtmfProfiles/$DtmfProfileId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$DtmfProfileId","Remove DTMF profile")) {
+        Open-AcanoAPI "/api/v1/dtmfProfiles/$DtmfProfileId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -4531,15 +4531,15 @@ function Set-AcanoIvr {
 }
 
 function Remove-AcanoIvr {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$IvrId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/ivrs/$IvrId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$IvrId","Remove IVR")) {
+        Open-AcanoAPI "/api/v1/ivrs/$IvrId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -4645,15 +4645,15 @@ function Set-AcanoIvrBrandingProfile {
 }
 
 function Remove-AcanoIvrBrandingProfile {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$IvrBrandingProfileId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/ivrBrandingProfiles/$IvrBrandingProfileId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$IvrBrandingProfileId","Remove IVR Branding profile")) {
+        Open-AcanoAPI "/api/v1/ivrBrandingProfiles/$IvrBrandingProfileId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -5003,15 +5003,15 @@ function Set-AcanoUserProfile {
 }
 
 function Remove-AcanoUserProfile {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$UserProfileId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/userProfiles/$UserProfileId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$UserProfileId","Remove user profile")) {
+        Open-AcanoAPI "/api/v1/userProfiles/$UserProfileId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -5112,15 +5112,15 @@ function Set-AcanoCdrRecieverUri {
 }
 
 function Remove-AcanoCdrRecieverUri {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$CdrRecieverUriId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/system/cdrRecievers/$CdrRecieverUriId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$CdrRecieverUriId","Remove CDR reciever")) {
+        Open-AcanoAPI "/api/v1/system/cdrRecievers/$CdrRecieverUriId" -DELETE
+    }
 }
 
 function Get-AcanoLegacyCdrReceiverUri {
@@ -5128,6 +5128,7 @@ function Get-AcanoLegacyCdrReceiverUri {
 }
 
 function Set-AcanoLegacyCdrRecieverUri {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
      Param (
         [parameter(Mandatory=$false,Position=1)]
         [string]$Uri
@@ -5143,13 +5144,16 @@ function Set-AcanoLegacyCdrRecieverUri {
     } 
     
     else {
-        Open-AcanoAPI $nodeLocation -PUT -Data $data
+        if ($PSCmdlet.ShouldProcess("Legacy CDR Reciever","Remove")) {
+            Open-AcanoAPI $nodeLocation -PUT -Data $data
+        }
     }
 
     Get-AcanoLegacyCdrReceiverUri
 }
 
 function Remove-AcanoLegacyCdrRecieverUri {
+    ##Triggers a PUT on Set-AcanoLegacyCdrRecieverUri, which effectively removes the CDR reciever.
     Set-AcanoLegacyCdrRecieverUri
 }
 
@@ -5502,15 +5506,15 @@ function Set-AcanoTurnServer {
 }
 
 function Remove-AcanoTurnServer {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$TurnServerId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/turnServers/$TurnServerId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$TurnServerId","Remove TURN server")) {
+        Open-AcanoAPI "/api/v1/turnServers/$TurnServerId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -5801,15 +5805,15 @@ function Set-AcanoWebBridge {
 }
 
 function Remove-AcanoWebBridge {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$WebBridgeId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/webBridges/$WebBridgeId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$WebBridgeId","Remove web bridge")) {
+        Open-AcanoAPI "/api/v1/webBridges/$WebBridgeId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -6152,15 +6156,15 @@ function Set-AcanoLdapServer {
 }
 
 function Remove-AcanoLdapServer {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$LdapServerId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/ldapServers/$LdapServerId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$LdapServerId","Remove LDAP server")) {
+        Open-AcanoAPI "/api/v1/ldapServers/$LdapServerId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -6407,15 +6411,15 @@ function Set-AcanoLdapMapping {
 }
 
 function Remove-AcanoLdapMapping {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$LdapMappingId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/ldapMappings/$LdapMappingId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$LdapMappingId","Remove LDAP mapping")) {
+        Open-AcanoAPI "/api/v1/ldapMappings/$LdapMappingId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -6574,15 +6578,15 @@ function Set-AcanoLdapSource {
 }
 
 function Remove-AcanoLdapSource {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$LdapSourceId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/ldapSources/$LdapSourceId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$LdapSourceId","Remove LDAP source")) {
+        Open-AcanoAPI "/api/v1/ldapSources/$LdapSourceId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -6661,15 +6665,15 @@ function New-AcanoLdapSync {
 }
 
 function Remove-AcanoLdapSync {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$LdapSyncId
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/ldapSyncs/$LdapSyncId" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$LdapSyncId","Stop ongoing LDAP Sync")) {
+        Open-AcanoAPI "/api/v1/ldapSyncs/$LdapSyncId" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -6977,15 +6981,15 @@ function Set-AcanoExternalDirectorySearchLocation {
 }
 
 function Remove-AcanoExternalDirectorySearchLocation {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$ExternalDirectorySearchLocationID
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$ExternalDirectorySearchLocationID","Remove external directory search location")) {
+        Open-AcanoAPI "/api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID" -DELETE
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -7208,15 +7212,15 @@ function Set-AcanoTenant {
 }
 
 function Remove-AcanoTenant {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$TenantID
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/tenants/$TenantID" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$TenantID","Remove tenant")) {
+        Open-AcanoAPI "/api/v1/tenants/$TenantID" -DELETE
+    }
 }
 
 function Get-AcanoTenantGroups {
@@ -7267,15 +7271,15 @@ function New-AcanoTenantGroup {
 }
 
 function Remove-AcanoTenantGroup {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$TenantGroupID
     )
 
-    ### Add confirmation
-
-    Open-AcanoAPI "/api/v1/tenantGroups/$TenantGroupID" -DELETE
-
+    if ($PSCmdlet.ShouldProcess("$TenantGroupID","Remove tenant group")) {
+        Open-AcanoAPI "/api/v1/tenantGroups/$TenantGroupID" -DELETE
+    }
 }
 
 function New-AcanoAccessQuery {
