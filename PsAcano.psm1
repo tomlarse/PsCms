@@ -736,11 +736,10 @@ function Remove-AcanocoSpaceMessages {
 
     if ($MaxAge -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&maxAge=$MaxAge"
-        } else {
-            $data += "maxAge=$MaxAge"
-            $modifiers++
+            $data += "&"
         }
+        $data += "maxAge=$MaxAge"
+        $modifiers++
     }
 
     if ($PSCmdlet.ShouldProcess("$coSpaceId","Remove messages in coSpace")) {
@@ -783,19 +782,21 @@ function Get-AcanocoSpaceAccessMethods {
 
     if ($CallLegProfileFilter -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"
-            $modifiers++
+            $nodeLocation += "?"
         }
+        $nodeLocation += "callLegProfileFilter=$CallLegProfileFilter"
+        $modifiers++
     }
 
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -838,57 +839,62 @@ function New-AcanocoSpaceAccessMethod {
     )
 
     $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"
-
+    $data=""
     $modifiers = 0
 
     if ($Uri -ne "") {
-        $nodeLocation += "?uri=$Uri"
+        $data += "?uri=$Uri"
         $modifiers++
     }
 
     if ($CallId -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&callId=$CallId"
+            $data += "&"
         } else {
-            $nodeLocation += "?callId=$CallId"
-            $modifiers++
+            $data += "?"
         }
+        $data += "callId=$CallId"
+        $modifiers++
     }
 
     if ($Passcode -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&passcode=$Passcode"
+            $data += "&"
         } else {
-            $nodeLocation += "?passcode=$Passcode"
-            $modifiers++
+            $data += "?"
         }
+        $data += "passcode=$Passcode"
+        $modifiers++
     }
 
     if ($CallLegProfile -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&callLegProfile=$CallLegProfile"
+            $data += "&"
         } else {
-            $nodeLocation += "?callLegProfile=$CallLegProfile"
-            $modifiers++
+            $data += "?"
         }
+        $data += "callLegProfile=$CallLegProfile"
+        $modifiers++
     }
 
     if ($Secret -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&secret=$Secret"
+            $data += "&"
         } else {
-            $nodeLocation += "?secret=$Secret"
-            $modifiers++
+            $data += "?"
         }
+        $data += "secret=$Secret"
+        $modifiers++
     }
 
     if ($Scope -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&scope=$Scope"
+            $data += "&"
         } else {
-            $nodeLocation += "?scope=$Scope"
-            $modifiers++
+            $data += "?"
         }
+        $data += "scope=$Scope"
+        $modifiers++
     }
 
     [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -918,7 +924,7 @@ function Set-AcanocoSpaceAccessMethod {
     )
 
     $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"
-
+    $data=""
     $modifiers = 0
 
     if ($Uri -ne "") {
@@ -928,56 +934,62 @@ function Set-AcanocoSpaceAccessMethod {
 
     if ($CallId -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&callId=$CallId"
+            $data += "&"
         } else {
-            $nodeLocation += "?callId=$CallId"
-            $modifiers++
+            $data += "?"
         }
+        $data += "callId=$CallId"
+        $modifiers++
     }
 
     if ($Passcode -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&passcode=$Passcode"
+            $data += "&"
         } else {
-            $nodeLocation += "?passcode=$Passcode"
-            $modifiers++
+            $data += "?"
         }
+        $data += "passcode=$Passcode"
+        $modifiers++
     }
 
     if ($CallLegProfile -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&callLegProfile=$CallLegProfile"
+            $data += "&"
         } else {
-            $nodeLocation += "?callLegProfile=$CallLegProfile"
-            $modifiers++
+            $data += "?"
         }
+        $data += "callLegProfile=$CallLegProfile"
+        $modifiers++
     }
 
     if ($Secret -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&secret=$Secret"
+            $data += "&"
         } else {
-            $nodeLocation += "?secret=$Secret"
-            $modifiers++
+            $data += "?"
         }
+        $data += "secret=$Secret"
+        $modifiers++
     }
 
     if ($RegenerateSecret) {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&regenerateSecret=true"
+            $data += "&"
         } else {
-            $nodeLocation += "?regenerateSecret=true"
-            $modifiers++
+            $data += "?"
         }
+        $data += "regenerateSecret=true"
+        $modifiers++
     }
 
     if ($Scope -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&scope=$Scope"
+            $data += "&"
         } else {
-            $nodeLocation += "?scope=$Scope"
-            $modifiers++
+            $data += "?"
         }
+        $data += "scope=$Scope"
+        $modifiers++
     }
 
     [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -1034,10 +1046,11 @@ function Get-AcanoOutboundDialPlanRules {
 
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -1208,110 +1221,98 @@ function Set-AcanoOutboundDialPlanRule {
 
     if ($Domain -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&domain=$Domain"
-        } else {
-            $data += "domain=$Domain"
-            $modifiers++
+            $data += "&"
         }
+        $data += "domain=$Domain"
+        $modifiers++
     }
 
     if ($LocalContactDomain -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&localContactDomain=$LocalContactDomain"
-        } else {
-            $data += "localContactDomain=$LocalContactDomain"
-            $modifiers++
+            $data += "&"
         }
+        $data += "localContactDomain=$LocalContactDomain"
+        $modifiers++
     }
 
     if ($LocalFromDomain -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&localFromDomain=$LocalFromDomain"
-        } else {
-            $data += "localFromDomain=$LocalFromDomain"
-            $modifiers++
+            $data += "&"
         }
+        $data += "localFromDomain=$LocalFromDomain"
+        $modifiers++
     }
 
     if ($SipProxy -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&sipProxy=$SipProxy"
-        } else {
-            $data += "sipProxy=$SipProxy"
-            $modifiers++
+            $data += "&"
         }
+        $data += "sipProxy=$SipProxy"
+        $modifiers++
     }
 
     if ($TrunkType -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&trunkType=$TrunkType"
-        } else {
-            $data += "trunkType=$TrunkType"
-            $modifiers++
+            $data += "&"
         }
+        $data += "trunkType=$TrunkType"
+        $modifiers++
     }
 
     if ($Priority -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&priority=$Priority"
-        } else {
-            $data += "priority=$Priority"
-            $modifiers++
+            $data += "&"
         }
+        $data += "priority=$Priority"
+        $modifiers++
     }
     
     if ($FailureAction -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&failureAction=$FailureAction"
-        } else {
-            $data += "failureAction=$FailureAction"
-            $modifiers++
+            $data += "&"
         }
+        $data += "failureAction=$FailureAction"
+        $modifiers++
     }
 
     if ($SipControlEncryption -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&sipControlEncryption=$SipControlEncryption"
-        } else {
-            $data += "sipControlEncryption=$SipControlEncryption"
-            $modifiers++
+            $data += "&"
         }
+        $data += "sipControlEncryption=$SipControlEncryption"
+        $modifiers++
     }
 
     if ($Scope -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&scope=$Scope"
-        } else {
-            $data += "scope=$Scope"
-            $modifiers++
+            $data += "&"
         }
+        $data += "scope=$Scope"
+        $modifiers++
     }
 
     if ($CallBridgeId -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&callBridge=$CallBridgeId"
-        } else {
-            $data += "callBridge=$CallBridgeId"
-            $modifiers++
+            $data += "&"
         }
+        $data += "callBridge=$CallBridgeId"
+        $modifiers++
     }
 
     if ($Tenant -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&tenant=$Tenant"
-        } else {
-            $data += "tenant=$Tenant"
-            $modifiers++
+            $data += "&"
         }
+        $data += "tenant=$Tenant"
+        $modifiers++
     }
 
     if ($CallRouting -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&callRouting=$CallRouting"
-        } else {
-            $data += "&callRouting=$CallRouting"
-            $modifiers++
+            $data += "&"
         }
+        $data += "callRouting=$CallRouting"
+        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
