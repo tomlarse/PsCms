@@ -122,7 +122,7 @@ function Get-AcanocoSpaces {
             $nodeLocation += "&"
         } else {
             $nodeLocation += "?"
-        
+        }
 
         $nodeLocation += "callLegProfileFilter=$CallLegProfileFilter"
         $modifiers++
@@ -434,19 +434,21 @@ function Get-AcanocoSpaceMembers {
 
     if ($CallLegProfileFilter -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&callLegProfileFilter=$CallLegProfileFilter"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?callLegProfileFilter=$CallLegProfileFilter"
-            $modifiers++
+            $nodeLocation += "?"
         }
+        $nodeLocation += "callLegProfileFilter=$CallLegProfileFilter"
+        $modifiers++
     }
 
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -604,83 +606,74 @@ function Set-AcanocoSpaceMember {
 
     if ($CanDestroy -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canDestroy="+$CanDestroy
-        } else {
-            $data += "canDestroy="+$CanDestroy
-            $modifiers++
+            $data += "&"
         }
+        $data += "canDestroy=$CanDestroy"
+        $modifiers++
     }
 
     if ($CanAddRemoveMember -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canAddRemoveMember="+$CanAddRemoveMember
-        } else {
-            $data += "canAddRemoveMember="+$CanAddRemoveMember
-            $modifiers++
+            $data += "&"
         }
+        $data += "canAddRemoveMember=$CanAddRemoveMember"
+        $modifiers++
     }
 
     if ($CanChangeName -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canChangeName="+$CanChangeName
-        } else {
-            $data += "canChangeName="+$CanChangeName
-            $modifiers++
+            $data += "&"
         }
+        $data += "canChangeName=$CanChangeName"
+        $modifiers++
     }
 
     if ($CanChangeUri -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canChangeUri="+$CanChangeUri
-        } else {
-            $data += "canChangeUri="+$CanChangeUri
-            $modifiers++
+            $data += "&"
         }
+        $data += "canChangeUri=$CanChangeUri"
+        $modifiers++
     }
 
     if ($CanChangeCallId -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canChangeCallId="+$CanChangeCallId
-        } else {
-            $data += "canChangeCallId="+$CanChangeCallId
-            $modifiers++
+            $data += "&"
         }
+        $data += "canChangeCallId=$CanChangeCallId"
+        $modifiers++
     }
 
     if ($CanChangePasscode -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canChangePasscode="+$CanChangePasscode
-        } else {
-            $data += "canChangePasscode="+$CanChangePasscode
-            $modifiers++
+            $data += "&"
         }
+        $data += "canChangePasscode=$CanChangePasscode"
+        $modifiers++
     }
 
     if ($CanPostMessage -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canPostMessage="+$CanPostMessage
-        } else {
-            $data += "canPostMessage="+$CanPostMessage
-            $modifiers++
+            $data += "&"
         }
+            $data += "canPostMessage=$CanPostMessage"
+            $modifiers++
     }
 
     if ($CanRemoveSelf -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canRemoveSelf="+$CanRemoveSelf
-        } else {
-            $data += "canRemoveSelf="+$CanRemoveSelf
-            $modifiers++
+            $data += "&"
         }
+        $data += "canRemoveSelf=$CanRemoveSelf"
+        $modifiers++
     }
 
     if ($CanDeleteAllMessages -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canDeleteAllMessages="+$CanDeleteAllMessages
-        } else {
-            $data += "canDeleteAllMessages="+$CanDeleteAllMessages
-            $modifiers++
+            $data += "&"
         }
+        $data += "canDeleteAllMessages=$CanDeleteAllMessages"
+        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
