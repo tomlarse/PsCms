@@ -30,7 +30,7 @@ Copyright = '(c) 2015 Tom-Inge Larsen. All rights reserved.'
 Description = 'PowerShell implementation of the Acano API'
 
 # Minimum version of the Windows PowerShell engine required by this module
-# PowerShellVersion = '3.0'
+PowerShellVersion = '3.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
