@@ -673,7 +673,6 @@ function Set-AcanocoSpaceMember {
             $data += "&"
         }
         $data += "canDeleteAllMessages=$CanDeleteAllMessages"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -739,7 +738,6 @@ function Remove-AcanocoSpaceMessages {
             $data += "&"
         }
         $data += "maxAge=$MaxAge"
-        $modifiers++
     }
 
     if ($PSCmdlet.ShouldProcess("$coSpaceId","Remove messages in coSpace")) {
@@ -894,7 +892,6 @@ function New-AcanocoSpaceAccessMethod {
             $data += "?"
         }
         $data += "scope=$Scope"
-        $modifiers++
     }
 
     [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -989,7 +986,6 @@ function Set-AcanocoSpaceAccessMethod {
             $data += "?"
         }
         $data += "scope=$Scope"
-        $modifiers++
     }
 
     [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -1312,7 +1308,6 @@ function Set-AcanoOutboundDialPlanRule {
             $data += "&"
         }
         $data += "callRouting=$CallRouting"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -1531,7 +1526,6 @@ function Set-AcanoInboundDialPlanRule {
             $data += "&"
         }
         $data += "tenant=$Tenant"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -1714,7 +1708,6 @@ function Set-AcanoCallForwardingDialPlanRule {
             $data += ""
         }
         $data += "tenant=$Tenant"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -1910,7 +1903,6 @@ function New-AcanoCallProfile {
             $data += "&"
         }
         $data += "locked=$Locked"
-        $modifiers++
     }
 
     [string]$NewCallProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -1954,7 +1946,6 @@ function Set-AcanoCallProfile {
             $data += "&"
         }
         $data += "locked=$Locked"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -2684,7 +2675,6 @@ function Set-AcanoCallLeg {
             $data += "&"
         }
         $data += "bfcpMode=$BfcpMode"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -3293,7 +3283,6 @@ function New-AcanoCallLegProfile {
             $data += "&"
         }
         $data += "callLockAllowed=$CallLockAllowed"
-        $modifiers++
     }
 
     [string]$NewCallLegProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -3601,7 +3590,6 @@ function Set-AcanoCallLegProfile {
             $data += "&"
         }
         $data += "callLockAllowed=$CallLockAllowed"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -4088,7 +4076,6 @@ function New-AcanoDtmfProfile {
             $data += "&"
         }
         $data += "endCall=$EndCall"
-        $modifiers++
     }
 
     [string]$NewDtmfProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -4200,7 +4187,6 @@ function Set-AcanoDtmfProfile {
             $data += "&"
         }
         $data += "endCall=$EndCall"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -4440,19 +4426,21 @@ function Get-AcanoIvrBrandingProfiles {
 
     if ($TenantFilter -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&tenantFilter=$TenantFilter"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?tenantFilter=$TenantFilter"
-            $modifiers++
+            $nodeLocation += "?"
         }
+        $nodeLocation += "tenantFilter=$TenantFilter"
+        $modifiers++
     }
 
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -4481,11 +4469,9 @@ function New-AcanoIvrBrandingProfile {
 
     $nodeLocation = "/api/v1/ivrBrandingProfiles"
     $data = ""
-    $modifiers = 0
 
     if ($ResourceLocation -ne "") {
         $data += "resourceLocation=$ResourceLocation"
-        $modifiers++
     }
 
     [string]$NewIvrBrandingProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -4503,11 +4489,9 @@ function Set-AcanoIvrBrandingProfile {
 
     $nodeLocation = "/api/v1/ivrBrandingProfiles/$IvrBrandingProfileId"
     $data = ""
-    $modifiers = 0
 
     if ($ResourceLocation -ne "") {
         $data += "resourceLocation=$ResourceLocation"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -4558,28 +4542,31 @@ function Get-AcanoParticipants {
 
     if ($TenantFilter -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&tenantFilter=$TenantFilter"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?tenantFilter=$TenantFilter"
-            $modifiers++
+            $nodeLocation += "?"
         }
+        $nodeLocation += "tenantFilter=$TenantFilter"
+        $modifiers++
     }
 
     if ($CallBridgeFilter -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&callBridgeFilter=$CallBridgeFilter"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?callBridgeFilter=$CallBridgeFilter"
-            $modifiers++
+            $nodeLocation += "?"
         }
+        $nodeLocation += "callBridgeFilter=$CallBridgeFilter"
+        $modifiers++
     }
 
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -4638,19 +4625,21 @@ function Get-AcanoUsers {
 
     if ($TenantFilter -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&tenantFilter=$TenantFilter"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?tenantFilter=$TenantFilter"
-            $modifiers++
+            $nodeLocation += "?"
         }
+        $nodeLocation += "tenantFilter=$TenantFilter"
+        $modifiers++
     }
 
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -4709,10 +4698,11 @@ function Get-AcanoUserProfiles {
 
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -4763,38 +4753,33 @@ function New-AcanoUserProfile {
 
     if ($CanCreateCalls -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canCreateCalls=$canCreateCalls"
-        } else {
-            $data += "canCreateCalls=$canCreateCalls"
+            $data += "&"
         }
+        $data += "canCreateCalls=$canCreateCalls"
         $modifiers++
     }
 
     if ($CanUseExternalDevices -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canUseExternalDevices=$CanUseExternalDevices"
-        } else {
-            $data += "canUseExternalDevices=$CanUseExternalDevices"
+            $data += "&"
         }
+        $data += "canUseExternalDevices=$CanUseExternalDevices"
         $modifiers++
     }
 
     if ($CanMakePhoneCalls -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canMakePhoneCalls=$CanMakePhoneCalls"
-        } else {
-            $data += "canMakePhoneCalls=$CanMakePhoneCalls"
+            $data += "&"
         }
+        $data += "canMakePhoneCalls=$CanMakePhoneCalls"
         $modifiers++
     }
 
     if ($UserToUserMessagingAllowed -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&userToUserMessagingAllowed=$UserToUserMessagingAllowed"
-        } else {
-            $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"
+            $data += "&"
         }
-        $modifiers++
+        $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"
     }
 
     [string]$NewUserProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -4834,38 +4819,33 @@ function Set-AcanoUserProfile {
 
     if ($CanCreateCalls -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canCreateCalls=$canCreateCalls"
-        } else {
-            $data += "canCreateCalls=$canCreateCalls"
+            $data += "&"
         }
+        $data += "canCreateCalls=$canCreateCalls"
         $modifiers++
     }
 
     if ($CanUseExternalDevices -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canUseExternalDevices=$CanUseExternalDevices"
-        } else {
-            $data += "canUseExternalDevices=$CanUseExternalDevices"
+            $data += "&"
         }
+        $data += "canUseExternalDevices=$CanUseExternalDevices"
         $modifiers++
     }
 
     if ($CanMakePhoneCalls -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&canMakePhoneCalls=$CanMakePhoneCalls"
-        } else {
-            $data += "canMakePhoneCalls=$CanMakePhoneCalls"
+            $data += "&"
         }
+        $data += "canMakePhoneCalls=$CanMakePhoneCalls"
         $modifiers++
     }
 
     if ($UserToUserMessagingAllowed -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&userToUserMessagingAllowed=$UserToUserMessagingAllowed"
-        } else {
-            $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"
+            $data += "&"
         }
-        $modifiers++
+        $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -4925,10 +4905,11 @@ function Get-AcanoCdrRecieverUris {
 
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -5134,8 +5115,6 @@ function Set-AcanoGlobalProfile {
         else {
             $data += "callBrandingProfile=$CallBrandingProfile"
         }
-
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -5168,10 +5147,11 @@ function Get-AcanoTurnServers {
     
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -5230,56 +5210,49 @@ function New-AcanoTurnServer {
 
     if ($ClientAddress -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&clientAddress=$ClientAddress"
-        } else {
-            $data += "clientAddress=$ClientAddress"
+            $data += "&"
         }
+        $data += "clientAddress=$ClientAddress"
         $modifiers++
     }
 
     if ($Username -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&username=$Username"
-        } else {
-            $data += "username=$Username"
+            $data += "&"
         }
+        $data += "username=$Username"
         $modifiers++
     }
 
     if ($Password -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&password=$Password"
-        } else {
-            $data += "password=$Password"
+            $data += "&"
         }
+        $data += "password=$Password"
         $modifiers++
     }
 
     if ($Type -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&type=$Type"
-        } else {
-            $data += "type=$Type"
+            $data += "&"
         }
+        $data += "type=$Type"
         $modifiers++
     }
 
     if ($NumRegistrations -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&numRegistrations=$NumRegistrations"
-        } else {
-            $data += "numRegistrations=$NumRegistrations"
+            $data += "&"
         }
+        $data += "numRegistrations=$NumRegistrations"
         $modifiers++
     }
 
     if ($TcpPortNumberOverride -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&tcpPortNumberOverride=$TcpPortNumberOverride"
-        } else {
-            $data += "tcpPortNumberOverride=$TcpPortNumberOverride"
+            $data += "&"
         }
-        $modifiers++
+        $data += "tcpPortNumberOverride=$TcpPortNumberOverride"
     }
 
     [string]$NewTurnServerId = Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -5319,56 +5292,49 @@ function Set-AcanoTurnServer {
 
     if ($ClientAddress -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&clientAddress=$ClientAddress"
-        } else {
-            $data += "clientAddress=$ClientAddress"
+            $data += "&"
         }
+        $data += "clientAddress=$ClientAddress"
         $modifiers++
     }
 
     if ($Username -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&username=$Username"
-        } else {
-            $data += "username=$Username"
+            $data += "&"
         }
+        $data += "username=$Username"
         $modifiers++
     }
 
     if ($Password -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&password=$Password"
-        } else {
-            $data += "password=$Password"
+            $data += "&"
         }
+        $data += "password=$Password"
         $modifiers++
     }
 
     if ($Type -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&type=$Type"
-        } else {
-            $data += "type=$Type"
+            $data += "&"
         }
+        $data += "type=$Type"
         $modifiers++
     }
 
     if ($NumRegistrations -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&numRegistrations=$NumRegistrations"
-        } else {
-            $data += "numRegistrations=$NumRegistrations"
+            $data += "&"
         }
+        $data += "numRegistrations=$NumRegistrations"
         $modifiers++
     }
 
     if ($TcpPortNumberOverride -ne "") {
         if ($modifiers -gt 0) {
-            $data += "&tcpPortNumberOverride=$TcpPortNumberOverride"
-        } else {
-            $data += "tcpPortNumberOverride=$TcpPortNumberOverride"
+            $data += "&"
         }
-        $modifiers++
+        $data += "tcpPortNumberOverride=$TcpPortNumberOverride"
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -5415,19 +5381,21 @@ function Get-AcanoWebBridges {
 
     if ($TenantFilter -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&tenantFilter=$TenantFilter"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?tenantFilter=$TenantFilter"
-            $modifiers++
+            $nodeLocation += "?"
         }
+        $nodeLocation += "tenantFilter=$TenantFilter"
+        $modifiers++
     }
 
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -5487,7 +5455,6 @@ function New-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "resourceArchive=$ResourceArchive"
         $modifiers++
     }
@@ -5496,7 +5463,6 @@ function New-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "tenant=$Tenant"
         $modifiers++
     }
@@ -5505,7 +5471,6 @@ function New-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "tenantGroup=$TenantGroup"
         $modifiers++
     }
@@ -5514,7 +5479,6 @@ function New-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "idEntryMode=$IdEntryMode"
         $modifiers++
     }
@@ -5523,7 +5487,6 @@ function New-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "allowWebLinkAccess=$AllowWebLinkAccess"
         $modifiers++
     }
@@ -5541,7 +5504,6 @@ function New-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"
         $modifiers++
     }
@@ -5550,9 +5512,7 @@ function New-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"
-        $modifiers++
     }
 
     [string]$NewWebBridgeId = Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -5602,7 +5562,6 @@ function Set-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "resourceArchive=$ResourceArchive"
         $modifiers++
     }
@@ -5611,7 +5570,6 @@ function Set-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "tenant=$Tenant"
         $modifiers++
     }
@@ -5620,7 +5578,6 @@ function Set-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "tenantGroup=$TenantGroup"
         $modifiers++
     }
@@ -5629,7 +5586,6 @@ function Set-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "idEntryMode=$IdEntryMode"
         $modifiers++
     }
@@ -5638,7 +5594,6 @@ function Set-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "allowWebLinkAccess=$AllowWebLinkAccess"
         $modifiers++
     }
@@ -5647,7 +5602,6 @@ function Set-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "showSignIn=$ShowSignIn"
         $modifiers++
     }
@@ -5656,7 +5610,6 @@ function Set-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "resolveCoSpaceCallIds=$ResolveCoSpaceCallIds"
         $modifiers++
     }
@@ -5665,9 +5618,7 @@ function Set-AcanoWebBridge {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -5751,7 +5702,6 @@ function Set-AcanoXmppServer {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "domain=$Domain"
         $modifiers++
     }
@@ -5760,7 +5710,6 @@ function Set-AcanoXmppServer {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "sharedSecret=$SharedSecret"
         $modifiers++
     }
@@ -5769,7 +5718,6 @@ function Set-AcanoXmppServer {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "serverAddressOverride=$ServerAddressOverride"
     }
 
@@ -5803,7 +5751,6 @@ function Set-AcanoCallBridgeCluster {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "peerLinkBitRate=$PeerLinkBitRate"
     }
 
@@ -5839,19 +5786,21 @@ function Get-AcanoSystemDiagnostics {
 
     if ($CallCorrelatorFilter -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&callCorrelatorFilter=$CallCorrelatorFilter"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?callCorrelatorFilter=$CallCorrelatorFilter"
-            $modifiers++
+            $nodeLocation += "?"
         }
+        $nodeLocation += "callCorrelatorFilter=$CallCorrelatorFilter"
+        $modifiers++
     }
 
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -5905,10 +5854,11 @@ function Get-AcanoLdapServers {
     
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -5990,7 +5940,6 @@ function Set-AcanoLdapServer {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "portNumber=$PortNumber"
         $modifiers++
     }
@@ -5999,7 +5948,6 @@ function Set-AcanoLdapServer {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "username=$Username"
         $modifiers++
     }
@@ -6008,7 +5956,6 @@ function Set-AcanoLdapServer {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "password=$Password"
         $modifiers++
     }
@@ -6017,7 +5964,6 @@ function Set-AcanoLdapServer {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "secure=$Secure"
     }
 
@@ -6062,10 +6008,11 @@ function Get-AcanoLdapMappings {
     
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -6118,7 +6065,6 @@ function New-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "nameMapping=$NameMapping"
         $modifiers++
     }
@@ -6127,7 +6073,6 @@ function New-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "cdrTagMapping=$CdrTagMapping"
         $modifiers++
     }
@@ -6136,7 +6081,6 @@ function New-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "authenticationMapping=$AuthenticationMapping"
         $modifiers++
     }
@@ -6145,7 +6089,6 @@ function New-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "coSpaceUriMapping=$CoSpaceUriMapping"
         $modifiers++
     }
@@ -6154,7 +6097,6 @@ function New-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "coSpaceSecondaryUriMapping=$CoSpaceSecondaryUriMapping"
         $modifiers++
     }
@@ -6163,7 +6105,6 @@ function New-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "coSpaceNameMapping=$CoSpaceNameMapping"
         $modifiers++
     }
@@ -6172,9 +6113,7 @@ function New-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "coSpaceCallIdMapping=$CoSpaceCallIdMapping"
-        $modifiers++
     }
 
     [string]$NewLdapMappingId = Open-AcanoAPI $nodeLocation -POST -Data $data
@@ -6217,7 +6156,6 @@ function Set-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "nameMapping=$NameMapping"
         $modifiers++
     }
@@ -6226,7 +6164,6 @@ function Set-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "cdrTagMapping=$CdrTagMapping"
         $modifiers++
     }
@@ -6235,7 +6172,6 @@ function Set-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "authenticationMapping=$AuthenticationMapping"
         $modifiers++
     }
@@ -6244,7 +6180,6 @@ function Set-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "coSpaceUriMapping=$CoSpaceUriMapping"
         $modifiers++
     }
@@ -6253,7 +6188,6 @@ function Set-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "coSpaceSecondaryUriMapping=$CoSpaceSecondaryUriMapping"
         $modifiers++
     }
@@ -6262,7 +6196,6 @@ function Set-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "coSpaceNameMapping=$CoSpaceNameMapping"
         $modifiers++
     }
@@ -6271,9 +6204,7 @@ function Set-AcanoLdapMapping {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "coSpaceCallIdMapping=$CoSpaceCallIdMapping"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -6320,19 +6251,21 @@ function Get-AcanoLdapSources {
 
     if ($TenantFilter -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&tenantFilter=$TenantFilter"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?tenantFilter=$TenantFilter"
-            $modifiers++
+            $nodeLocation += "?"
         }
+        $nodeLocation += "tenantFilter=$TenantFilter"
+        $modifiers++
     }
     
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -6412,7 +6345,6 @@ function Set-AcanoLdapSource {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "mapping=$Mapping"
         $modifiers++
     }
@@ -6421,7 +6353,6 @@ function Set-AcanoLdapSource {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "baseDn=$BaseDN"
         $modifiers++
     }
@@ -6430,7 +6361,6 @@ function Set-AcanoLdapSource {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "filter=$Filter"
         $modifiers++
     }
@@ -6439,7 +6369,6 @@ function Set-AcanoLdapSource {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "tenant=$Tenant"
     }
 
@@ -6517,7 +6446,6 @@ function New-AcanoLdapSync {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "ldapSource=$LdapSource"
         $modifiers++
     }
@@ -6526,7 +6454,6 @@ function New-AcanoLdapSync {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "removeWhenFinished=$RemoveWhenFinished"
     }
 
@@ -6571,10 +6498,11 @@ function Get-AcanoExternalDirectorySearchLocations {
     
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -6733,7 +6661,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "ldapServer=$LdapServer"
         $modifiers++
     }
@@ -6742,7 +6669,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "baseDn=$BaseDN"
         $modifiers++
     }
@@ -6751,7 +6677,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "filterFormat=$FilterFormat"
         $modifiers++
     }
@@ -6760,7 +6685,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "label=$Label"
         $modifiers++
     }
@@ -6769,7 +6693,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "priority=$Priority"
         $modifiers++
     }
@@ -6778,7 +6701,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "firstName=$FirstName"
         $modifiers++
     }
@@ -6787,7 +6709,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "lastName=$LastName"
         $modifiers++
     }
@@ -6796,7 +6717,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "displayName=$DisplayName"
         $modifiers++
     }
@@ -6805,7 +6725,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "phone=$Phone"
         $modifiers++
     }
@@ -6814,7 +6733,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "mobile=$Mobile"
         $modifiers++
     }
@@ -6823,7 +6741,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "email=$Email"
         $modifiers++
     }
@@ -6832,7 +6749,6 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "sip=$Sip"
         $modifiers++
     }
@@ -6841,9 +6757,7 @@ function Set-AcanoExternalDirectorySearchLocation {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "organization=$Organization"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -6887,10 +6801,11 @@ function Get-AcanoTenants {
     
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -7009,7 +6924,6 @@ function Set-AcanoTenant {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "name=$Name"
         $modifiers++
     }
@@ -7018,7 +6932,6 @@ function Set-AcanoTenant {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "callLegProfile=$CallLegProfile"
         $modifiers++
     }
@@ -7027,7 +6940,6 @@ function Set-AcanoTenant {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "callProfile=$CallProfile"
         $modifiers++
     }
@@ -7036,7 +6948,6 @@ function Set-AcanoTenant {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "dtmfProfile=$DtmfProfile"
         $modifiers++
     }
@@ -7045,7 +6956,6 @@ function Set-AcanoTenant {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "ivrBrandingProfile=$IvrBrandingProfile"
         $modifiers++
     }
@@ -7054,7 +6964,6 @@ function Set-AcanoTenant {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "callBrandingProfile=$CallBrandingProfile"
         $modifiers++
     }
@@ -7063,7 +6972,6 @@ function Set-AcanoTenant {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "participantLimit=$ParticipantLimit"
         $modifiers++
     }
@@ -7072,9 +6980,7 @@ function Set-AcanoTenant {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "userProfile=$UserProfile"
-        $modifiers++
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
@@ -7109,10 +7015,11 @@ function Get-AcanoTenantGroups {
     
     if ($Limit -ne "") {
         if ($modifiers -gt 0) {
-            $nodeLocation += "&limit=$Limit"
+            $nodeLocation += "&"
         } else {
-            $nodeLocation += "?limit=$Limit"
+            $nodeLocation += "?"
         }
+        $nodeLocation += "limit=$Limit"
 
         if($Offset -ne ""){
             $nodeLocation += "&offset=$Offset"
@@ -7176,7 +7083,6 @@ function New-AcanoAccessQuery {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "uri=$Uri"
         $modifiers++
     }
@@ -7185,7 +7091,6 @@ function New-AcanoAccessQuery {
         if ($modifiers -gt 0) {
             $data += "&"
         }
-
         $data += "callId=$CallId"
     }
 
