@@ -1,6 +1,9 @@
 # PsAcano
 Powershell implementation of the Acano API
 
+# This branch is here to run tests from dev before merging in to master. 
+dev should be merged in to tests to run tests before being merged in to master. 
+
 ## Introduction
 The Acano Server provides management access through an API exposed through HTTPS in the WebAdmin on the server. This API is thorughly documented at https://www.acano.com/publications/2015/09/Solution-API-Reference-R1_8.pdf
 
