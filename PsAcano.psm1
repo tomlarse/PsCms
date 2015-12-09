@@ -81,7 +81,7 @@ function New-AcanoSession {
     $connectionstatus = Get-AcanoSystemStatus
     $ver = $connectionstatus.softwareVersion
     $ut = $connectionstatus.uptimeSeconds
-    Write-Host "Successfully connected to the Acano Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds" -ForegroundColor DarkCyan
+    Write-Host "Successfully connected to the Acano Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds." -ForegroundColor DarkCyan
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -90,18 +90,18 @@ function Get-AcanocoSpaces {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$CallLegProfileFilter="",
+        [string]$CallLegProfileFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/coSpaces"
