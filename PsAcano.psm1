@@ -69,6 +69,7 @@ function New-AcanoSession {
         $script:APIAddress = "https://"+$APIAddress+":"+$Port+"/"
     } else {
         $script:APIAddress = "https://"+$APIAddress+"/"
+        $port = 443
     }
 
     $script:creds = $Credential
@@ -76,6 +77,11 @@ function New-AcanoSession {
     if ($IgnoreSSLTrust) {
         [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
     }
+
+    $connectionstatus = Get-AcanoSystemStatus
+    $ver = $connectionstatus.softwareVersion
+    $ut = $connectionstatus.uptimeSeconds
+    Write-Host "Successfully connected to the Acano Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds" -ForegroundColor DarkCyan
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
