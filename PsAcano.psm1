@@ -81,7 +81,7 @@ function New-AcanoSession {
     $connectionstatus = Get-AcanoSystemStatus
     $ver = $connectionstatus.softwareVersion
     $ut = $connectionstatus.uptimeSeconds
-    Write-Host "Successfully connected to the Acano Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds" -ForegroundColor DarkCyan
+    Write-Host "Successfully connected to the Acano Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds." -ForegroundColor DarkCyan
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -90,18 +90,18 @@ function Get-AcanocoSpaces {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$CallLegProfileFilter="",
+        [string]$CallLegProfileFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/coSpaces"
@@ -170,28 +170,28 @@ function New-AcanocoSpace {
         [parameter(Mandatory=$true)]
         [string]$Uri,
         [parameter(Mandatory=$false)]
-        [string]$SecondaryUri="",
+        [string]$SecondaryUri,
         [parameter(Mandatory=$false)]
-        [string]$CallId="",
+        [string]$CallId,
         [parameter(Mandatory=$false)]
-        [string]$CdrTag="",
+        [string]$CdrTag,
         [parameter(Mandatory=$false)]
-        [string]$Passcode="",
+        [string]$Passcode,
         [parameter(Mandatory=$false)]
-        [string]$DefaultLayout="",
+        [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
-        [string]$TenantID="",
+        [string]$TenantID,
         [parameter(Mandatory=$false)]
-        [string]$CallLegProfile="",
+        [string]$CallLegProfile,
         [parameter(Mandatory=$false)]
-        [string]$CallProfile="",
+        [string]$CallProfile,
         [parameter(Mandatory=$false)]
-        [string]$CallBrandingProfile="",
+        [string]$CallBrandingProfile,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$RequireCallID="true",
         [parameter(Mandatory=$false)]
-        [string]$Secret=""
+        [string]$Secret
     )
 
     $nodeLocation = "/api/v1/coSpaces"
@@ -254,28 +254,28 @@ function Set-AcanocoSpace {
         [parameter(Mandatory=$false)]
         [string]$Uri,
         [parameter(Mandatory=$false)]
-        [string]$SecondaryUri="",
+        [string]$SecondaryUri,
         [parameter(Mandatory=$false)]
-        [string]$CallId="",
+        [string]$CallId,
         [parameter(Mandatory=$false)]
-        [string]$CdrTag="",
+        [string]$CdrTag,
         [parameter(Mandatory=$false)]
-        [string]$Passcode="",
+        [string]$Passcode,
         [parameter(Mandatory=$false)]
-        [string]$DefaultLayout="",
+        [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
-        [string]$TenantId="",
+        [string]$TenantId,
         [parameter(Mandatory=$false)]
-        [string]$CallLegProfile="",
+        [string]$CallLegProfile,
         [parameter(Mandatory=$false)]
-        [string]$CallProfile="",
+        [string]$CallProfile,
         [parameter(Mandatory=$false)]
-        [string]$CallBrandingProfile="",
+        [string]$CallBrandingProfile,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$RequireCallId,
         [parameter(Mandatory=$false)]
-        [string]$Secret="",
+        [string]$Secret,
         [parameter(Mandatory=$false)]
         [switch]$RegenerateSecret
     )
@@ -418,15 +418,15 @@ function Get-AcanocoSpaceMembers {
         [string]$coSpaceID,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$CallLegProfileFilter="",
+        [string]$CallLegProfileFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     
@@ -485,7 +485,7 @@ function New-AcanocoSpaceMember {
         [parameter(Mandatory=$true)]
         [string]$UserJid,
         [parameter(Mandatory=$false)]
-        [string]$CallLegProfile="",
+        [string]$CallLegProfile,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$CanDestroy,
@@ -571,7 +571,7 @@ function Set-AcanocoSpaceMember {
         [parameter(Mandatory=$true)]
         [string]$UserId,
         [parameter(Mandatory=$false)]
-        [string]$CallLegProfile="",
+        [string]$CallLegProfile,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$CanDestroy,
@@ -764,15 +764,15 @@ function Get-AcanocoSpaceAccessMethods {
         [string]$coSpaceID,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$CallLegProfileFilter="",
+        [string]$CallLegProfileFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     
@@ -831,19 +831,19 @@ function New-AcanocoSpaceAccessMethod {
         [parameter(Mandatory=$false)]
         [string]$Uri,
         [parameter(Mandatory=$false)]
-        [string]$CallId="",
+        [string]$CallId,
         [parameter(Mandatory=$false)]
-        [string]$Passcode="",
+        [string]$Passcode,
         [parameter(Mandatory=$false)]
-        [string]$CallLegProfile="",
+        [string]$CallLegProfile,
         [parameter(Mandatory=$false)]
-        [string]$Secret="",
+        [string]$Secret,
         [parameter(Mandatory=$false)]
-        [string]$Scope=""
+        [string]$Scope
     )
 
     $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"
-    $data=""
+    $data = ""
     $modifiers = 0
 
     if ($Uri -ne "") {
@@ -913,21 +913,21 @@ function Set-AcanocoSpaceAccessMethod {
         [parameter(Mandatory=$false)]
         [string]$Uri,
         [parameter(Mandatory=$false)]
-        [string]$CallId="",
+        [string]$CallId,
         [parameter(Mandatory=$false)]
-        [string]$Passcode="",
+        [string]$Passcode,
         [parameter(Mandatory=$false)]
-        [string]$CallLegProfile="",
+        [string]$CallLegProfile,
         [parameter(Mandatory=$false)]
-        [string]$Secret="",
+        [string]$Secret,
         [parameter(Mandatory=$false)]
         [switch]$RegenerateSecret,
         [parameter(Mandatory=$false)]
-        [string]$Scope=""
+        [string]$Scope
     )
 
     $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"
-    $data=""
+    $data = ""
     $modifiers = 0
 
     if ($Uri -ne "") {
@@ -1030,12 +1030,12 @@ function Get-AcanoOutboundDialPlanRules {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/outboundDialPlanRules"
@@ -1339,15 +1339,15 @@ function Get-AcanoInboundDialPlanRules {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/inboundDialPlanRules"
@@ -1557,12 +1557,12 @@ function Get-AcanoCallForwardingDialPlanRules {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/forwardingDialPlanRules"
@@ -1739,15 +1739,15 @@ function Get-AcanoCalls {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$coSpaceFilter="",
+        [string]$coSpaceFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/calls"
@@ -1840,9 +1840,9 @@ function Get-AcanoCallProfiles {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/callProfiles"
@@ -1977,24 +1977,24 @@ function Get-AcanoCallLegs {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$ParticipantFilter="",
+        [string]$ParticipantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [ValidateSet("true","false","")]
-        [string]$OwnerIDSet="",
+        [ValidateSet("true","false")]
+        [string]$OwnerIDSet,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
         [ValidateSet("All","packetLoss","excessiveJitter","highRoundTripTime")]
         [string[]]$Alarms,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$CallID="",
+        [string]$CallID,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
         [string]$ActiveLayoutFilter,
@@ -2006,9 +2006,9 @@ function Get-AcanoCallLegs {
         [string]$AvailableVideoStreamsUpperBound,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     if ($CallID -ne "") {
@@ -2932,16 +2932,16 @@ function Get-AcanoCallLegProfiles {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
         [ValidateSet("unreferenced","referenced","")]
-        [string]$UsageFilter="",
+        [string]$UsageFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/callLegProfiles"
@@ -3643,12 +3643,12 @@ function Get-AcanoDialTransforms {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/dialTransforms"
@@ -3747,8 +3747,8 @@ function Set-AcanoDialTransform {
     )
 
     $nodeLocation = "/api/v1/dialTransforms/$DialTransformId"
-    $data=""
-    $modifiers=0
+    $data = ""
+    $modifiers = 0
     
 
     if ($Type -ne "") {
@@ -3811,12 +3811,12 @@ function Get-AcanoCallBrandingProfiles {
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
         [ValidateSet("unreferenced","referenced","")]
-        [string]$UsageFilter="",
+        [string]$UsageFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/callBrandingProfiles"
@@ -3935,12 +3935,12 @@ function Get-AcanoDtmfProfiles {
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
         [ValidateSet("unreferenced","referenced","")]
-        [string]$UsageFilter="",
+        [string]$UsageFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/dtmfProfiles"
@@ -4218,15 +4218,15 @@ function Get-AcanoIvrs {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/ivrs"
@@ -4411,15 +4411,15 @@ function Get-AcanoIvrBrandingProfiles {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/ivrBrandingProfiles"
@@ -4523,18 +4523,18 @@ function Get-AcanoParticipants {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$callBridgeFilter="",
+        [string]$callBridgeFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/participants"
@@ -4610,15 +4610,15 @@ function Get-AcanoUsers {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/users"
@@ -4684,12 +4684,12 @@ function Get-AcanoUserProfiles {
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
         [ValidateSet("unreferenced","referenced","")]
-        [string]$UsageFilter="",
+        [string]$UsageFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/userProfiles"
@@ -4901,9 +4901,9 @@ function Get-AcanoCdrRecieverUris {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/system/cdrRecievers"
@@ -5135,12 +5135,12 @@ function Get-AcanoTurnServers {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/turnServers"
@@ -5366,15 +5366,15 @@ function Get-AcanoWebBridges {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/webBridges"
@@ -5650,9 +5650,9 @@ function Get-AcanoCallBridges {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/callBridges"
@@ -5771,15 +5771,15 @@ function Get-AcanoSystemDiagnostics {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$CoSpaceFilter="",
+        [string]$CoSpaceFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$CallCorrelatorFilter="",
+        [string]$CallCorrelatorFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/system/diagnostics"
@@ -5842,12 +5842,12 @@ function Get-AcanoLdapServers {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/ldapServers"
@@ -5996,12 +5996,12 @@ function Get-AcanoLdapMappings {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/ldapMappings"
@@ -6236,15 +6236,15 @@ function Get-AcanoLdapSources {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/ldapMappings"
@@ -6401,9 +6401,9 @@ function Get-AcanoLdapSyncs {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/ldapSyncs"
@@ -6486,12 +6486,12 @@ function Get-AcanoExternalDirectorySearchLocations {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$TenantFilter="",
+        [string]$TenantFilter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/directorySearchLocations"
@@ -6789,12 +6789,12 @@ function Get-AcanoTenants {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Filter="",
+        [string]$Filter,
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/tenants"
@@ -7011,9 +7011,9 @@ function Get-AcanoTenantGroups {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
-        [string]$Limit="",
+        [string]$Limit,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
-        [string]$Offset=""
+        [string]$Offset
     )
 
     $nodeLocation = "api/v1/tenantGroups"
