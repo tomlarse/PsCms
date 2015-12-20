@@ -81,7 +81,13 @@ function New-AcanoSession {
     $connectionstatus = Get-AcanoSystemStatus
     $ver = $connectionstatus.softwareVersion
     $ut = $connectionstatus.uptimeSeconds
-    Write-Host "Successfully connected to the Acano Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds." -ForegroundColor DarkCyan
+    if ($connectionstatus -ne $null) {
+        Write-Information "Successfully connected to the Acano Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds." -ForegroundColor DarkCyan
+        return $true
+    }
+    else {
+        throw "Could not connect to the Acano Server at $APIAddress`:$port"
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
