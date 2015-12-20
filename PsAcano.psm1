@@ -27,28 +27,40 @@ function Open-AcanoAPI {
     $webclient.Headers.Add("user-agent", "PSAcano Powershell Module")
     $webclient.Credentials = $credCache
 
-    if ($POST) {
-        $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
-        $response = $webclient.UploadString($script:APIAddress+$NodeLocation,"POST",$Data)
+    try {
+        if ($POST) {
+            $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
+            $response = $webclient.UploadString($script:APIAddress+$NodeLocation,"POST",$Data)
 
-        if ($ReturnResponse) {
-            return [xml]$response
+            if ($ReturnResponse) {
+                return [xml]$response
+            }
+            else {
+                $res = $webclient.ResponseHeaders.Get("Location")
+
+                return $res.Substring($res.Length-36)
+            }
+        } elseif ($PUT) {
+            $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
+
+            return $webclient.UploadString($script:APIAddress+$NodeLocation,"PUT",$Data)
+        } elseif ($DELETE){
+            $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
+
+            return $webclient.UploadString($script:APIAddress+$NodeLocation,"DELETE",$Data)
+        } else {
+            return [xml]$webclient.DownloadString($script:APIAddress+$NodeLocation)
         }
-        else {
-            $res = $webclient.ResponseHeaders.Get("Location")
-
-            return $res.Substring($res.Length-36)
+    }
+    catch [Net.WebException]{
+        if ($_.Exception.Response.StatusCode.Value__ -eq 400) {
+            [System.IO.StreamReader]$failure = $_.Exception.Response.GetResponseStream()
+            $AcanoFailureReasonRaw = $failure.ReadToEnd()
+            $stripbefore = $AcanoFailureReasonRaw.Remove(0,38)
+            $AcanoFailureReason = $stripbefore.Remove($stripbefore.Length-20)
+          
+            Write-Error "Error: API returned reason: $AcanoFailureReason" -ErrorId $AcanoFailureReason -TargetObject $NodeLocation
         }
-    } elseif ($PUT) {
-        $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
-
-        return $webclient.UploadString($script:APIAddress+$NodeLocation,"PUT",$Data)
-    } elseif ($DELETE){
-        $webclient.Headers.Add("Content-Type","application/x-www-form-urlencoded")
-
-        return $webclient.UploadString($script:APIAddress+$NodeLocation,"DELETE",$Data)
-    } else {
-        return [xml]$webclient.DownloadString($script:APIAddress+$NodeLocation)
     }
 }
 
