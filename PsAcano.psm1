@@ -55,9 +55,11 @@ function Open-AcanoAPI {
     catch [Net.WebException]{
         if ($_.Exception.Response.StatusCode.Value__ -eq 400) {
             [System.IO.StreamReader]$failure = $_.Exception.Response.GetResponseStream()
-            $AcanoFailureCode = $failure.ReadToEnd()
-
-            write-host "Få konvertert til XML $AcanoFailureCode" 
+            $AcanoFailureReasonRaw = $failure.ReadToEnd()
+            $stripbefore = $AcanoFailureReasonRaw.Remove(0,38)
+            $AcanoFailureReason = $stripbefore.Remove($stripbefore.Length-20)
+          
+            Write-Error "Error: API returned reason: $AcanoFailureReason" -ErrorId $AcanoFailureReason -TargetObject $NodeLocation
         }
     }
 }
