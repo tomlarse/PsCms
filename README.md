@@ -72,8 +72,11 @@ Get-Command -Module PsAcano
 
 The Acano server uses a 128-bit GUID to identify objects, use these when accessing objects with `Get-`, `Set-` and `Remove-` Cmdlets.
 
+### Errors
+If an API call fails, the server will return an HTTP 400 containing the failure reason. The module will display these as a normal Powershell error
+
 ## Caveats
 
-This module has feature parity with the Acano API documentation. However there is no error handling in it at the moment, so it doesn't return error messages from the server. This is planned in a future update. There is also a lot of comment-based help missing, so `Get-Help` doesn't work for all commands.
+There is a lot of comment-based help missing, so `Get-Help` doesn't work for all commands.
 
 Please feel free to give feedback through [issues](https://github.com/tomlarse/PsAcano/issues).
