@@ -6265,7 +6265,7 @@ function Get-AcanoLdapSources {
         [string]$Offset
     )
 
-    $nodeLocation = "api/v1/ldapMappings"
+    $nodeLocation = "api/v1/ldapSources"
     $modifiers = 0
 
     if ($Filter -ne "") {
