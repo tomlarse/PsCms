@@ -94,7 +94,7 @@ function New-AcanoSession {
     $ver = $connectionstatus.softwareVersion
     $ut = $connectionstatus.uptimeSeconds
     if ($connectionstatus -ne $null) {
-        Write-Information "Successfully connected to the Acano Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds." -ForegroundColor DarkCyan
+        Write-Information "Successfully connected to the Acano Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds."
         return $true
     }
     else {
