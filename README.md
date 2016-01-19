@@ -1,5 +1,5 @@
 # PsAcano
-Powershell implementation of the Acano API
+Powershell implementation of the Acano API. It also contains a module that can connect to SSH on the Acano servers and perform configurations that are only accessible through SSH.
 
 ## Introduction
 The Acano Server provides management access through an API exposed through HTTPS in the WebAdmin on the server. This API is thorughly documented at https://www.acano.com/publications/2015/09/Solution-API-Reference-R1_8.pdf
@@ -51,6 +51,15 @@ in the folder in Powershell. To make it load automatically when PowerShell start
 ```posh
 $env:PsModulePath
 ```
+
+### PSAcano-SSH
+To load the SSH module, run
+
+```posh
+Import-Module .\PsAcano-SSH.psm1
+```
+
+This module is dependant on posh-ssh by darkoperator. Please install this first from https://github.com/darkoperator/Posh-SSH
 
 ## Use
 
