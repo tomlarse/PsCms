@@ -59,6 +59,12 @@ function Get-AcanoIfaceList {
         }
     }
 
+    ## If this is an Acano Server, it has admin iface too. 
+    $sshresult = (Invoke-SSHCommand -Command "iface admin" -SessionId $Script:SSHSessionid).Output
+    if ($sshresult -ne "No configuration for interface") {
+        $ifacelist += 'admin'
+    }
+
     return $ifacelist
 }
 
@@ -98,4 +104,19 @@ Function Get-AcanoIface {
     }
 
     return $ifaceoutput
+}
+
+function Set-AcanoIfaceMTU {
+[CmdletBinding(DefaultParameterSetName="NoSpeed")]
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$Identity,
+        [parameter(Mandatory=$true)]
+        [string]$MTU
+    )
+
+    $sshresult = (Invoke-SSHCommand -Command "iface $Identity mtu $MTU" -SessionId $Script:SSHSessionId).Output
+
+    Get-AcanoIface $Identity
+
 }
