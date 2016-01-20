@@ -12,7 +12,7 @@
 RootModule = 'PsAcano-API.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.3 RC1'
+ModuleVersion = '0.2.9.1'
 
 # ID used to uniquely identify this module
 GUID = 'f3a39c2f-e32d-4dba-994f-6e3427587204'
