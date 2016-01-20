@@ -160,6 +160,25 @@ function Get-AcanoIpv4 {
             $dhcp = ($sshresult | Select-String -Pattern "dhcp" -SimpleMatch).Line
             $enabled = ($sshresult | Select-String -Pattern "enabled" -SimpleMatch).Line
 
+            $rawroutes = $sshresult | select -Skip ($sshresult | Select-String -Pattern "source" -SimpleMatch).LineNumber[0]
+            $routes = @()
+            
+            foreach ($rawroute in $rawroutes) {
+                $temparray = $rawroute.Split(" ")
+                $route = @()
+                foreach ($temp in $temparray) {
+                    if ($temp -ne "") {
+                        $route += $temp
+                    }
+                }
+                $routeobj = New-Object System.Object
+                $routeobj | Add-Member -MemberType NoteProperty -Name Source -Value $route[0]
+                $routeobj | Add-Member -MemberType NoteProperty -Name Destination -Value $route[1]
+                $routeobj | Add-Member -MemberType NoteProperty -Name Gateway -Value $route[2]
+                $routeobj | Add-Member -MemberType NoteProperty -Name Global -Value $route[3]
+                $routes += $routeobj
+            }
+
             $ipv4obj | Add-Member -MemberType NoteProperty -Name IpAddress -Value $ipaddress.Substring($ipaddress.LastIndexOf(' ')+1)
             $ipv4obj | Add-Member -MemberType NoteProperty -Name Gateway -Value $gateway.Substring($gateway.LastIndexOf(' ')+1)
             $ipv4obj | Add-Member -MemberType NoteProperty -Name PrefixLength -Value $prefixlength.Substring($prefixlength.LastIndexOf(' ')+1)
@@ -167,6 +186,7 @@ function Get-AcanoIpv4 {
             $ipv4obj | Add-Member -MemberType NoteProperty -Name default -Value $default.Substring($default.LastIndexOf(' ')+1)
             $ipv4obj | Add-Member -MemberType NoteProperty -Name dhcp -Value $dhcp.Substring($dhcp.LastIndexOf(' ')+1)
             $ipv4obj | Add-Member -MemberType NoteProperty -Name enabled -Value $enabled.Substring($enabled.LastIndexOf(' ')+1)
+            $ipv4obj | Add-Member -MemberType NoteProperty -Name Routes -Value $routes
         }
         else {
             ## Interface has dhcp set and hasn't recieved an address. This is lazy and should be fixed at some point, nonetheless:
