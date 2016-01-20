@@ -1,14 +1,14 @@
-﻿function New-AcanoSSHSession {
+﻿function New-AcanoMMPSession {
     Param (
         [parameter(Mandatory=$true)]
-        [string]$ServerAddress,
+        [string]$MMPAddress,
         [parameter(Mandatory=$false)]
         [string]$Port = $null,
         [parameter(Mandatory=$true)]
         [PSCredential]$Credential
     )
 
-    $script:ServerAddress = $ServerAddress
+    $script:MMPAddress = $MMPAddress
     $script:ServerPort = $Port
     $script:ServerCredential = $Credential
 
@@ -17,13 +17,13 @@
 }
 
 function Open-AcanoSSHSession {
-    if (($Script:ServerAddress -eq $null) -or ($Script:ServerAddress -eq "")) {
+    if (($Script:MMPAddress -eq $null) -or ($Script:MMPAddress -eq "")) {
         throw "No server address has been set. Run New-AcanoSSHSession to configure the SSH connection first."
     }
     else {
         $SessionExists = $false
         foreach ($SSHSession in (Get-SSHSession)) {
-            if ($SSHSession.Host -eq $Script:ServerAddress){
+            if ($SSHSession.Host -eq $Script:MMPAddress){
                 $SessionExists = $true
                 $SessionId = $SSHSession.SessionId
             }
@@ -36,10 +36,10 @@ function Open-AcanoSSHSession {
 
         if ($script:ServerPort -ne "")
         {
-            $Script:SSHSessionId = (New-SSHSession -ComputerName $Script:ServerAddress -Port $script:ServerPort -Credential $Script:ServerCredential).SessionId        
+            $Script:SSHSessionId = (New-SSHSession -ComputerName $Script:MMPAddress -Port $script:ServerPort -Credential $Script:ServerCredential).SessionId        
         }
         else {
-            $Script:SSHSessionId = (New-SSHSession -ComputerName $Script:ServerAddress -Credential $Script:ServerCredential).SessionId
+            $Script:SSHSessionId = (New-SSHSession -ComputerName $Script:MMPAddress -Credential $Script:ServerCredential).SessionId
         }
     }
 }
