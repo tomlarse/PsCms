@@ -51,7 +51,7 @@ function Get-AcanoIfaceList {
 
     foreach ($iface in $possibleifaces) {
         $sshresult = (Invoke-SSHCommand -Command "iface $iface" -SessionId $Script:SSHSessionid).Output
-        if ($sshresult -eq "No configuration for interface") {
+        if ($sshresult.Contains("No configuration for interface")) {
             break
         }
         else {
@@ -61,7 +61,7 @@ function Get-AcanoIfaceList {
 
     ## If this is an Acano Server, it has admin iface too. 
     $sshresult = (Invoke-SSHCommand -Command "iface admin" -SessionId $Script:SSHSessionid).Output
-    if ($sshresult -ne "No configuration for interface") {
+    if ((-not $sshresult.Contains("No configuration for interface")) -and (-not $sshresult.Contains("Unrecognized interface"))) {
         $ifacelist += 'admin'
     }
 
@@ -87,11 +87,20 @@ Function Get-AcanoIface {
         $ifaceobj = New-Object System.Object
         $sshresult = (Invoke-SSHCommand -Command "iface $iface" -SessionId $script:SSHSessionId).Output
 
-        $macadress = ($sshresult | Select-String -Pattern "Mac address").ToString()
-        $autoneg = ($sshresult | Select-String "Auto-Negotiation").ToString()
-        $speed = ($sshresult | Select-String "Speed").ToString()
-        $duplex = ($sshresult | Select-String "Duplex").ToString()
-        $MTU = ($sshresult | Select-String "MTU").ToString()
+        $macadress = ($sshresult | Select-String -Pattern "Mac address" -SimpleMatch).ToString()
+        $autoneg = ($sshresult | Select-String -Pattern "Auto-Negotiation" -SimpleMatch).ToString()
+        
+        if ($sshresult | Select-String -Pattern "Speed" -SimpleMatch -Quiet) {
+            $speed = ($sshresult | Select-String -Pattern "Speed" -SimpleMatch).ToString()
+            $duplex = ($sshresult | Select-String -Pattern "Duplex" -SimpleMatch).ToString()
+        }
+        else {
+            ## Speed and duplex null
+            $speed = ""
+            $duplex = ""
+        }
+        
+        $MTU = ($sshresult | Select-String -Pattern "MTU" -SimpleMatch).ToString()
 
         $ifaceobj | Add-Member -MemberType NoteProperty -Name Identity -Value $iface
         $ifaceobj | Add-Member -MemberType NoteProperty -Name macaddress -Value $macadress.Substring($macadress.Length-17)
