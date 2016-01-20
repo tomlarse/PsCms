@@ -96,7 +96,7 @@ Get-Command -Module PsAcano-MMP
 The Acano API uses a 128-bit GUID to identify objects, use these when accessing objects with `Get-`, `Set-` and `Remove-` Cmdlets.
 
 ### Errors
-If an API call fails, the server will return an HTTP 400 containing the failure reason. The module will display these as a normal Powershell error
+If an API call fails, the server will return an HTTP 400 containing the failure reason. The module will display these as normal Powershell errors
 
 ## Caveats
 
