@@ -116,7 +116,6 @@ Function Get-AcanoIface {
 }
 
 function Set-AcanoIfaceMTU {
-[CmdletBinding(DefaultParameterSetName="NoSpeed")]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -151,7 +150,7 @@ function Get-AcanoIpv4 {
 
         $ipv4obj | Add-Member -MemberType NoteProperty -Name Identity -Value $iface
 
-        if (-not ($sshresult | Select-String -Pattern "No observed values for interface b" -quiet)) {
+        if (-not ($sshresult | Select-String -Pattern "No observed values for interface" -quiet)) {
             $ipaddress = ($sshresult | Select-String -Pattern "address" -SimpleMatch).Line[0]
             $prefixlength = ($sshresult | Select-String -Pattern "prefixlen" -SimpleMatch).Line
             $gateway = ($sshresult | Select-String -Pattern "gateway" -SimpleMatch).Line[0]
@@ -189,7 +188,7 @@ function Get-AcanoIpv4 {
             $ipv4obj | Add-Member -MemberType NoteProperty -Name Routes -Value $routes
         }
         else {
-            ## Interface has dhcp set and hasn't recieved an address. This is lazy and should be fixed at some point, nonetheless:
+            ## Interface has dhcp set and hasn't recieved an address, or isn't connected. This is lazy and should be fixed at some point, nonetheless:
             $ipv4obj | Add-Member -MemberType NoteProperty -Name IpAddress -Value "Ip address not observed"
         }
               
@@ -197,4 +196,48 @@ function Get-AcanoIpv4 {
     }
 
     return $ipv4output
+}
+
+function Set-AcanoIpv4 {
+    [CmdletBinding(DefaultParameterSetName="ChangeIPAddress")]
+    Param (
+        [parameter(ParameterSetName="ChangeIPAddress",Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="ChangeDHCP",Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="EnableDisableIf",Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="DefaultIf",Mandatory=$true,position=1)]
+        [string]$Identity,
+        [parameter(ParameterSetName="ChangeIPAddress",Mandatory=$true)]
+        [string]$IpAddress,
+        [parameter(ParameterSetName="ChangeIPAddress",Mandatory=$true)]
+        [string]$PrefixLength,
+        [parameter(ParameterSetName="ChangeIPAddress",Mandatory=$true)]
+        [string]$Gateway,
+        [parameter(ParameterSetName="ChangeDHCP",Mandatory=$true)]
+        [switch]$EnableDHCP,
+        [parameter(ParameterSetName="EnableDisableIf",Mandatory=$true)]
+        [ValidateSet("true","false")]
+        [string]$Enabled,
+        [parameter(ParameterSetName="DefaultIf",Mandatory=$true)]
+        [switch]$Default
+    )
+
+    If ($PSCmdlet.ParameterSetName -eq 'ChangeIpAddress') {
+        Invoke-SSHCommand -Command "ipv4 $Identity add $IpAddress/$PrefixLength $Gateway" -SessionId $Script:SSHSessionId | Out-Null
+    }
+    elseif ($PSCmdlet.ParameterSetName -eq 'ChangeDHCP') {
+        Invoke-SSHCommand -Command "ipv4 $Identity dhcp" -SessionId $Script:SSHSessionId | Out-Null
+    }
+    elseif ($PSCmdlet.ParameterSetName -eq 'EnableDisableIf') {
+        if ($Enabled -eq "true") {
+            Invoke-SSHCommand -Command "ipv4 $Identity enable" -SessionId $Script:SSHSessionId | Out-Null
+        }
+        else {
+            Invoke-SSHCommand -Command "ipv4 $Identity disable" -SessionId $Script:SSHSessionId | Out-Null
+        }
+    }
+    elseif ($PSCmdlet.ParameterSetName -eq 'DefaultIf') {
+        Invoke-SSHCommand -Command "ipv4 $Identity default" -SessionId $Script:SSHSessionId | Out-Null
+    }
+
+    Get-AcanoIpv4 -Identity $Identity
 }
