@@ -241,3 +241,18 @@ function Set-AcanoIpv4 {
 
     Get-AcanoIpv4 -Identity $Identity
 }
+
+function New-AcanoIpv4Route {
+    Param (
+        [parameter(Mandatory=$true,position=1)]
+        [string]$Identity,
+        [parameter(Mandatory=$true)]
+        [string]$Network,
+        [parameter(Mandatory=$true)]
+        [string]$PrefixLength
+    )
+
+    Invoke-SSHCommand -Command "ipv4 $Identity route add $Network/$PrefixLength" -SessionId 0 | Out-Null
+
+    Get-AcanoIpv4 $Identity | select -ExpandProperty Routes
+}
