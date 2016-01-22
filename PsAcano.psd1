@@ -12,7 +12,7 @@
 RootModule = 'PsAcano.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.2.2'
+ModuleVersion = '0.2.3'
 
 # ID used to uniquely identify this module
 GUID = 'f3a39c2f-e32d-4dba-994f-6e3427587204'
@@ -117,4 +117,3 @@ PrivateData = @{
 # DefaultCommandPrefix = ''
 
 }
-

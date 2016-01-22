@@ -5140,8 +5140,9 @@ function Set-AcanoGlobalProfile {
             $data += "callBrandingProfile=$CallBrandingProfile"
         }
     }
+    $data
 
-    Open-AcanoAPI $nodeLocation -POST -Data $data
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
     
     Get-AcanoGlobalProfile
 
