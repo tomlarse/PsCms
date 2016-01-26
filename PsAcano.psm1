@@ -5663,6 +5663,15 @@ function Remove-AcanoWebBridge {
     }
 }
 
+function Update-AcanoWebBridgeCustomization {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$WebBridgeId
+    )
+
+    Open-AcanoAPI "/api/v1/webBridges/$WebBridgeId/updateCustomization" -POST -ReturnResponse | Out-Null
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoCallBridges {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
