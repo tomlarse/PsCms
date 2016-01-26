@@ -5664,15 +5664,12 @@ function Remove-AcanoWebBridge {
 }
 
 function Update-AcanoWebBridgeCustomization {
-[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$WebBridgeId
     )
 
-    if ($PSCmdlet.ShouldProcess("$WebBridgeId","Reload Web Bridge customization")) {
-        Open-AcanoAPI "/api/v1/webBridges/$WebBridgeId/updateCustomization" -POST  
-    }
+    Open-AcanoAPI "/api/v1/webBridges/$WebBridgeId/updateCustomization" -POST -ReturnResponse | Out-Null
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
