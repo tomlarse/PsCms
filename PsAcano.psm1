@@ -3700,7 +3700,7 @@ function Get-AcanoDialTransform {
         [string]$DialTransformID
     )
 
-    return (Open-AcanoAPI "api/v1/dialTransform/$DialTransformID").dialTransform
+    return (Open-AcanoAPI "api/v1/dialTransforms/$DialTransformID").dialTransform
 
 }
 
