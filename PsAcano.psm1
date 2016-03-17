@@ -6856,7 +6856,7 @@ function Get-AcanoTenant {
         [string]$TenantID
     )
 
-    return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenants
+    return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenant
 }
 
 function New-AcanoTenant {
