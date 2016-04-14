@@ -277,7 +277,7 @@ function New-AcanocoSpace {
 function Set-AcanocoSpace {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$Name,
         [parameter(Mandatory=$false)]
@@ -309,7 +309,7 @@ function Set-AcanocoSpace {
         [switch]$RegenerateSecret
     )
 
-    $nodeLocation = "/api/v1/coSpaces/$coSpaceId"
+    $nodeLocation = "/api/v1/coSpaces/$Identity"
     $data = ""
     $modifiers = 0
     
@@ -430,11 +430,11 @@ function Remove-AcanocoSpace {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceID
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$coSpaceID","Remove coSpace")) {
-        Open-AcanoAPI "api/v1/coSpaces/$coSpaceID" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove coSpace")) {
+        Open-AcanoAPI "api/v1/coSpaces/$Identity" -DELETE
     }
 }
 
@@ -495,22 +495,32 @@ function Get-AcanocoSpaceMembers {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanocoSpaceMember {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceUserID,
-        [parameter(Mandatory=$true)]
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity,
+        [parameter(ParameterSetName="getSingle",Mandatory=$true)]
+        [parameter(ParameterSetName="getAll",Mandatory=$true)]
         [string]$coSpaceID
     )
 
-    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$coSpaceUserID").coSpaceUser
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanocoSpaceMembers $coSpaceID
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$Identity").coSpaceUser
+        }
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function New-AcanocoSpaceMember {
     Param (
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,
+        [string]$Identity,
         [parameter(Mandatory=$true)]
         [string]$UserJid,
         [parameter(Mandatory=$false)]
@@ -544,7 +554,7 @@ function New-AcanocoSpaceMember {
         [string]$CanDeleteAllMessages
     )
 
-    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers"
+    $nodeLocation = "/api/v1/coSpaces/$Identity/coSpaceUsers"
     $data = "userJid=$UserJid"
 
     if ($CallLegProfile -ne "") {
@@ -589,14 +599,14 @@ function New-AcanocoSpaceMember {
 
     [string]$NewcoSpaceMemberID = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanocoSpaceMember $Identity -coSpaceUserID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Set-AcanocoSpaceMember {
     Param (
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,
+        [string]$Identity,
         [parameter(Mandatory=$true)]
         [string]$UserId,
         [parameter(Mandatory=$false)]
@@ -630,7 +640,7 @@ function Set-AcanocoSpaceMember {
         [string]$CanDeleteAllMessages
     )
 
-    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId"
+    $nodeLocation = "/api/v1/coSpaces/$Identity/coSpaceUsers/$UserId"
     $data = ""
     $modifiers = 0
     
@@ -718,13 +728,13 @@ function Remove-AcanocoSpaceMember {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,
+        [string]$Identity,
         [parameter(Mandatory=$true)]
         [string]$UserId
     )
 
-    if ($PSCmdlet.ShouldProcess("$UserId","Remove user from cospace with id $coSpaceId")) {
-        Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/coSpaceUsers/$UserId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$UserId","Remove user from cospace with id $Identity")) {
+        Open-AcanoAPI "api/v1/coSpaces/$Identity/coSpaceUsers/$UserId" -DELETE
     }
 }
 
@@ -732,14 +742,14 @@ function Remove-AcanocoSpaceMember {
 function New-AcanocoSpaceMessage {
     Param (
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,
+        [string]$Identity,
         [parameter(Mandatory=$true)]
         [string]$Message,
         [parameter(Mandatory=$true)]
         [string]$From
     )
 
-    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/messages"
+    $nodeLocation = "/api/v1/coSpaces/$Identity/messages"
     $data = "message=$Message"
     $data += "&from=$From"
 
@@ -752,14 +762,14 @@ function Remove-AcanocoSpaceMessages {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$MinAge,
         [parameter(Mandatory=$false)]
         [string]$MaxAge
     )
 
-    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/messages"
+    $nodeLocation = "/api/v1/coSpaces/$Identity/messages"
     $data = ""
     $modifiers = 0
 
@@ -775,7 +785,7 @@ function Remove-AcanocoSpaceMessages {
         $data += "maxAge=$MaxAge"
     }
 
-    if ($PSCmdlet.ShouldProcess("$coSpaceId","Remove messages in coSpace")) {
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove messages in coSpace")) {
         if ($modifiers -gt 0) {
             Open-AcanoAPI $nodeLocation -DELETE -Data $data
         } else {
@@ -790,7 +800,7 @@ function Get-AcanocoSpaceAccessMethods {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]
-        [string]$coSpaceID,
+        [string]$Identity,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
         [string]$Filter,
@@ -805,7 +815,7 @@ function Get-AcanocoSpaceAccessMethods {
     )
 
     
-    $nodeLocation = "api/v1/coSpaces/$coSpaceID/accessMethods"
+    $nodeLocation = "api/v1/coSpaces/$Identity/accessMethods"
     $modifiers = 0
 
     if ($Filter -ne "") {
@@ -841,22 +851,32 @@ function Get-AcanocoSpaceAccessMethods {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanocoSpaceAccessMethod {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceAccessMethodID,
-        [parameter(Mandatory=$true)]
-        [string]$coSpaceID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity,
+        [parameter(ParameterSetName="getSingle",Mandatory=$true)]
+        [parameter(ParameterSetName="getAll",Mandatory=$true)]
+        [string]$coSpaceAccessMethodID
     )
 
-    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/accessMethods/$coSpaceAccessMethodID").accessMethod
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanocoSpaceAccessMethods $Identity
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/coSpaces/$Identity/accessMethods/$coSpaceAccessMethodID").accessMethod
+        }
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function New-AcanocoSpaceAccessMethod {
     Param (
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$Uri,
         [parameter(Mandatory=$false)]
@@ -871,7 +891,7 @@ function New-AcanocoSpaceAccessMethod {
         [string]$Scope
     )
 
-    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"
+    $nodeLocation = "/api/v1/coSpaces/$Identity/accessMethods"
     $data = ""
     $modifiers = 0
 
@@ -937,8 +957,10 @@ function New-AcanocoSpaceAccessMethod {
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Set-AcanocoSpaceAccessMethod {
     Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$Identity,
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,
+        [string]$coSpaceAccessMethodID,
         [parameter(Mandatory=$false)]
         [string]$Uri,
         [parameter(Mandatory=$false)]
@@ -955,7 +977,7 @@ function Set-AcanocoSpaceAccessMethod {
         [string]$Scope
     )
 
-    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"
+    $nodeLocation = "/api/v1/coSpaces/$Identity/accessMethods/$coSpaceAccessMethodID"
     $data = ""
     $modifiers = 0
 
@@ -1025,7 +1047,7 @@ function Set-AcanocoSpaceAccessMethod {
 
     [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanocoSpaceAccessMethod -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") -coSpaceID $coSpaceId ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanocoSpaceAccessMethod $Identity -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -1033,23 +1055,23 @@ function Remove-AcanocoSpaceAccessMethod {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,
+        [string]$Identity,
         [parameter(Mandatory=$true)]
-        [string]$AccessMethodId
+        [string]$coSpaceAccessMethodID
     )
 
-    if ($PSCmdlet.ShouldProcess("$AccessMethodId","Remove access method from coSpace $coSpaceId")) {
-        Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/accessMethods/$AccessMethodId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$coSpaceAccessMethodID","Remove access method from coSpace $Identity")) {
+        Open-AcanoAPI "api/v1/coSpaces/$Identity/accessMethods/$coSpaceAccessMethodID" -DELETE
     }
 }
 
 function Start-AcanocoSpaceCallDiagnosticsGeneration {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$coSpaceId
+        [string]$Identity
     )
 
-    Open-AcanoAPI "api/v1/coSpaces/$coSpaceId/diagnostics" -POST
+    Open-AcanoAPI "api/v1/coSpaces/$Identity/diagnostics" -POST
 
 }
 
