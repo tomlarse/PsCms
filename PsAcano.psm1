@@ -444,7 +444,7 @@ function Get-AcanocoSpaceMembers {
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$true,Position=1)]
-        [string]$coSpaceID,
+        [string]$Identity,
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
         [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
         [string]$Filter,
@@ -459,7 +459,7 @@ function Get-AcanocoSpaceMembers {
     )
 
     
-    $nodeLocation = "api/v1/coSpaces/$coSpaceID/coSpaceUsers"
+    $nodeLocation = "api/v1/coSpaces/$Identity/coSpaceUsers"
     $modifiers = 0
 
     if ($Filter -ne "") {
@@ -1115,12 +1115,22 @@ function Get-AcanoOutboundDialPlanRules {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoOutboundDialPlanRule {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$OutboundDialPlanRuleID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/outboundDialPlanRules/$OutboundDialPlanRuleID").outboundDialPlanRule
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoOutboundDialPlanRules
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/outboundDialPlanRules/$Identity").outboundDialPlanRule
+        } 
+    }  
 }
 
 function New-AcanoOutboundDialPlanRule {
@@ -1225,7 +1235,7 @@ function Set-AcanoOutboundDialPlanRule {
     Param (
         [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$true,Position=1)]
         [parameter(ParameterSetName="CallbridgeId",Mandatory=$true,Position=1)]
-        [string]$OutboundDialPlanRuleId,
+        [string]$Identity,
         [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$false)]
         [parameter(ParameterSetName="CallbridgeId",Mandatory=$false)]
         [string]$Domain,
@@ -1268,7 +1278,7 @@ function Set-AcanoOutboundDialPlanRule {
         [string]$CallRouting
     )
 
-    $nodeLocation = "/api/v1/outboundDialPlanRules/$OutboundDialPlanRuleId"
+    $nodeLocation = "/api/v1/outboundDialPlanRules/$Identity"
     $modifiers = 0
     $data = ""
 
@@ -1369,18 +1379,18 @@ function Set-AcanoOutboundDialPlanRule {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoOutboundDialPlanRule $OutboundDialPlanRuleId
+    Get-AcanoOutboundDialPlanRule $Identity
 }
 
 function Remove-AcanoOutboundDialPlanRule {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$OutboundDialPlanRuleId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$OutboundDialPlanRuleId","Remove outbound dial plan rule")) {
-        Open-AcanoAPI "/api/v1/outboundDialPlanRules/$OutboundDialPlanRuleId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove outbound dial plan rule")) {
+        Open-AcanoAPI "/api/v1/outboundDialPlanRules/$Identity" -DELETE
     }
 }
 
@@ -1437,13 +1447,22 @@ function Get-AcanoInboundDialPlanRules {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoInboundDialPlanRule {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$InboundDialPlanRuleID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/inboundDialPlanRules/$InboundDialPlanRuleID").inboundDialPlanRule
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoInboundDialPlanRules
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/inboundDialPlanRules/$Identity").inboundDialPlanRule
+        } 
+    }
 }
 
 function New-AcanoInboundDialPlanRule {
@@ -1504,7 +1523,7 @@ function New-AcanoInboundDialPlanRule {
 function Set-AcanoInboundDialPlanRule {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$InboundDialPlanRuleId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$Domain,
         [parameter(Mandatory=$false)]
@@ -1526,7 +1545,7 @@ function Set-AcanoInboundDialPlanRule {
     )
 
 
-    $nodeLocation = "/api/v1/inboundDialPlanRules/$InboundDialPlanRuleId"
+    $nodeLocation = "/api/v1/inboundDialPlanRules/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -1587,18 +1606,18 @@ function Set-AcanoInboundDialPlanRule {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoInboundDialPlanRule -InboundDialPlanRuleID $InboundDialPlanRuleId
+    Get-AcanoInboundDialPlanRule $Identity
 }
 
 function Remove-AcanoInboundDialPlanRule {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$InboundDialPlanRuleId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$InboundDialPlanRuleId","Remove inbound dial plan rule")) {
-        Open-AcanoAPI "/api/v1/inboundDialPlanRules/$InboundDialPlanRuleId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove inbound dial plan rule")) {
+        Open-AcanoAPI "/api/v1/inboundDialPlanRules/$Identity" -DELETE
     }
 }
 
