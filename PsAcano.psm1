@@ -174,7 +174,7 @@ function Get-AcanocoSpace {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
-        [string]$coSpaceID
+        [string]$Identity
     )
 
     switch ($PsCmdlet.ParameterSetName) 
@@ -186,7 +186,7 @@ function Get-AcanocoSpace {
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace
+            return (Open-AcanoAPI "api/v1/coSpaces/$Identity").coSpace
         } 
     } 
 }
