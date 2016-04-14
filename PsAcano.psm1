@@ -171,13 +171,24 @@ function Get-AcanocoSpaces {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanocoSpace {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
         [string]$coSpaceID
     )
 
-    return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace
+    switch ($PsCmdlet.ParameterSetName) 
 
+    { 
+
+        "getAll"  {
+            Get-AcanocoSpaces
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID").coSpace
+        } 
+    } 
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
