@@ -926,8 +926,10 @@ function New-AcanocoSpaceAccessMethod {
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Set-AcanocoSpaceAccessMethod {
     Param (
-        [parameter(Mandatory=$true)]
+        [parameter(Mandatory=$true,Position=1)]
         [string]$coSpaceId,
+        [parameter(Mandatory=$true)]
+        [string]$coSpaceAccessMethodID,
         [parameter(Mandatory=$false)]
         [string]$Uri,
         [parameter(Mandatory=$false)]
@@ -944,7 +946,7 @@ function Set-AcanocoSpaceAccessMethod {
         [string]$Scope
     )
 
-    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods"
+    $nodeLocation = "/api/v1/coSpaces/$coSpaceId/accessMethods/$coSpaceAccessMethodID"
     $data = ""
     $modifiers = 0
 
