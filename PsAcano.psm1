@@ -270,7 +270,7 @@ function New-AcanocoSpace {
 
     [string]$NewcoSpaceID = Open-AcanoAPI $nodeLocation -POST -Data $data
 
-    Get-AcanocoSpace -coSpaceID $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanocoSpace $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -501,17 +501,17 @@ function Get-AcanocoSpaceMember {
         [string]$Identity,
         [parameter(ParameterSetName="getSingle",Mandatory=$true)]
         [parameter(ParameterSetName="getAll",Mandatory=$true)]
-        [string]$coSpaceID
+        [string]$coSpaceMemberID
     )
 
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanocoSpaceMembers $coSpaceID
+            Get-AcanocoSpaceMembers $Identity
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/coSpaces/$coSpaceID/coSpaceUsers/$Identity").coSpaceUser
+            return (Open-AcanoAPI "api/v1/coSpaces/$Identity/coSpaceUsers/$coSpaceMemberID").coSpaceUser
         }
     }
 }
@@ -599,7 +599,7 @@ function New-AcanocoSpaceMember {
 
     [string]$NewcoSpaceMemberID = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanocoSpaceMember $Identity -coSpaceUserID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanocoSpaceMember $Identity -coSpaceMemberID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -951,7 +951,7 @@ function New-AcanocoSpaceAccessMethod {
 
     [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanocoSpaceAccessMethod -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") -coSpaceID $coSpaceId ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanocoSpaceAccessMethod $Identity -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -1045,9 +1045,10 @@ function Set-AcanocoSpaceAccessMethod {
         $data += "scope=$Scope"
     }
 
-    [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanocoSpaceAccessMethod $Identity -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanocoSpaceAccessMethod $Identity -coSpaceAccessMethodID $coSpaceAccessMethodID
+
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
