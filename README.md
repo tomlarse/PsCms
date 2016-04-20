@@ -36,7 +36,7 @@ Start-AcanocoSpaceCallDiagnosticsGeneration
 
 To install, simply run
 ```posh
-iex (New-Object Net.WebClient).DownloadString("https://gist.githubusercontent.com/tomlarse/5f43bbe0e763cea379ca/raw/e7fb441f1cd0289b72046f5480bd1f179c94022b/installmodule")
+iex (New-Object Net.WebClient).DownloadString("https://gist.githubusercontent.com/tomlarse/5f43bbe0e763cea379ca/raw/28007a020604dda2b643198df9e0a5d34154d9ef/installmodule")
 ```
 to install the latest release.
 
