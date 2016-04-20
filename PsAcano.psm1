@@ -423,6 +423,8 @@ function Set-AcanocoSpace {
     $data += "regenerateSecret="+$RegenerateSecret.toString()
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
+
+    Get-AcanocoSpace $Identity
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -500,7 +502,7 @@ function Get-AcanocoSpaceMember {
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
         [string]$Identity,
         [parameter(ParameterSetName="getSingle",Mandatory=$true)]
-        [parameter(ParameterSetName="getAll",Mandatory=$true)]
+        [parameter(ParameterSetName="getAll",Mandatory=$false)]
         [string]$coSpaceMemberID
     )
 
@@ -608,7 +610,7 @@ function Set-AcanocoSpaceMember {
         [parameter(Mandatory=$true)]
         [string]$Identity,
         [parameter(Mandatory=$true)]
-        [string]$UserId,
+        [string]$coSpaceMemberId,
         [parameter(Mandatory=$false)]
         [string]$CallLegProfile,
         [parameter(Mandatory=$false)]
@@ -640,7 +642,7 @@ function Set-AcanocoSpaceMember {
         [string]$CanDeleteAllMessages
     )
 
-    $nodeLocation = "/api/v1/coSpaces/$Identity/coSpaceUsers/$UserId"
+    $nodeLocation = "/api/v1/coSpaces/$Identity/coSpaceUsers/$coSpaceMemberId"
     $data = ""
     $modifiers = 0
     
@@ -721,6 +723,8 @@ function Set-AcanocoSpaceMember {
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
+
+    Get-AcanocoSpaceMember $Identity -coSpaceMemberID $coSpaceMemberId
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -856,7 +860,7 @@ function Get-AcanocoSpaceAccessMethod {
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
         [string]$Identity,
         [parameter(ParameterSetName="getSingle",Mandatory=$true)]
-        [parameter(ParameterSetName="getAll",Mandatory=$true)]
+        [parameter(ParameterSetName="getAll",Mandatory=$false)]
         [string]$coSpaceAccessMethodID
     )
 
@@ -1228,7 +1232,7 @@ function New-AcanoOutboundDialPlanRule {
 
     [string]$NewOutboundDialPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoOutboundDialPlanRule -OutboundDialPlanRuleID $NewOutboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoOutboundDialPlanRule $NewOutboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoOutboundDialPlanRule {
@@ -1518,7 +1522,7 @@ function New-AcanoInboundDialPlanRule {
 
     [string]$NewInboundDialPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoInboundDialPlanRule -InboundDialPlanRuleID $NewInboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoInboundDialPlanRule $NewInboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoInboundDialPlanRule {
@@ -1662,12 +1666,22 @@ function Get-AcanoCallForwardingDialPlanRules {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoCallForwardingDialPlanRule {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$ForwardingDialPlanRuleID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleID").forwardingDialPlanRule
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoCallForwardingDialPlanRules
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$Identity").forwardingDialPlanRule
+        } 
+    }
 }
 
 function New-AcanoCallForwardingDialPlanRule {
@@ -1713,13 +1727,13 @@ function New-AcanoCallForwardingDialPlanRule {
 
     [string]$NewCallForwardingPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallForwardingDialPlanRule -ForwardingDialPlanRuleID $NewCallForwardingPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoCallForwardingDialPlanRule $NewCallForwardingPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoCallForwardingDialPlanRule {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ForwardingDialPlanRuleId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$MatchPattern,
         [parameter(Mandatory=$false)]
@@ -1736,7 +1750,7 @@ function Set-AcanoCallForwardingDialPlanRule {
         [string]$Tenant
     )
 
-    $nodeLocation = "/api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleId"
+    $nodeLocation = "/api/v1/forwardingDialPlanRules/$Identity"
     $modifiers = 0
     $data = ""
 
@@ -1789,18 +1803,18 @@ function Set-AcanoCallForwardingDialPlanRule {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallForwardingDialPlanRule $ForwardingDialPlanRuleId
+    Get-AcanoCallForwardingDialPlanRule $Identity
 }
 
 function Remove-AcanoCallForwardingDialPlanRule {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ForwardingDialPlanRuleId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$ForwardingDialPlanRuleId","Remove call forwarding rule")) {
-        Open-AcanoAPI "/api/v1/forwardingDialPlanRules/$ForwardingDialPlanRuleId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove call forwarding rule")) {
+        Open-AcanoAPI "/api/v1/forwardingDialPlanRules/$Identity" -DELETE
     }
 }
 
@@ -1857,19 +1871,28 @@ function Get-AcanoCalls {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoCall {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CallID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/calls/$CallID").call
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoCalls
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/calls/$Identity").call
+        } 
+    }
 }
 
 function New-AcanoCall {
     Param (
         [parameter(Mandatory=$true)]
-        [string]$coSpaceId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$Name,
         [parameter(Mandatory=$false)]
@@ -1878,7 +1901,7 @@ function New-AcanoCall {
     )
 
     $nodeLocation = "/api/v1/calls"
-    $data = "coSpace=$coSpaceId"
+    $data = "coSpace=$Identity"
 
     if ($Name -ne "") {
         $data += "&name=$Name"
@@ -1890,18 +1913,18 @@ function New-AcanoCall {
 
     [string]$NewCallId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCall -CallID $NewCallId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoCall $NewCallId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Remove-AcanoCall {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$CallId","Remove call")) {
-        Open-AcanoAPI "/api/v1/calls/$CallId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove call")) {
+        Open-AcanoAPI "/api/v1/calls/$Identity" -DELETE
     }
 }
 
@@ -1937,13 +1960,22 @@ function Get-AcanoCallProfiles {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoCallProfile {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CallProfileID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/callProfiles/$CallProfileID").callProfile | fl
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoCallProfiles
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/callProfiles/$Identity").callProfile | fl
+        } 
+    }
 }
 
 function New-AcanoCallProfile {
@@ -1984,13 +2016,13 @@ function New-AcanoCallProfile {
 
     [string]$NewCallProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallProfile -CallProfileID $NewCallProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoCallProfile -$NewCallProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoCallProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallProfileId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$ParticipantLimit,
         [parameter(Mandatory=$false)]
@@ -2001,7 +2033,7 @@ function Set-AcanoCallProfile {
         [string]$Locked
     )
 
-    $nodeLocation = "/api/v1/callProfiles/$CallProfileId"
+    $nodeLocation = "/api/v1/callProfiles/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -2027,18 +2059,18 @@ function Set-AcanoCallProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallProfile -CallProfileID $CallProfileId
+    Get-AcanoCallProfile $CallProfileId
 }
 
 function Remove-AcanoCallProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallProfileId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$CallProfileId","Remove call profile")) {
-        Open-AcanoAPI "/api/v1/callProfiles/$CallProfileId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove call profile")) {
+        Open-AcanoAPI "/api/v1/callProfiles/$Identity" -DELETE
     }
 }
 
@@ -2200,19 +2232,28 @@ function Get-AcanoCallLegs {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoCallLeg {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID").callLeg
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoCallLegs
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/callLegs/$Identity").callLeg
+        } 
+    }
 }
 
 function New-AcanoCallLeg {
     Param (
         [parameter(Mandatory=$true)]
-        [string]$CallId,
+        [string]$Identity,
         [parameter(Mandatory=$true)]
         [string]$RemoteParty,
         [parameter(Mandatory=$false)]
@@ -2303,7 +2344,7 @@ function New-AcanoCallLeg {
         [string]$BfcpMode
     )
 
-    $nodeLocation = "/api/v1/calls/$CallId/callLegs"
+    $nodeLocation = "/api/v1/calls/$Identity/callLegs"
     $data = "remoteParty=$RemoteParty"
 
     if ($Bandwidth -ne "") {
@@ -2432,13 +2473,13 @@ function New-AcanoCallLeg {
 
     [string]$NewCallLegId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallLeg -CallLegID $NewCallLegId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoCallLeg $NewCallLegId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoCallLeg {
     Param (
         [parameter(Mandatory=$true)]
-        [string]$CallLegId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$OwnerId,
         [parameter(Mandatory=$false)]
@@ -2522,7 +2563,7 @@ function Set-AcanoCallLeg {
         [string]$BfcpMode
     )
 
-    $nodeLocation = "/api/v1/callLegs/$CallLegId"
+    $nodeLocation = "/api/v1/callLegs/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -2756,25 +2797,25 @@ function Set-AcanoCallLeg {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallLeg -CallLegID $CallLegId
+    Get-AcanoCallLeg $CallLegId
 }
 
 function Remove-AcanoCallLeg {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$CallLegId","Remove call leg")) {
-        Open-AcanoAPI "/api/v1/callLegs/$CallLegId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove call leg")) {
+        Open-AcanoAPI "/api/v1/callLegs/$Identity" -DELETE
     }
 }
 
 function New-AcanoCallLegParticipant {
     Param (
-        [parameter(Mandatory=$true)]
-        [string]$CallId,
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$Identity,
         [parameter(Mandatory=$true)]
         [string]$RemoteParty,
         [parameter(Mandatory=$false)]
@@ -2865,7 +2906,7 @@ function New-AcanoCallLegParticipant {
         [string]$BfcpMode
     )
 
-    $nodeLocation = "/api/v1/calls/$CallId/participants"
+    $nodeLocation = "/api/v1/calls/$Identity/participants"
     $data = "remoteParty=$RemoteParty"
 
     if ($Bandwidth -ne "") {
@@ -2994,7 +3035,7 @@ function New-AcanoCallLegParticipant {
 
     [string]$NewCallLegParticipantId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoParticipant -ParticipantID $NewCallLegParticipantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoParticipant $NewCallLegParticipantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -3053,13 +3094,22 @@ function Get-AcanoCallLegProfiles {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoCallLegProfile {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegProfileID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID").callLegProfile
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoCallLegProfiles
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/callLegProfiles/$Identity").callLegProfile
+        } 
+    }
 }
 
 function New-AcanoCallLegProfile {
@@ -3364,13 +3414,13 @@ function New-AcanoCallLegProfile {
 
     [string]$NewCallLegProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallLegProfile -CallLegProfileID $NewCallLegProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoCallLegProfile $NewCallLegProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoCallLegProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegProfileId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
@@ -3450,7 +3500,7 @@ function Set-AcanoCallLegProfile {
         [string]$CallLockAllowed
     )
 
-    $nodeLocation = "/api/v1/callLegProfiles/$CallLegProfileId"
+    $nodeLocation = "/api/v1/callLegProfiles/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -3671,18 +3721,18 @@ function Set-AcanoCallLegProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallLegProfile -CallLegProfileID $CallLegProfileId
+    Get-AcanoCallLegProfile $CallLegProfileId
 }
 
 function Remove-AcanoCallLegProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegProfileId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$CallLegProfileId","Remove call leg profile")) {
-        Open-AcanoAPI "/api/v1/callLegProfiles/$CallLegProfileId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove call leg profile")) {
+        Open-AcanoAPI "/api/v1/callLegProfiles/$Identity" -DELETE
     }
 }
 
@@ -3690,10 +3740,10 @@ function Remove-AcanoCallLegProfile {
 function Get-AcanoCallLegProfileUsages {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegProfileID
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/callLegProfiles/$CallLegProfileID/usage").callLegProfileUsage
+    return (Open-AcanoAPI "api/v1/callLegProfiles/$Identity/usage").callLegProfileUsage
 
 }
 
@@ -3701,10 +3751,10 @@ function Get-AcanoCallLegProfileUsages {
 function Get-AcanoCallLegProfileTrace {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallLegID
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/callLegs/$CallLegID/callLegProfileTrace").callLegProfileTrace
+    return (Open-AcanoAPI "api/v1/callLegs/$Identity/callLegProfileTrace").callLegProfileTrace
 
 }
 
@@ -3748,13 +3798,22 @@ function Get-AcanoDialTransforms {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoDialTransform {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$DialTransformID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/dialTransforms/$DialTransformID").dialTransform
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoDialTransforms
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/dialTransforms/$Identity").dialTransform
+        }
+    }
 }
 
 function New-AcanoDialTransform {
@@ -3796,13 +3855,13 @@ function New-AcanoDialTransform {
 
     [string]$NewDialTransformId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoDialTransform -DialTransformID $NewDialTransformId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoDialTransform $NewDialTransformId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoDialTransform {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$DialTransformId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [ValidateSet("raw","strip","phone")]
         [string]$Type,
@@ -3817,7 +3876,7 @@ function Set-AcanoDialTransform {
         [string]$Action
     )
 
-    $nodeLocation = "/api/v1/dialTransforms/$DialTransformId"
+    $nodeLocation = "/api/v1/dialTransforms/$Identity"
     $data = ""
     $modifiers = 0
     
@@ -3860,18 +3919,18 @@ function Set-AcanoDialTransform {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoDialTransform -DialTransformID $DialTransformId
+    Get-AcanoDialTransform $DialTransformId
 }
 
 function Remove-AcanoDialTransform {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$DialTransformId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$DialTransformId","Remove dial transform rule")) {
-        Open-AcanoAPI "/api/v1/dialTransforms/$DialTransformId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove dial transform rule")) {
+        Open-AcanoAPI "/api/v1/dialTransforms/$Identity" -DELETE
     }
 }
 
@@ -3918,13 +3977,22 @@ function Get-AcanoCallBrandingProfiles {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoCallBrandingProfile {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBrandingProfileID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/callBrandingProfiles/$CallBrandingProfileID").callBrandingProfile
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoCallBrandingProfiles
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/callBrandingProfiles/$Identity").callBrandingProfile
+        }
+    }
 }
 
 function New-AcanoCallBrandingProfile {
@@ -3953,20 +4021,20 @@ function New-AcanoCallBrandingProfile {
 
     [string]$NewCallBrandingProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallBrandingProfile -CallBrandingProfileID $NewCallBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoCallBrandingProfile $NewCallBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoCallBrandingProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBrandingProfileId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$InvitationTemplate,
         [parameter(Mandatory=$false)]
         [string]$ResourceLocation
     )
 
-    $nodeLocation = "/api/v1/callBrandingProfiles/$CallBrandingProfileId"
+    $nodeLocation = "/api/v1/callBrandingProfiles/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -3984,18 +4052,18 @@ function Set-AcanoCallBrandingProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallBrandingProfile -CallBrandingProfileID $CallBrandingProfileId
+    Get-AcanoCallBrandingProfile $CallBrandingProfileId
 }
 
 function Remove-AcanoCallBrandingProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBrandingProfileId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$CallBrandingProfileId","Remove call branding profile")) {
-        Open-AcanoAPI "/api/v1/CallBrandingProfiles/$CallBrandingProfileId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove call branding profile")) {
+        Open-AcanoAPI "/api/v1/CallBrandingProfiles/$Identity" -DELETE
     }
 }
 
@@ -4042,13 +4110,22 @@ function Get-AcanoDtmfProfiles {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoDtmfProfile {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$DtmfProfileID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/dtmfProfiles/$DtmfProfileID").dtmfProfile
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoDtmfProfiles
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/dtmfProfiles/$Identity").dtmfProfile
+        }
+    }
 }
 
 function New-AcanoDtmfProfile {
@@ -4157,13 +4234,13 @@ function New-AcanoDtmfProfile {
 
     [string]$NewDtmfProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoDtmfProfile -DtmfProfileID $NewDtmfProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoDtmfProfile $NewDtmfProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoDtmfProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$DtmfProfileId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$LockCall,
         [parameter(Mandatory=$false)]
@@ -4186,7 +4263,7 @@ function Set-AcanoDtmfProfile {
         [string]$EndCall
     )
 
-    $nodeLocation = "/api/v1/dtmfProfiles/$DtmfProfileId"
+    $nodeLocation = "/api/v1/dtmfProfiles/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -4268,18 +4345,18 @@ function Set-AcanoDtmfProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoDtmfProfile -DtmfProfileID $DtmfProfileId
+    Get-AcanoDtmfProfile $DtmfProfileId
 }
 
 function Remove-AcanoDtmfProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$DtmfProfileId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$DtmfProfileId","Remove DTMF profile")) {
-        Open-AcanoAPI "/api/v1/dtmfProfiles/$DtmfProfileId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove DTMF profile")) {
+        Open-AcanoAPI "/api/v1/dtmfProfiles/$Identity" -DELETE
     }
 }
 
@@ -4336,13 +4413,22 @@ function Get-AcanoIvrs {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoIvr {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/ivrs/$IvrID").ivr
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoIvrs
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/ivrs/$Identity").ivr
+        }
+    }
 }
 
 function New-AcanoIvr {
@@ -4388,13 +4474,13 @@ function New-AcanoIvr {
 
     [string]$NewIvrId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoIvr -IvrID $NewIvrId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoIvr $NewIvrId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoIvr {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$Uri,
         [parameter(Mandatory=$false)]
@@ -4411,7 +4497,7 @@ function Set-AcanoIvr {
         [string]$ResolveLyncConferenceIds
     )
 
-    $nodeLocation = "/api/v1/ivrs/$IvrId"
+    $nodeLocation = "/api/v1/ivrs/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -4461,18 +4547,18 @@ function Set-AcanoIvr {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoIvr -IvrID $IvrId
+    Get-AcanoIvr $IvrId
 }
 
 function Remove-AcanoIvr {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$IvrId","Remove IVR")) {
-        Open-AcanoAPI "/api/v1/ivrs/$IvrId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove IVR")) {
+        Open-AcanoAPI "/api/v1/ivrs/$Identity" -DELETE
     }
 }
 
@@ -4529,13 +4615,22 @@ function Get-AcanoIvrBrandingProfiles {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoIvrBrandingProfile {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrBrandingProfileID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/ivrBrandingProfiles/$IvrBrandingProfileID").ivrBrandingProfile
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoIvrBrandingProfiles
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/ivrBrandingProfiles/$Identity").ivrBrandingProfile
+        }
+    }
 }
 
 function New-AcanoIvrBrandingProfile {
@@ -4553,18 +4648,18 @@ function New-AcanoIvrBrandingProfile {
 
     [string]$NewIvrBrandingProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoIvrBrandingProfile -IvrBrandingProfileID $NewIvrBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoIvrBrandingProfile $NewIvrBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoIvrBrandingProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrBrandingProfileId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$ResourceLocation
     )
 
-    $nodeLocation = "/api/v1/ivrBrandingProfiles/$IvrBrandingProfileId"
+    $nodeLocation = "/api/v1/ivrBrandingProfiles/$Identity"
     $data = ""
 
     if ($ResourceLocation -ne "") {
@@ -4573,18 +4668,18 @@ function Set-AcanoIvrBrandingProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoIvrBrandingProfile -IvrBrandingProfileID $IvrBrandingProfileId
+    Get-AcanoIvrBrandingProfile $IvrBrandingProfileId
 }
 
 function Remove-AcanoIvrBrandingProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$IvrBrandingProfileId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$IvrBrandingProfileId","Remove IVR Branding profile")) {
-        Open-AcanoAPI "/api/v1/ivrBrandingProfiles/$IvrBrandingProfileId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove IVR Branding profile")) {
+        Open-AcanoAPI "/api/v1/ivrBrandingProfiles/$Identity" -DELETE
     }
 }
 
@@ -4655,23 +4750,32 @@ function Get-AcanoParticipants {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoParticipant {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$ParticipantID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/participants/$ParticipantID").participant
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoParticipants
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/participants/$Identity").participant
+        }
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoParticipantCallLegs {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ParticipantID
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/participants/$ParticipantID/callLegs").callLeg
+    return (Open-AcanoAPI "api/v1/participants/$Identity/callLegs").callLeg
 
 }
 
@@ -4728,23 +4832,32 @@ function Get-AcanoUsers {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoUser {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$UserID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/users/$UserID").user
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoUsers
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/users/$Identity").user
+        }
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoUsercoSpaces {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserID
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/users/$UserID/usercoSpaces").userCoSpaces.userCoSpace
+    return (Open-AcanoAPI "api/v1/users/$Identity/usercoSpaces").userCoSpaces.userCoSpace
 
 }
 
@@ -4791,13 +4904,22 @@ function Get-AcanoUserProfiles {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoUserProfile {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$UserProfileID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/userProfiles/$UserProfileID").userProfile
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoUserProfiles
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/userProfiles/$Identity").userProfile
+        }
+    }
 }
 
 function New-AcanoUserProfile {
@@ -4861,13 +4983,13 @@ function New-AcanoUserProfile {
 
     [string]$NewUserProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoUserProfile -UserProfileID $NewUserProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoUserProfile $NewUserProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoUserProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserProfileId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$canCreateCoSpaces,
@@ -4885,7 +5007,7 @@ function Set-AcanoUserProfile {
         [string]$UserToUserMessagingAllowed
     )
 
-    $nodeLocation = "/api/v1/userProfiles/$UserProfileId"
+    $nodeLocation = "/api/v1/userProfiles/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -4927,18 +5049,18 @@ function Set-AcanoUserProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoUserProfile -UserProfileID $UserProfileId
+    Get-AcanoUserProfile $UserProfileId
 }
 
 function Remove-AcanoUserProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$UserProfileId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$UserProfileId","Remove user profile")) {
-        Open-AcanoAPI "/api/v1/userProfiles/$UserProfileId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove user profile")) {
+        Open-AcanoAPI "/api/v1/userProfiles/$Identity" -DELETE
     }
 }
 
@@ -4956,10 +5078,10 @@ function Get-AcanoSystemAlarms {
 function Get-AcanoSystemAlarm {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$AlarmID
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/system/alarms/$AlarmID").alarm
+    return (Open-AcanoAPI "api/v1/system/alarms/$Identity").alarm
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -4997,13 +5119,22 @@ function Get-AcanoCdrRecieverUris {
 }
 
 function Get-AcanoCdrRecieverUri {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CdrRecieverUriID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/system/cdrRecievers/$CdrRecieverUriID").cdrReciever
+    switch ($PsCmdlet.ParameterSetName) { 
 
+        "getAll"  {
+            Get-AcanoCdrRecieverUris
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/system/cdrRecievers/$Identity").cdrReciever
+        }
+    }
 }
 
 function New-AcanoCdrRecieverUri {
@@ -5017,18 +5148,18 @@ function New-AcanoCdrRecieverUri {
 
     [string]$NewCdrRecieverUriId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCdrRecieverUri -CdrRecieverUriID $NewCdrRecieverUriId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoCdrRecieverUri $NewCdrRecieverUriId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoCdrRecieverUri {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CdrRecieverUriId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$Uri
     )
 
-    $nodeLocation = "/api/v1/system/cdrRecievers/$CdrRecieverUriId"
+    $nodeLocation = "/api/v1/system/cdrRecievers/$Identity"
     $data = ""
 
     if ($Uri -ne "") {
@@ -5037,18 +5168,18 @@ function Set-AcanoCdrRecieverUri {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCdrRecieverUri -CdrRecieverUriID $CdrRecieverUriId
+    Get-AcanoCdrRecieverUri $CdrRecieverUriId
 }
 
 function Remove-AcanoCdrRecieverUri {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$CdrRecieverUriId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$CdrRecieverUriId","Remove CDR reciever")) {
-        Open-AcanoAPI "/api/v1/system/cdrRecievers/$CdrRecieverUriId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove CDR reciever")) {
+        Open-AcanoAPI "/api/v1/system/cdrRecievers/$Identity" -DELETE
     }
 }
 
@@ -5198,7 +5329,6 @@ function Set-AcanoGlobalProfile {
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
     Get-AcanoGlobalProfile
-
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -5241,21 +5371,31 @@ function Get-AcanoTurnServers {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoTurnServer {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$TurnServerID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID").turnServer
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoTurnServers
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/turnServers/$Identity").turnServer
+        }
+    }
 }
 
 function Get-AcanoTurnServerStatus {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TurnServerID
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/turnServers/$TurnServerID/status").turnServer.host
+    return (Open-AcanoAPI "api/v1/turnServers/$Identity/status").turnServer.host
 }
 
 function New-AcanoTurnServer {
@@ -5335,13 +5475,13 @@ function New-AcanoTurnServer {
 
     [string]$NewTurnServerId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoTurnServer -TurnServerID $NewTurnServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoTurnServer $NewTurnServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoTurnServer {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TurnServerID,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$ServerAddress,
         [parameter(Mandatory=$false)]
@@ -5359,7 +5499,7 @@ function Set-AcanoTurnServer {
         [string]$TcpPortNumberOverride
     )
 
-    $nodeLocation = "/api/v1/turnServers/$TurnServerID"
+    $nodeLocation = "/api/v1/turnServers/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -5417,18 +5557,18 @@ function Set-AcanoTurnServer {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoTurnServer -TurnServerID $TurnServerID
+    Get-AcanoTurnServer $TurnServerID
 }
 
 function Remove-AcanoTurnServer {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TurnServerId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$TurnServerId","Remove TURN server")) {
-        Open-AcanoAPI "/api/v1/turnServers/$TurnServerId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove TURN server")) {
+        Open-AcanoAPI "/api/v1/turnServers/$Identity" -DELETE
     }
 }
 
@@ -5485,12 +5625,22 @@ function Get-AcanoWebBridges {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoWebBridge {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$WebBridgeID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/webBridges/$WebBridgeID").webBridge
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoWebBridges
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/webBridges/$Identity").webBridge
+        }
+    }
 }
 
 function New-AcanoWebBridge {
@@ -5595,13 +5745,13 @@ function New-AcanoWebBridge {
 
     [string]$NewWebBridgeId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoWebBridge -WebBridgeID $NewWebBridgeId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoWebBridge $NewWebBridgeId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoWebBridge {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$WebBridgeId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$Url,
         [parameter(Mandatory=$false)]
@@ -5627,7 +5777,7 @@ function Set-AcanoWebBridge {
         [string]$ResolveLyncConferenceIds
     )
 
-    $nodeLocation = "/api/v1/webBridges/$WebBridgeId"
+    $nodeLocation = "/api/v1/webBridges/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -5701,28 +5851,28 @@ function Set-AcanoWebBridge {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoWebBridge -WebBridgeID $WebBridgeId
+    Get-AcanoWebBridge $WebBridgeId
 }
 
 function Remove-AcanoWebBridge {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$WebBridgeId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$WebBridgeId","Remove web bridge")) {
-        Open-AcanoAPI "/api/v1/webBridges/$WebBridgeId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove web bridge")) {
+        Open-AcanoAPI "/api/v1/webBridges/$Identity" -DELETE
     }
 }
 
 function Update-AcanoWebBridgeCustomization {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$WebBridgeId
+        [string]$Identity
     )
 
-    Open-AcanoAPI "/api/v1/webBridges/$WebBridgeId/updateCustomization" -POST -ReturnResponse | Out-Null
+    Open-AcanoAPI "/api/v1/webBridges/$Identity/updateCustomization" -POST -ReturnResponse | Out-Null
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -5751,12 +5901,22 @@ function Get-AcanoCallBridges {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoCallBridge {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$CallBridgeID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/callBridges/$CallBridgeID").callBridge
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoCallBridges
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/callBridges/$Identity").callBridge
+        }
+    }
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -5901,20 +6061,20 @@ function Get-AcanoSystemDiagnostics {
 function Get-AcanoSystemDiagnostic {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$SystemDiagnosticID
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID").diagnostic
+    return (Open-AcanoAPI "api/v1/system/diagnostics/$Identity").diagnostic
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoSystemDiagnosticContent {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$SystemDiagnosticID
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/system/diagnostics/$SystemDiagnosticID/contents").diagnostic
+    return (Open-AcanoAPI "api/v1/system/diagnostics/$Identity/contents").diagnostic
 }
 
 # .ExternalHelp PsAcano.psm1-Help.xml
@@ -5957,12 +6117,22 @@ function Get-AcanoLdapServers {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoLdapServer {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapServerID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/ldapServers/$LdapServerID").ldapServer
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoLdapServers
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/ldapServers/$Identity").ldapServer
+        }
+    }
 }
 
 function New-AcanoLdapServer {
@@ -5994,13 +6164,13 @@ function New-AcanoLdapServer {
 
     [string]$NewLdapServerId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoLdapServer -LdapServerID $NewLdapServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoLdapServer $NewLdapServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoLdapServer {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapServerId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$Address,
         [parameter(Mandatory=$false)]
@@ -6014,7 +6184,7 @@ function Set-AcanoLdapServer {
         [string]$Secure
     )
 
-    $nodeLocation = "/api/v1/ldapServers/$LdapServerId"
+    $nodeLocation = "/api/v1/ldapServers/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -6056,18 +6226,18 @@ function Set-AcanoLdapServer {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoLdapServer -LdapServerID $LdapServerId
+    Get-AcanoLdapServer $LdapServerId
 }
 
 function Remove-AcanoLdapServer {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapServerId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$LdapServerId","Remove LDAP server")) {
-        Open-AcanoAPI "/api/v1/ldapServers/$LdapServerId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove LDAP server")) {
+        Open-AcanoAPI "/api/v1/ldapServers/$Identity" -DELETE
     }
 }
 
@@ -6111,12 +6281,22 @@ function Get-AcanoLdapMappings {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoLdapMapping {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapMappingID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/ldapMappings/$LdapMappingID").ldapMapping
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoLdapMappings
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/ldapMappings/$Identity").ldapMapping
+        }
+    }
 }
 
 function New-AcanoLdapMapping {
@@ -6205,13 +6385,13 @@ function New-AcanoLdapMapping {
 
     [string]$NewLdapMappingId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoLdapMapping -LdapMappingID $NewLdapMappingId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoLdapMapping $NewLdapMappingId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoLdapMapping {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapMappingId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$JidMapping,
         [parameter(Mandatory=$false)]
@@ -6230,7 +6410,7 @@ function Set-AcanoLdapMapping {
         [string]$CoSpaceCallIdMapping
     )
 
-    $nodeLocation = "/api/v1/ldapMappings/$LdapMappingId"
+    $nodeLocation = "/api/v1/ldapMappings/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -6296,18 +6476,18 @@ function Set-AcanoLdapMapping {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoLdapMapping -LdapMappingID $LdapMappingId
+    Get-AcanoLdapMapping $LdapMappingId
 }
 
 function Remove-AcanoLdapMapping {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapMappingId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$LdapMappingId","Remove LDAP mapping")) {
-        Open-AcanoAPI "/api/v1/ldapMappings/$LdapMappingId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove LDAP mapping")) {
+        Open-AcanoAPI "/api/v1/ldapMappings/$Identity" -DELETE
     }
 }
 
@@ -6364,12 +6544,22 @@ function Get-AcanoLdapSources {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoLdapSource {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSourceID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/ldapSources/$LdapSourceID").ldapSource
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoLdapSources
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/ldapSources/$Identity").ldapSource
+        }
+    }
 }
 
 function New-AcanoLdapSource {
@@ -6400,13 +6590,13 @@ function New-AcanoLdapSource {
 
     [string]$NewLdapSourceId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoLdapSource -LdapSourceID $NewLdapSourceId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoLdapSource $NewLdapSourceId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoLdapSource {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSourceId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$Server,
         [parameter(Mandatory=$false)]
@@ -6419,7 +6609,7 @@ function Set-AcanoLdapSource {
         [string]$Tenant
     )
 
-    $nodeLocation = "/api/v1/ldapSources/$LdapSourceId"
+    $nodeLocation = "/api/v1/ldapSources/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -6461,18 +6651,18 @@ function Set-AcanoLdapSource {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoLdapSource -LdapSourceID $LdapSourceId
+    Get-AcanoLdapSource $LdapSourceId
 }
 
 function Remove-AcanoLdapSource {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSourceId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$LdapSourceId","Remove LDAP source")) {
-        Open-AcanoAPI "/api/v1/ldapSources/$LdapSourceId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove LDAP source")) {
+        Open-AcanoAPI "/api/v1/ldapSources/$Identity" -DELETE
     }
 }
 
@@ -6502,12 +6692,22 @@ function Get-AcanoLdapSyncs {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoLdapSync {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSyncID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/ldapSyncs/$LdapSyncID").ldapSync
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoLdapSyncs
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/ldapSyncs/$Identity").ldapSync
+        }
+    }
 }
 
 function New-AcanoLdapSync {
@@ -6546,18 +6746,18 @@ function New-AcanoLdapSync {
 
     [string]$NewLdapSyncId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoLdapSync -LdapSyncID $NewLdapSyncId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoLdapSync $NewLdapSyncId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Remove-AcanoLdapSync {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$LdapSyncId
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$LdapSyncId","Stop ongoing LDAP Sync")) {
-        Open-AcanoAPI "/api/v1/ldapSyncs/$LdapSyncId" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Stop ongoing LDAP Sync")) {
+        Open-AcanoAPI "/api/v1/ldapSyncs/$Identity" -DELETE
     }
 }
 
@@ -6601,12 +6801,22 @@ function Get-AcanoExternalDirectorySearchLocations {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoExternalDirectorySearchLocation {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$ExternalDirectorySearchLocationID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID").directorySearchLocation
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoExternalDirectorySearchLocations
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/directorySearchLocations/$Identity").directorySearchLocation
+        }
+    }
 }
 
 function New-AcanoExternalDirectorySearchLocation {
@@ -6698,13 +6908,13 @@ function New-AcanoExternalDirectorySearchLocation {
 
     [string]$NewexdirsearchId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoExternalDirectorySearchLocation -ExternalDirectorySearchLocationID $NewexdirsearchId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoExternalDirectorySearchLocation $NewexdirsearchId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoExternalDirectorySearchLocation {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ExternalDirectorySearchLocationID,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$LdapServer,
         [parameter(Mandatory=$false)]
@@ -6735,7 +6945,7 @@ function Set-AcanoExternalDirectorySearchLocation {
         [string]$Organization
     )
 
-    $nodeLocation = "/api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID"
+    $nodeLocation = "/api/v1/directorySearchLocations/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -6849,18 +7059,18 @@ function Set-AcanoExternalDirectorySearchLocation {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoExternalDirectorySearchLocation -ExternalDirectorySearchLocationID $ExternalDirectorySearchLocationID
+    Get-AcanoExternalDirectorySearchLocation $ExternalDirectorySearchLocationID
 }
 
 function Remove-AcanoExternalDirectorySearchLocation {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$ExternalDirectorySearchLocationID
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$ExternalDirectorySearchLocationID","Remove external directory search location")) {
-        Open-AcanoAPI "/api/v1/directorySearchLocations/$ExternalDirectorySearchLocationID" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove external directory search location")) {
+        Open-AcanoAPI "/api/v1/directorySearchLocations/$Identity" -DELETE
     }
 }
 
@@ -6904,12 +7114,22 @@ function Get-AcanoTenants {
 
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoTenant {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$TenantID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/tenants/$TenantID").tenant
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoTenants
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/tenants/$Identity").tenant
+        }
+    }
 }
 
 function New-AcanoTenant {
@@ -6971,13 +7191,13 @@ function New-AcanoTenant {
 
     [string]$NewTenantId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoTenant -TenantID $NewTenantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoTenant $NewTenantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Set-AcanoTenant {
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TenantId,
+        [string]$Identity,
         [parameter(Mandatory=$false)]
         [string]$Name,
         [parameter(Mandatory=$false)]
@@ -6998,7 +7218,7 @@ function Set-AcanoTenant {
         [string]$UserProfile
     )
 
-    $nodeLocation = "/api/v1/Tenants/$TenantId"
+    $nodeLocation = "/api/v1/Tenants/$Identity"
     $data = ""
     $modifiers = 0
 
@@ -7072,18 +7292,18 @@ function Set-AcanoTenant {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoTenant -TenantID $TenantId
+    Get-AcanoTenant $TenantId
 }
 
 function Remove-AcanoTenant {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TenantID
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$TenantID","Remove tenant")) {
-        Open-AcanoAPI "/api/v1/tenants/$TenantID" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove tenant")) {
+        Open-AcanoAPI "/api/v1/tenants/$Identity" -DELETE
     }
 }
 
@@ -7117,12 +7337,22 @@ function Get-AcanoTenantGroups {
 }
 
 function Get-AcanoTenantGroup {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
-        [parameter(Mandatory=$true,Position=1)]
-        [string]$TenantGroupID
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/tenantGroups/$TenantGroupID").tenantGroup
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoTenantGroups
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/tenantGroups/$Identity").tenantGroup
+        }
+    }
 }
 
 function New-AcanoTenantGroup {
@@ -7132,18 +7362,18 @@ function New-AcanoTenantGroup {
 
     [string]$NewTenantGroupId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoTenantGroup -TenantGroupID $NewTenantGroupId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-AcanoTenantGroup $NewTenantGroupId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
 function Remove-AcanoTenantGroup {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
-        [string]$TenantGroupID
+        [string]$Identity
     )
 
-    if ($PSCmdlet.ShouldProcess("$TenantGroupID","Remove tenant group")) {
-        Open-AcanoAPI "/api/v1/tenantGroups/$TenantGroupID" -DELETE
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove tenant group")) {
+        Open-AcanoAPI "/api/v1/tenantGroups/$Identity" -DELETE
     }
 }
 
