@@ -2059,7 +2059,7 @@ function Set-AcanoCallProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallProfile $CallProfileId
+    Get-AcanoCallProfile $Identity
 }
 
 function Remove-AcanoCallProfile {
@@ -2797,7 +2797,7 @@ function Set-AcanoCallLeg {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallLeg $CallLegId
+    Get-AcanoCallLeg $Identity
 }
 
 function Remove-AcanoCallLeg {
@@ -3721,7 +3721,7 @@ function Set-AcanoCallLegProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallLegProfile $CallLegProfileId
+    Get-AcanoCallLegProfile $Identity
 }
 
 function Remove-AcanoCallLegProfile {
@@ -3919,7 +3919,7 @@ function Set-AcanoDialTransform {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoDialTransform $DialTransformId
+    Get-AcanoDialTransform $Identity
 }
 
 function Remove-AcanoDialTransform {
@@ -4052,7 +4052,7 @@ function Set-AcanoCallBrandingProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallBrandingProfile $CallBrandingProfileId
+    Get-AcanoCallBrandingProfile $Identity
 }
 
 function Remove-AcanoCallBrandingProfile {
@@ -4345,7 +4345,7 @@ function Set-AcanoDtmfProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoDtmfProfile $DtmfProfileId
+    Get-AcanoDtmfProfile $Identity
 }
 
 function Remove-AcanoDtmfProfile {
@@ -4547,7 +4547,7 @@ function Set-AcanoIvr {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoIvr $IvrId
+    Get-AcanoIvr $Identity
 }
 
 function Remove-AcanoIvr {
@@ -4668,7 +4668,7 @@ function Set-AcanoIvrBrandingProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoIvrBrandingProfile $IvrBrandingProfileId
+    Get-AcanoIvrBrandingProfile $Identity
 }
 
 function Remove-AcanoIvrBrandingProfile {
@@ -5049,7 +5049,7 @@ function Set-AcanoUserProfile {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoUserProfile $UserProfileId
+    Get-AcanoUserProfile $Identity
 }
 
 function Remove-AcanoUserProfile {
@@ -5168,7 +5168,7 @@ function Set-AcanoCdrRecieverUri {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCdrRecieverUri $CdrRecieverUriId
+    Get-AcanoCdrRecieverUri $Identity
 }
 
 function Remove-AcanoCdrRecieverUri {
@@ -5557,7 +5557,7 @@ function Set-AcanoTurnServer {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoTurnServer $TurnServerID
+    Get-AcanoTurnServer $Identity
 }
 
 function Remove-AcanoTurnServer {
@@ -5851,7 +5851,7 @@ function Set-AcanoWebBridge {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoWebBridge $WebBridgeId
+    Get-AcanoWebBridge $Identity
 }
 
 function Remove-AcanoWebBridge {
@@ -6226,7 +6226,7 @@ function Set-AcanoLdapServer {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoLdapServer $LdapServerId
+    Get-AcanoLdapServer $Identity
 }
 
 function Remove-AcanoLdapServer {
@@ -6476,7 +6476,7 @@ function Set-AcanoLdapMapping {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoLdapMapping $LdapMappingId
+    Get-AcanoLdapMapping $Identity
 }
 
 function Remove-AcanoLdapMapping {
@@ -6651,7 +6651,7 @@ function Set-AcanoLdapSource {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoLdapSource $LdapSourceId
+    Get-AcanoLdapSource $Identity
 }
 
 function Remove-AcanoLdapSource {
@@ -7059,7 +7059,7 @@ function Set-AcanoExternalDirectorySearchLocation {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoExternalDirectorySearchLocation $ExternalDirectorySearchLocationID
+    Get-AcanoExternalDirectorySearchLocation $Identity
 }
 
 function Remove-AcanoExternalDirectorySearchLocation {
@@ -7292,7 +7292,7 @@ function Set-AcanoTenant {
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoTenant $TenantId
+    Get-AcanoTenant $Identity
 }
 
 function Remove-AcanoTenant {
