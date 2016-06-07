@@ -2088,7 +2088,10 @@ function New-AcanoCallProfile {
         [string]$MessageBoardEnabled,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
-        [string]$Locked
+        [string]$Locked,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("disabled","manual","automatic")]
+        [string]$RecordingMode
     )
 
     $nodeLocation = "/api/v1/callProfiles"
@@ -2105,6 +2108,14 @@ function New-AcanoCallProfile {
             $data += "&"
         }
         $data += "messageBoardEnabled=$MessageBoardEnabled"
+        $modifiers++
+    }
+
+    if ($RecordingMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "recordingMode=$RecordingMode"
         $modifiers++
     }
 
@@ -2131,7 +2142,10 @@ function Set-AcanoCallProfile {
         [string]$MessageBoardEnabled,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
-        [string]$Locked
+        [string]$Locked,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("disabled","manual","automatic")]
+        [string]$RecordingMode
     )
 
     $nodeLocation = "/api/v1/callProfiles/$Identity"
@@ -2148,6 +2162,14 @@ function Set-AcanoCallProfile {
             $data += "&"
         }
         $data += "messageBoardEnabled=$MessageBoardEnabled"
+        $modifiers++
+    }
+
+    if ($RecordingMode -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "recordingMode=$RecordingMode"
         $modifiers++
     }
 
