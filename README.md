@@ -2,7 +2,7 @@
 Powershell implementation of the Acano API
 
 ## Introduction
-The Acano Server provides management access through an API exposed through HTTPS in the WebAdmin on the server. This API is thorughly documented at https://www.acano.com/publications/2015/09/Solution-API-Reference-R1_8.pdf
+The Acano Server provides management access through an API exposed through HTTPS in the WebAdmin on the server. This API is thorughly documented at https://www.acano.com/publications/2016/06/Solution-API-Reference-R1_9.pdf
 
 Knowledge of this document is assumed before use of this module.
 
@@ -36,7 +36,7 @@ Start-AcanocoSpaceCallDiagnosticsGeneration
 
 To install, simply run
 ```posh
-iex (New-Object Net.WebClient).DownloadString("https://gist.githubusercontent.com/tomlarse/5f43bbe0e763cea379ca/raw/578208ac612d93340c438548091cae024888c536/installmodule")
+iex (New-Object Net.WebClient).DownloadString("https://gist.githubusercontent.com/tomlarse/5f43bbe0e763cea379ca/raw/83054527ca5e5433e466f55106ea145bec330435/installmodule")
 ```
 to install the latest release.
 
