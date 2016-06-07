@@ -4294,6 +4294,28 @@ function New-AcanoDtmfProfile {
         [parameter(Mandatory=$false)]
         [string]$UnMuteAllExceptSelfAudio,
         [parameter(Mandatory=$false)]
+        [string]$StartRecording,
+        [parameter(Mandatory=$false)]
+        [string]$StopRecording,
+        [parameter(Mandatory=$false)]
+        [string]$AllowAllMuteSelf,
+        [parameter(Mandatory=$false)]
+        [string]$CancelAllowAllMuteSelf,
+        [parameter(Mandatory=$false)]
+        [string]$AllowAllPresentationContribution,
+        [parameter(Mandatory=$false)]
+        [string]$CancelAllowAllPresentationContribution,
+        [parameter(Mandatory=$false)]
+        [string]$MuteAllNewAudio,
+        [parameter(Mandatory=$false)]
+        [string]$UnMuteAllNewAudio,
+        [parameter(Mandatory=$false)]
+        [string]$DefaultMuteAllNewAudio,
+        [parameter(Mandatory=$false)]
+        [string]$MuteAllNewAndAllExceptSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$UnMuteAllNewAndAllExceptSelfAudio,
+        [parameter(Mandatory=$false)]
         [string]$EndCall
     )
 
@@ -4370,6 +4392,86 @@ function New-AcanoDtmfProfile {
         $modifiers++
     }
 
+    if ($StartRecording -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "startRecording=$StartRecording"
+        $modifiers++
+    }
+
+    if ($StopRecording -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "stopRecording=$StopRecording"
+        $modifiers++
+    }
+
+    if ($AllowAllMuteSelf -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "allowAllMuteSelf=$AllowAllMuteSelf"
+        $modifiers++
+    }
+
+    if ($CancelAllowAllMuteSelf -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "cancelAllowAllMuteSelf=$CancelAllowAllMuteSelf"
+        $modifiers++
+    }
+
+    if ($AllowAllPresentationContribution -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "allowAllPresentationContribution=$AllowAllPresentationContribution"
+        $modifiers++
+    }
+
+    if ($CancelAllowAllPresentationContribution -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "cancelAllowAllPresentationContribution=$CancelAllowAllPresentationContribution"
+        $modifiers++
+    }
+
+    if ($MuteAllNewAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "muteAllNewAudio=$MuteAllNewAudio"
+        $modifiers++
+    }
+
+    if ($UnMuteAllNewAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "unmuteAllNewAudio=$UnMuteAllNewAudio"
+        $modifiers++
+    }
+
+    if ($MuteAllNewAndAllExceptSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "muteAllNewAndAllExceptSelfAudio=$MuteAllNewAndAllExceptSelfAudio"
+        $modifiers++
+    }
+
+    if ($UnMuteAllNewAndAllExceptSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "unmuteAllNewAndAllExceptSelfAudio=$UnMuteAllNewAndAllExceptSelfAudio"
+        $modifiers++
+    }
+
     if ($EndCall -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
@@ -4404,6 +4506,28 @@ function Set-AcanoDtmfProfile {
         [string]$MuteAllExceptSelfAudio,
         [parameter(Mandatory=$false)]
         [string]$UnMuteAllExceptSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$StartRecording,
+        [parameter(Mandatory=$false)]
+        [string]$StopRecording,
+        [parameter(Mandatory=$false)]
+        [string]$AllowAllMuteSelf,
+        [parameter(Mandatory=$false)]
+        [string]$CancelAllowAllMuteSelf,
+        [parameter(Mandatory=$false)]
+        [string]$AllowAllPresentationContribution,
+        [parameter(Mandatory=$false)]
+        [string]$CancelAllowAllPresentationContribution,
+        [parameter(Mandatory=$false)]
+        [string]$MuteAllNewAudio,
+        [parameter(Mandatory=$false)]
+        [string]$UnMuteAllNewAudio,
+        [parameter(Mandatory=$false)]
+        [string]$DefaultMuteAllNewAudio,
+        [parameter(Mandatory=$false)]
+        [string]$MuteAllNewAndAllExceptSelfAudio,
+        [parameter(Mandatory=$false)]
+        [string]$UnMuteAllNewAndAllExceptSelfAudio,
         [parameter(Mandatory=$false)]
         [string]$EndCall
     )
@@ -4478,6 +4602,86 @@ function Set-AcanoDtmfProfile {
             $data += "&"
         }
         $data += "unmuteAllExceptSelfAudio=$UnMuteAllExceptSelfAudio"
+        $modifiers++
+    }
+
+    if ($StartRecording -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "startRecording=$StartRecording"
+        $modifiers++
+    }
+
+    if ($StopRecording -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "stopRecording=$StopRecording"
+        $modifiers++
+    }
+
+    if ($AllowAllMuteSelf -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "allowAllMuteSelf=$UnMuteAllEAllowAllMuteSelfxceptSelfAudio"
+        $modifiers++
+    }
+
+    if ($CancelAllowAllMuteSelf -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "cancelAllowAllMuteSelf=$CancelAllowAllMuteSelf"
+        $modifiers++
+    }
+
+    if ($AllowAllPresentationContribution -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "allowAllPresentationContribution=$AllowAllPresentationContribution"
+        $modifiers++
+    }
+
+    if ($CancelAllowAllPresentationContribution -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "cancelAllowAllPresentationContribution=$CancelAllowAllPresentationContribution"
+        $modifiers++
+    }
+
+    if ($MuteAllNewAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "muteAllNewAudio=$MuteAllNewAudio"
+        $modifiers++
+    }
+
+    if ($UnMuteAllNewAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "unmuteAllNewAudio=$UnMuteAllNewAudio"
+        $modifiers++
+    }
+
+    if ($MuteAllNewAndAllExceptSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "muteAllNewAndAllExceptSelfAudio=$MuteAllNewAndAllExceptSelfAudio"
+        $modifiers++
+    }
+
+    if ($UnMuteAllNewAndAllExceptSelfAudio -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "unmuteAllNewAndAllExceptSelfAudio=$UnMuteAllNewAndAllExceptSelfAudio"
         $modifiers++
     }
 
