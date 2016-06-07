@@ -7413,3 +7413,95 @@ function New-AcanoAccessQuery {
 
     return (Open-AcanoAPI $nodeLocation -POST -Data $data -ReturnResponse).accessQuery
 }
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoRecorders {
+    [CmdletBinding(DefaultParameterSetName="NoOffset")]
+    Param (
+        [parameter(ParameterSetName="Offset",Mandatory=$true)]
+        [parameter(ParameterSetName="NoOffset",Mandatory=$false)]
+        [string]$Limit,
+        [parameter(ParameterSetName="Offset",Mandatory=$false)]
+        [string]$Offset
+    )
+
+    $nodeLocation = "api/v1/recorders"
+    $modifiers = 0
+    
+    if ($Limit -ne "") {
+        if ($modifiers -gt 0) {
+            $nodeLocation += "&"
+        } else {
+            $nodeLocation += "?"
+        }
+        $nodeLocation += "limit=$Limit"
+
+        if($Offset -ne ""){
+            $nodeLocation += "&offset=$Offset"
+        }
+    }
+
+    return (Open-AcanoAPI $nodeLocation).recorders.recorder
+}
+
+# .ExternalHelp PsAcano.psm1-Help.xml
+function Get-AcanoRecorder {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
+    Param (
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
+    )
+
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-AcanoRecorders
+        } 
+
+        "getSingle"  {
+            return (Open-AcanoAPI "api/v1/recorders/$Identity").tenant
+        }
+    }
+}
+
+function New-AcanoRecorder {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Url
+    )
+
+    $nodeLocation = "/api/v1/recorders"
+    $data = "Url=$Url"
+
+    [string]$NewRecorderId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoRecorder $NewRecorderId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoRecorder {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$Identity,
+        [parameter(Mandatory=$true)]
+        [string]$Url
+    )
+
+    $nodeLocation = "/api/v1/recorders/$Identity"
+    $data = "url=$Url"
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoRecorder $Identity
+}
+
+function Remove-AcanoRecorder {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$Identity
+    )
+
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove recorder")) {
+        Open-AcanoAPI "/api/v1/recorders/$Identity" -DELETE
+    }
+}
