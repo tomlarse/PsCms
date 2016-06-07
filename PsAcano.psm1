@@ -1892,16 +1892,28 @@ function Get-AcanoCall {
 function New-AcanoCall {
     Param (
         [parameter(Mandatory=$true)]
-        [string]$Identity,
+        [string]$CoSpaceId,
         [parameter(Mandatory=$false)]
         [string]$Name,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
-        [string]$Locked
+        [string]$Locked,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$Recording,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$AllowAllMuteSelf,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$AllowAllPresentationContribution,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$JoinAudioMuteOverride
     )
 
     $nodeLocation = "/api/v1/calls"
-    $data = "coSpace=$Identity"
+    $data = "coSpace=$CoSpaceId"
 
     if ($Name -ne "") {
         $data += "&name=$Name"
@@ -1911,9 +1923,98 @@ function New-AcanoCall {
         $data += "&locked=$Locked"
     }
 
+    if ($Recording -ne "") {
+        $data += "&recording=$Recording"
+    }
+
+    if ($AllowAllMuteSelf -ne "") {
+        $data += "&allowAllMuteSelf=$AllowAllMuteSelf"
+    }
+
+    if ($AllowAllPresentationContribution -ne "") {
+        $data += "&allowAllPresentationContribution=$AllowAllPresentationContribution"
+    }
+
+    if ($JoinAudioMuteOverride -ne "") {
+        $data += "&joinAudioMuteOverride=$JoinAudioMuteOverride"
+    }
+
     [string]$NewCallId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
     Get-AcanoCall $NewCallId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoCall {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$Identity,
+        [parameter(Mandatory=$false)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$Locked,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$Recording,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$AllowAllMuteSelf,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$AllowAllPresentationContribution,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$JoinAudioMuteOverride
+    )
+
+    $nodeLocation = "/api/v1/calls/$Identity"
+    $data = ""
+    $modifiers = 0
+
+    if ($Name -ne "") {
+        $data += "name=$Name"
+        $modifiers++
+    }
+
+    if ($Locked -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "locked=$Locked"
+        $modifiers++
+    }
+
+    if ($Recording -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "recording=$Recording"
+    }
+
+    if ($AllowAllMuteSelf -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "allowAllMuteSelf=$AllowAllMuteSelf"
+    }
+
+    if ($AllowAllPresentationContribution -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "allowAllPresentationContribution=$AllowAllPresentationContribution"
+    }
+
+    if ($JoinAudioMuteOverride -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "joinAudioMuteOverride=$JoinAudioMuteOverride"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoCall $Identity
 }
 
 function Remove-AcanoCall {
