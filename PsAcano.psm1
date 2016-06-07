@@ -2387,7 +2387,7 @@ function New-AcanoCallLeg {
         [parameter(Mandatory=$false)]
         [string]$OwnerId,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
         [string]$ChosenLayout,
         [parameter(Mandatory=$false)]
         [string]$CallLegProfileId,
@@ -2395,7 +2395,7 @@ function New-AcanoCallLeg {
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -2462,6 +2462,8 @@ function New-AcanoCallLeg {
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$SipPresentationChannelEnabled,
+        [parameter(Mandatory=$false)]
+        [string]$DtmfSequence,
         [parameter(Mandatory=$false)]
         [ValidateSet("serverOnly","serverAndClient")]
         [string]$BfcpMode
@@ -2594,6 +2596,10 @@ function New-AcanoCallLeg {
         $data += "&bfcpMode=$BfcpMode"
     }
 
+    if ($DtmfSequence -ne "") {
+        $data += "&dtmfSequence=$DtmfSequence"
+    }
+
     [string]$NewCallLegId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
     Get-AcanoCallLeg $NewCallLegId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
@@ -2606,7 +2612,7 @@ function Set-AcanoCallLeg {
         [parameter(Mandatory=$false)]
         [string]$OwnerId,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
         [string]$ChosenLayout,
         [parameter(Mandatory=$false)]
         [string]$CallLegProfileId,
@@ -2614,7 +2620,7 @@ function Set-AcanoCallLeg {
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -2681,6 +2687,8 @@ function Set-AcanoCallLeg {
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$SipPresentationChannelEnabled,
+        [parameter(Mandatory=$false)]
+        [string]$DtmfSequence,
         [parameter(Mandatory=$false)]
         [ValidateSet("serverOnly","serverAndClient")]
         [string]$BfcpMode
@@ -2911,6 +2919,14 @@ function Set-AcanoCallLeg {
         $modifiers++
     }
 
+    if ($DtmfSequence -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "dtmfSequence=$DtmfSequence"
+        $modifiers++
+    }
+
     if ($BfcpMode -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
@@ -2949,7 +2965,7 @@ function New-AcanoCallLegParticipant {
         [parameter(Mandatory=$false)]
         [string]$OwnerId,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
         [string]$ChosenLayout,
         [parameter(Mandatory=$false)]
         [string]$CallLegProfileId,
@@ -2957,7 +2973,7 @@ function New-AcanoCallLegParticipant {
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -3024,6 +3040,8 @@ function New-AcanoCallLegParticipant {
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$SipPresentationChannelEnabled,
+        [parameter(Mandatory=$false)]
+        [string]$DtmfSequence,
         [parameter(Mandatory=$false)]
         [ValidateSet("serverOnly","serverAndClient")]
         [string]$BfcpMode
@@ -3156,6 +3174,10 @@ function New-AcanoCallLegParticipant {
         $data += "&bfcpMode=$BfcpMode"
     }
 
+    if ($DtmfSequence -ne "") {
+        $data += "&dtmfSequence=$DtmfSequence"
+    }
+
     [string]$NewCallLegParticipantId = Open-AcanoAPI $nodeLocation -POST -Data $data
     
     Get-AcanoParticipant $NewCallLegParticipantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
@@ -3241,7 +3263,7 @@ function New-AcanoCallLegProfile {
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -3255,6 +3277,9 @@ function New-AcanoCallLegProfile {
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$MuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$AllowMuteSelfAllowed,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$VideoMuteSelfAllowed,
@@ -3368,6 +3393,14 @@ function New-AcanoCallLegProfile {
             $data += "&"
         }
         $data += "muteSelfAllowed=$MuteSelfAllowed"
+        $modifiers++
+    }
+
+    if ($AllowMuteSelfAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "allowMuteSelfAllowed=$AllowMuteSelfAllowed"
         $modifiers++
     }
 
@@ -3559,7 +3592,7 @@ function Set-AcanoCallLegProfile {
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -3573,6 +3606,9 @@ function Set-AcanoCallLegProfile {
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$MuteSelfAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$AllowMuteSelfAllowed,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
         [string]$VideoMuteSelfAllowed,
@@ -3686,6 +3722,14 @@ function Set-AcanoCallLegProfile {
             $data += "&"
         }
         $data += "muteSelfAllowed=$MuteSelfAllowed"
+        $modifiers++
+    }
+
+    if ($AllowMuteSelfAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "allowMuteSelfAllowed=$AllowMuteSelfAllowed"
         $modifiers++
     }
 
