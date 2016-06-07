@@ -5919,6 +5919,85 @@ function Get-AcanoCallBridge {
     }
 }
 
+function New-AcanoCallBridge {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [string]$Address,
+        [parameter(Mandatory=$false)]
+        [string]$SipDomain
+    )
+
+    $nodeLocation = "/api/v1/callBridges"
+    $data = "name=$Name"
+
+    if ($Address -ne "") {
+        $data += "&address=$Address"
+    }
+
+    if ($SipDomain -ne "") {
+        $data += "&sipDomain=$SipDomain"
+    }
+
+    [string]$NewCallBridgeId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    
+    Get-AcanoCallBridge $NewCallBridgeId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-AcanoCallBridge {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$Identity,
+        [parameter(Mandatory=$false)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [string]$Address,
+        [parameter(Mandatory=$false)]
+        [string]$SipDomain
+    )
+
+    $nodeLocation = "/api/v1/callBridges/$Identity"
+    $data = ""
+    $modifiers = 0
+
+    if ($Name -ne "") {
+        $data += "name=$Name"
+        $modifiers++
+    }
+
+    if ($Address -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "address=$Address"
+        $modifiers++
+    }
+
+    if ($SipDomain -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "sipAddress=$SipDomain"
+    }
+
+    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    
+    Get-AcanoCallBridge $Identity
+}
+
+function Remove-AcanoCallBridge {
+[CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$Identity
+    )
+
+    if ($PSCmdlet.ShouldProcess("$Identity","Remove callbridge")) {
+        Open-AcanoAPI "/api/v1/callBridges/$Identity" -DELETE
+    }
+}
+
 # .ExternalHelp PsAcano.psm1-Help.xml
 function Get-AcanoXmppServer {
     return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp
