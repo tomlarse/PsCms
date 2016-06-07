@@ -3291,7 +3291,10 @@ function New-AcanoCallLegProfile {
         [string]$BfcpMode,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
-        [string]$CallLockAllowed
+        [string]$CallLockAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RecordingControlAllowed
     )
 
     $nodeLocation = "/api/v1/callLegProfiles"
@@ -3506,6 +3509,14 @@ function New-AcanoCallLegProfile {
         $modifiers++
     }
 
+    if ($RecordingControlAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "recordingControlAllowed=$RecordingControlAllowed"
+        $modifiers++
+    }
+
     if ($CallLockAllowed -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
@@ -3598,7 +3609,10 @@ function Set-AcanoCallLegProfile {
         [string]$BfcpMode,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
-        [string]$CallLockAllowed
+        [string]$CallLockAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$RecordingControlAllowed
     )
 
     $nodeLocation = "/api/v1/callLegProfiles/$Identity"
@@ -3810,6 +3824,14 @@ function Set-AcanoCallLegProfile {
             $data += "&"
         }
         $data += "bfcpMode=$BfcpMode"
+        $modifiers++
+    }
+
+    if ($RecordingControlAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "recordingControlAllowed=$RecordingControlAllowed"
         $modifiers++
     }
 
