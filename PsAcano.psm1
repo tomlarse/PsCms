@@ -7459,7 +7459,7 @@ function Get-AcanoRecorder {
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/recorders/$Identity").tenant
+            return (Open-AcanoAPI "api/v1/recorders/$Identity").recorder
         }
     }
 }
