@@ -6454,7 +6454,9 @@ function Set-AcanoCallBridgeCluster {
         [parameter(Mandatory=$false)]
         [string]$UniqueName,
         [parameter(Mandatory=$false)]
-        [string]$PeerLinkBitRate
+        [string]$PeerLinkBitRate,
+        [parameter(Mandatory=$false)]
+        [string]$ParticipantLimit
     )
 
     $nodeLocation = "/api/v1/system/configuration/cluster"
@@ -6471,6 +6473,14 @@ function Set-AcanoCallBridgeCluster {
             $data += "&"
         }
         $data += "peerLinkBitRate=$PeerLinkBitRate"
+        $modifiers++
+    }
+
+    if ($ParticipantLimit -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "participantLimit=$ParticipantLimit"
     }
 
     Open-AcanoAPI $nodeLocation -PUT -Data $data
