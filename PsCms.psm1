@@ -207,6 +207,7 @@ function New-CmsSpace {
         [parameter(Mandatory=$false)]
         [string]$Passcode,
         [parameter(Mandatory=$false)]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","onePlusN","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [string]$TenantID,
@@ -220,7 +221,14 @@ function New-CmsSpace {
         [ValidateSet("true","false")]
         [string]$RequireCallID="true",
         [parameter(Mandatory=$false)]
-        [string]$Secret
+        [string]$Secret,
+        [parameter(Mandatory=$false)]
+        [string]$OwnerId,
+        [parameter(Mandatory=$false)]
+        [string]$OwnerJid,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$NonMemberAccess
     )
 
     $nodeLocation = "/api/v1/coSpaces"
@@ -266,6 +274,18 @@ function New-CmsSpace {
         $data += "&secret=$Secret"
     }
 
+    if ($OwnerId -ne "") {
+        $data += "&ownerId=$OwnerId"
+    }
+
+    if ($OwnerJid -ne "") {
+        $data += "&ownerJid=$OwnerJid"
+    }
+
+    if ($NonMemberAccess -ne "") {
+        $data += "&nonMemberAccess=$NonMemberAccess"
+    }
+
     $data += "&requireCallID="+$RequireCallID
 
     [string]$NewcoSpaceID = Open-CmsAPI $nodeLocation -POST -Data $data
@@ -291,6 +311,7 @@ function Set-CmsSpace {
         [parameter(Mandatory=$false)]
         [string]$Passcode,
         [parameter(Mandatory=$false)]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","onePlusN","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [string]$TenantId,
@@ -306,7 +327,14 @@ function Set-CmsSpace {
         [parameter(Mandatory=$false)]
         [string]$Secret,
         [parameter(Mandatory=$false)]
-        [switch]$RegenerateSecret
+        [switch]$RegenerateSecret,
+        [parameter(Mandatory=$false)]
+        [string]$OwnerId,
+        [parameter(Mandatory=$false)]
+        [string]$OwnerJid,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$NonMemberAccess
     )
 
     $nodeLocation = "/api/v1/coSpaces/$Identity"
@@ -414,6 +442,30 @@ function Set-CmsSpace {
             $data += "&"
         }
         $data += "requireCallID="+$RequireCallId
+        $modifiers++
+    }
+
+    if ($OwnerId -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "ownerId=$OwnerId"
+        $modifiers++
+    }
+
+    if ($OwnerJid -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "ownerJid=$OwnerJid"
+        $modifiers++
+    }
+
+    if ($NonMemberAccess -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "nonMemberAccess=$NonMemberAccess"
         $modifiers++
     }
 
@@ -1070,6 +1122,200 @@ function Remove-CmsSpaceAccessMethod {
     }
 }
 
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSpaceBulkParameterSets {
+
+    $nodeLocation = "api/v1/coSpaceBulkParameterSets"
+
+    return (Open-CmsAPI $nodeLocation).coSpaceBulkParameterSets.coSpaceBulkParameterSet
+}
+
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSpaceBulkParameterSet {
+    [CmdletBinding(DefaultParameterSetName="getAll")]
+    Param (
+        [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
+        [string]$Identity
+    )
+
+    switch ($PsCmdlet.ParameterSetName) { 
+
+        "getAll"  {
+            Get-CmsSpaceBulkParameterSets
+        } 
+
+        "getSingle"  {
+            return (Open-CmsAPI "api/v1/coSpaceBulkParameterSets/$Identity").coSpaceBulkParameterSet
+        } 
+    }  
+}
+
+function New-CmsSpaceBulkParameterset {
+    Param (
+        [parameter(Mandatory=$true)]
+        [string]$StartIndex,
+        [parameter(Mandatory=$true)]
+        [string]$Endindex,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceUriMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceNameMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceCallIdMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$NonMemberAccess,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant
+    )
+
+
+    $nodeLocation = "/api/v1/coSpaceBulkParameterSet"
+    $data = "startIndex=$StartIndex&endIndex=$Endindex"
+
+    if ($CoSpaceUriMapping -ne "") {
+        $data += "&coSpaceUriMapping=$CoSpaceUriMapping"
+    }
+    
+    if ($CoSpaceNameMapping -ne "") {
+        $data += "&coSpaceNameMapping="+$CoSpaceNameMapping
+    }
+
+    if ($CoSpaceCallIdMapping -ne "") {
+        $data += "&coSpaceCallIdMapping="+$CoSpaceCallIdMapping
+    }
+
+    if ($CallProfile -ne "") {
+        $data += "&callProfile="+$CallProfile
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        $data += "&callBrandingProfile="+$CallBrandingProfile
+    }
+
+    if ($NonMemberAccess -ne "") {
+        $data += "&nonMemberAccess="+$NonMemberAccess
+    }
+
+    if ($Tenant -ne "") {
+        $data += "&tenant=$Tenant"
+    }
+
+    [string]$NewSpaceBulkParametersetId = Open-CmsAPI $nodeLocation -POST -Data $data
+    
+    Get-CmsSpaceBulkParameterSet $NewSpaceBulkParametersetId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+}
+
+function Set-CmsSpaceBulkParameterSet {
+    Param (
+        [parameter(Mandatory=$true,Position=1)]
+        [string]$Identity,
+        [parameter(Mandatory=$true)]
+        [string]$StartIndex,
+        [parameter(Mandatory=$true)]
+        [string]$Endindex,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceUriMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceNameMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CoSpaceCallIdMapping,
+        [parameter(Mandatory=$false)]
+        [string]$CallProfile,
+        [parameter(Mandatory=$false)]
+        [string]$CallBrandingProfile,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$NonMemberAccess,
+        [parameter(Mandatory=$false)]
+        [string]$Tenant
+    )
+
+
+    $nodeLocation = "/api/v1/coSpaceBulkParameterSets/$Identity"
+    $data = ""
+    $modifiers = 0
+
+    if ($StartIndex -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "startIndex=$StartIndex"
+        $modifiers++
+    }
+
+    if ($Endindex -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "endindex=$Endindex"
+        $modifiers++
+    }
+    
+    if ($CoSpaceUriMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "coSpaceUriMapping=$CoSpaceUriMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceNameMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "coSpaceNameMapping=$CoSpaceNameMapping"
+        $modifiers++
+    }
+
+    if ($CoSpaceCallIdMapping -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "coSpaceCallIdMapping=$CoSpaceCallIdMapping"
+        $modifiers++
+    }
+
+    if ($CallProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "callProfile=$CallProfile"
+        $modifiers++
+    }
+
+    if ($CallBrandingProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "callBrandingProfile=$CallBrandingProfile"
+        $modifiers++
+    }
+
+    if ($NonMemberAccess -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "nonMemberAccess=$NonMemberAccess"
+        $modifiers++
+    }
+
+    if ($Tenant -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "tenant=$Tenant"
+    }
+
+    Open-CmsAPI $nodeLocation -PUT -Data $data
+    
+    Get-CmsSpaceBulkParameterSet $Identity
+}
+
 function Start-CmsSpaceCallDiagnosticsGeneration {
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -1699,7 +1945,9 @@ function New-CmsCallForwardingDialPlanRule {
         [parameter(Mandatory=$false)]
         [string]$Priority,
         [parameter(Mandatory=$false)]
-        [string]$Tenant
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$UriParameters
     )
 
     $nodeLocation = "/api/v1/forwardingDialPlanRules"
@@ -1725,6 +1973,10 @@ function New-CmsCallForwardingDialPlanRule {
         $data += "&tenant=$Tenant"
     }
 
+    if ($UriParameters -ne "") {
+        $data += "&uriParameters=$UriParameters"
+    }
+
     [string]$NewCallForwardingPlanRuleId = Open-CmsAPI $nodeLocation -POST -Data $data
     
     Get-CmsCallForwardingDialPlanRule $NewCallForwardingPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
@@ -1747,7 +1999,9 @@ function Set-CmsCallForwardingDialPlanRule {
         [parameter(Mandatory=$false)]
         [string]$Priority,
         [parameter(Mandatory=$false)]
-        [string]$Tenant
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$UriParameters
     )
 
     $nodeLocation = "/api/v1/forwardingDialPlanRules/$Identity"
@@ -1791,6 +2045,14 @@ function Set-CmsCallForwardingDialPlanRule {
             $data += ""
         }
         $data += "priority=$Priority"
+        $modifiers++
+    }
+
+    if ($UriParameters -ne "") {
+        if ($modifiers -gt 0) {
+            $data += ""
+        }
+        $data += "uriParameters=$UriParameters"
         $modifiers++
     }
 
@@ -2387,7 +2649,7 @@ function New-CmsCallLeg {
         [parameter(Mandatory=$false)]
         [string]$OwnerId,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","onePlusN","automatic")]
         [string]$ChosenLayout,
         [parameter(Mandatory=$false)]
         [string]$CallLegProfileId,
@@ -2395,7 +2657,7 @@ function New-CmsCallLeg {
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","onePlusN","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -2612,7 +2874,7 @@ function Set-CmsCallLeg {
         [parameter(Mandatory=$false)]
         [string]$OwnerId,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","onePlusN","automatic")]
         [string]$ChosenLayout,
         [parameter(Mandatory=$false)]
         [string]$CallLegProfileId,
@@ -2620,7 +2882,7 @@ function Set-CmsCallLeg {
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","onePlusN","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -2965,7 +3227,7 @@ function New-CmsCallLegParticipant {
         [parameter(Mandatory=$false)]
         [string]$OwnerId,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","onePlusN","automatic")]
         [string]$ChosenLayout,
         [parameter(Mandatory=$false)]
         [string]$CallLegProfileId,
@@ -2973,7 +3235,7 @@ function New-CmsCallLegParticipant {
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","onePlusN","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -3263,7 +3525,7 @@ function New-CmsCallLegProfile {
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","onePlusN","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -3341,7 +3603,11 @@ function New-CmsCallLegProfile {
         [string]$CallLockAllowed,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
-        [string]$RecordingControlAllowed
+        [string]$RecordingControlAllowed,
+        [parameter(Mandatory=$false)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [string]$MaxCallDurationTime
     )
 
     $nodeLocation = "/api/v1/callLegProfiles"
@@ -3572,6 +3838,22 @@ function New-CmsCallLegProfile {
         $modifiers++
     }
 
+    if ($Name -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "name=$Name"
+        $modifiers++
+    }
+
+    if ($MaxCallDurationTime -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "maxCallDurationTime=$MaxCallDurationTime"
+        $modifiers++
+    }
+
     if ($CallLockAllowed -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
@@ -3592,7 +3874,7 @@ function Set-CmsCallLegProfile {
         [ValidateSet("true","false")]
         [string]$NeedsActivation,
         [parameter(Mandatory=$false)]
-        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","automatic")]
+        [ValidateSet("allEqual","speakerOnly","telepresence","stacked","allEqualQuarters","allEqualNinths","allEqualSixteenths","allEqualTwentyFifths","onePlusFive","onePlusSeven","onePlusNine","onePlusN","automatic")]
         [string]$DefaultLayout,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -3670,7 +3952,11 @@ function Set-CmsCallLegProfile {
         [string]$CallLockAllowed,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
-        [string]$RecordingControlAllowed
+        [string]$RecordingControlAllowed,
+        [parameter(Mandatory=$false)]
+        [string]$Name,
+        [parameter(Mandatory=$false)]
+        [string]$MaxCallDurationTime
     )
 
     $nodeLocation = "/api/v1/callLegProfiles/$Identity"
@@ -3898,6 +4184,22 @@ function Set-CmsCallLegProfile {
             $data += "&"
         }
         $data += "recordingControlAllowed=$RecordingControlAllowed"
+        $modifiers++
+    }
+
+    if ($Name -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "name=$Name"
+        $modifiers++
+    }
+
+    if ($MaxCallDurationTime -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "maxCallDurationTime=$MaxCallDurationTime"
         $modifiers++
     }
 
@@ -5331,7 +5633,19 @@ function New-CmsUserProfile {
         [string]$CanMakePhoneCalls,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
-        [string]$UserToUserMessagingAllowed
+        [string]$UserToUserMessagingAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$HasLicense,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$AudioParticipationAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoParticipationAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationParticipationAllowed
     )
 
     $nodeLocation = "/api/v1/userProfiles"
@@ -5372,6 +5686,38 @@ function New-CmsUserProfile {
             $data += "&"
         }
         $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"
+        $modifiers++
+    }
+
+    if ($HasLicense -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "hasLicense=$HasLicense"
+        $modifiers++
+    }
+        
+    if ($AudioParticipationAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "audioParticipationAllowed=$AudioParticipationAllowed"
+        $modifiers++
+    }
+
+    if ($VideoParticipationAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "videoParticipationAllowed=$VideoParticipationAllowed"
+        $modifiers++
+    }
+
+    if ($PresentationParticipationAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "presentationParticipationAllowed=$PresentationParticipationAllowed"
     }
 
     [string]$NewUserProfileId = Open-CmsAPI $nodeLocation -POST -Data $data
@@ -5397,7 +5743,19 @@ function Set-CmsUserProfile {
         [string]$CanMakePhoneCalls,
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
-        [string]$UserToUserMessagingAllowed
+        [string]$UserToUserMessagingAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$HasLicense,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$AudioParticipationAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$VideoParticipationAllowed,
+        [parameter(Mandatory=$false)]
+        [ValidateSet("true","false")]
+        [string]$PresentationParticipationAllowed
     )
 
     $nodeLocation = "/api/v1/userProfiles/$Identity"
@@ -5438,6 +5796,38 @@ function Set-CmsUserProfile {
             $data += "&"
         }
         $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"
+        $modifiers++
+    }
+
+    if ($AudioParticipationAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "audioParticipationAllowed=$AudioParticipationAllowed"
+        $modifiers++
+    }
+
+    if ($VideoParticipationAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "videoParticipationAllowed=$VideoParticipationAllowed"
+        $modifiers++
+    }
+
+    if ($PresentationParticipationAllowed -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "presentationParticipationAllowed=$PresentationParticipationAllowed"
+        $modifiers++
+    }
+
+    if ($HasLicense -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "hasLicense=$HasLicense"
     }
 
     Open-CmsAPI $nodeLocation -PUT -Data $data
@@ -7055,7 +7445,9 @@ function New-CmsLdapSource {
         [parameter(Mandatory=$false)]
         [string]$Filter,
         [parameter(Mandatory=$false)]
-        [string]$Tenant
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$UserProfile
     )
 
     $nodeLocation = "/api/v1/ldapSources"
@@ -7068,6 +7460,10 @@ function New-CmsLdapSource {
 
     if ($Tenant -ne "") {
         $data += "&tenant=$Tenant"
+    }
+
+    if ($UserProfile -ne "") {
+        $data += "&userProfile=$UserProfile"
     }
 
     [string]$NewLdapSourceId = Open-CmsAPI $nodeLocation -POST -Data $data
@@ -7088,7 +7484,9 @@ function Set-CmsLdapSource {
         [parameter(Mandatory=$false)]
         [string]$Filter,
         [parameter(Mandatory=$false)]
-        [string]$Tenant
+        [string]$Tenant,
+        [parameter(Mandatory=$false)]
+        [string]$UserProfile
     )
 
     $nodeLocation = "/api/v1/ldapSources/$Identity"
@@ -7129,6 +7527,14 @@ function Set-CmsLdapSource {
             $data += "&"
         }
         $data += "tenant=$Tenant"
+        $modifiers++
+    }
+
+    if ($UserProfile -ne "") {
+        if ($modifiers -gt 0) {
+            $data += "&"
+        }
+        $data += "userProfile=$UserProfile"
     }
 
     Open-CmsAPI $nodeLocation -PUT -Data $data
@@ -8013,6 +8419,12 @@ New-Alias -Name Get-AcanocoSpaceAccessMethods -Value Get-CmsSpaceAccessMethods
 New-Alias -Name Get-AcanocoSpaceMember -Value Get-CmsSpaceMember
 New-Alias -Name Get-AcanocoSpaceMembers -Value Get-CmsSpaceMembers
 New-Alias -Name Get-AcanocoSpaces -Value Get-CmsSpaces
+New-Alias -Name Get-CmscoSpace -Value Get-CmsSpace
+New-Alias -Name Get-CmscoSpaceAccessMethod -Value Get-CmsSpaceAccessMethod
+New-Alias -Name Get-CmscoSpaceAccessMethods -Value Get-CmsSpaceAccessMethods
+New-Alias -Name Get-CmscoSpaceMember -Value Get-CmsSpaceMember
+New-Alias -Name Get-CmscoSpaceMembers -Value Get-CmsSpaceMembers
+New-Alias -Name Get-CmscoSpaces -Value Get-CmsSpaces
 New-Alias -Name Get-AcanoDialTransform -Value Get-CmsDialTransform
 New-Alias -Name Get-AcanoDialTransforms -Value Get-CmsDialTransforms
 New-Alias -Name Get-AcanoDtmfProfile -Value Get-CmsDtmfProfile
@@ -8078,6 +8490,10 @@ New-Alias -Name New-AcanocoSpace -Value New-CmsSpace
 New-Alias -Name New-AcanocoSpaceAccessMethod -Value New-CmsSpaceAccessMethod
 New-Alias -Name New-AcanocoSpaceMember -Value New-CmsSpaceMember
 New-Alias -Name New-AcanocoSpaceMessage -Value New-CmsSpaceMessage
+New-Alias -Name New-CmscoSpace -Value New-CmsSpace
+New-Alias -Name New-CmscoSpaceAccessMethod -Value New-CmsSpaceAccessMethod
+New-Alias -Name New-CmscoSpaceMember -Value New-CmsSpaceMember
+New-Alias -Name New-CmscoSpaceMessage -Value New-CmsSpaceMessage
 New-Alias -Name New-AcanoDialTransform -Value New-CmsDialTransform
 New-Alias -Name New-AcanoDtmfProfile -Value New-CmsDtmfProfile
 New-Alias -Name New-AcanoExternalDirectorySearchLocation -Value New-CmsExternalDirectorySearchLocation
@@ -8109,6 +8525,10 @@ New-Alias -Name Remove-AcanocoSpace -Value Remove-CmsSpace
 New-Alias -Name Remove-AcanocoSpaceAccessMethod -Value Remove-CmsSpaceAccessMethod
 New-Alias -Name Remove-AcanocoSpaceMember -Value Remove-CmsSpaceMember
 New-Alias -Name Remove-AcanocoSpaceMessages -Value Remove-CmsSpaceMessages
+New-Alias -Name Remove-CmscoSpace -Value Remove-CmsSpace
+New-Alias -Name Remove-CmscoSpaceAccessMethod -Value Remove-CmsSpaceAccessMethod
+New-Alias -Name Remove-CmscoSpaceMember -Value Remove-CmsSpaceMember
+New-Alias -Name Remove-CmscoSpaceMessages -Value Remove-CmsSpaceMessages
 New-Alias -Name Remove-AcanoDialTransform -Value Remove-CmsDialTransform
 New-Alias -Name Remove-AcanoDtmfProfile -Value Remove-CmsDtmfProfile
 New-Alias -Name Remove-AcanoExternalDirectorySearchLocation -Value Remove-CmsExternalDirectorySearchLocation
@@ -8139,6 +8559,9 @@ New-Alias -Name Set-AcanoCdrRecieverUri -Value Set-CmsCdrRecieverUri
 New-Alias -Name Set-AcanocoSpace -Value Set-CmsSpace
 New-Alias -Name Set-AcanocoSpaceAccessMethod -Value Set-CmsSpaceAccessMethod
 New-Alias -Name Set-AcanocoSpaceMember -Value Set-CmsSpaceMember
+New-Alias -Name Set-CmscoSpace -Value Set-CmsSpace
+New-Alias -Name Set-CmscoSpaceAccessMethod -Value Set-CmsSpaceAccessMethod
+New-Alias -Name Set-CmscoSpaceMember -Value Set-CmsSpaceMember
 New-Alias -Name Set-AcanoDialTransform -Value Set-CmsDialTransform
 New-Alias -Name Set-AcanoDtmfProfile -Value Set-CmsDtmfProfile
 New-Alias -Name Set-AcanoExternalDirectorySearchLocation -Value Set-CmsExternalDirectorySearchLocation
@@ -8158,4 +8581,5 @@ New-Alias -Name Set-AcanoUserProfile -Value Set-CmsUserProfile
 New-Alias -Name Set-AcanoWebBridge -Value Set-CmsWebBridge
 New-Alias -Name Set-AcanoXmppServer -Value Set-CmsXmppServer
 New-Alias -Name Start-AcanocoSpaceCallDiagnosticsGeneration -Value Start-CmsSpaceCallDiagnosticsGeneration
+New-Alias -Name Start-CmscoSpaceCallDiagnosticsGeneration -Value Start-CmsSpaceCallDiagnosticsGeneration
 New-Alias -Name Update-AcanoWebBridgeCustomization -Value Update-CmsWebBridgeCustomization
