@@ -2,7 +2,7 @@
 Powershell implementation of the Cisco Meeting Server API
 
 ## Introduction
-The Cisco Meeting Server provides management access through an API exposed through HTTPS in the WebAdmin on the server. This API is thorughly documented at https://www.acano.com/publications/2016/06/Solution-API-Reference-R1_9.pdf
+The Cisco Meeting Server provides management access through an API exposed through HTTPS in the WebAdmin on the server. This API is thorughly documented at http://www.cisco.com/c/dam/en/us/td/docs/conferencing/ciscoMeetingServer/Reference_Guides/Version-2-0/Cisco-Meeting-Server-API-Reference-Guide-2-0.pdf
 
 Knowledge of this document is assumed before use of this module.
 
