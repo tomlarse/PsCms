@@ -1,5 +1,5 @@
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Open-AcanoAPI {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Open-CmsAPI {
     Param (
         [parameter(ParameterSetName="GET",Mandatory=$true,Position=1)]
         [parameter(ParameterSetName="POST",Mandatory=$true,Position=1)]
@@ -24,7 +24,7 @@ function Open-AcanoAPI {
     $credCache = new-object System.Net.CredentialCache
     $credCache.Add($script:APIAddress, "Basic", $script:creds)
 
-    $webclient.Headers.Add("user-agent", "PSAcano Powershell Module")
+    $webclient.Headers.Add("user-agent", "PSCms Powershell Module")
     $webclient.Credentials = $credCache
 
     try {
@@ -55,17 +55,17 @@ function Open-AcanoAPI {
     catch [Net.WebException]{
         if ($_.Exception.Response.StatusCode.Value__ -eq 400) {
             [System.IO.StreamReader]$failure = $_.Exception.Response.GetResponseStream()
-            $AcanoFailureReasonRaw = $failure.ReadToEnd()
-            $stripbefore = $AcanoFailureReasonRaw.Remove(0,38)
-            $AcanoFailureReason = $stripbefore.Remove($stripbefore.Length-20)
+            $CmsFailureReasonRaw = $failure.ReadToEnd()
+            $stripbefore = $CmsFailureReasonRaw.Remove(0,38)
+            $CmsFailureReason = $stripbefore.Remove($stripbefore.Length-20)
           
-            Write-Error "Error: API returned reason: $AcanoFailureReason" -ErrorId $AcanoFailureReason -TargetObject $NodeLocation
+            Write-Error "Error: API returned reason: $CmsFailureReason" -ErrorId $CmsFailureReason -TargetObject $NodeLocation
         }
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function New-AcanoSession {
+# .ExternalHelp PsCms.psm1-Help.xml
+function New-CmsSession {
     Param (
         [parameter(Mandatory=$true)]
         [string]$APIAddress,
@@ -90,20 +90,20 @@ function New-AcanoSession {
         [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
     }
 
-    $connectionstatus = Get-AcanoSystemStatus
+    $connectionstatus = Get-CmsSystemStatus
     $ver = $connectionstatus.softwareVersion
     $ut = $connectionstatus.uptimeSeconds
     if ($connectionstatus -ne $null) {
-        Write-Information "Successfully connected to the Acano Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds."
+        Write-Information "Successfully connected to the Cms Server at $APIAddress`:$port running version $ver. Uptime is $ut seconds."
         return $true
     }
     else {
-        throw "Could not connect to the Acano Server at $APIAddress`:$port"
+        throw "Could not connect to the Cms Server at $APIAddress`:$port"
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanocoSpaces {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSpaces {
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -166,11 +166,11 @@ function Get-AcanocoSpaces {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).coSpaces.coSpace
+    return (Open-CmsAPI $nodeLocation).coSpaces.coSpace
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanocoSpace {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSpace {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -182,17 +182,17 @@ function Get-AcanocoSpace {
     { 
 
         "getAll"  {
-            Get-AcanocoSpaces
+            Get-CmsSpaces
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/coSpaces/$Identity").coSpace
+            return (Open-CmsAPI "api/v1/coSpaces/$Identity").coSpace
         } 
     } 
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function New-AcanocoSpace {
+# .ExternalHelp PsCms.psm1-Help.xml
+function New-CmsSpace {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Name,
@@ -268,13 +268,13 @@ function New-AcanocoSpace {
 
     $data += "&requireCallID="+$RequireCallID
 
-    [string]$NewcoSpaceID = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewcoSpaceID = Open-CmsAPI $nodeLocation -POST -Data $data
 
-    Get-AcanocoSpace $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsSpace $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Set-AcanocoSpace {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Set-CmsSpace {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -422,13 +422,13 @@ function Set-AcanocoSpace {
         }
     $data += "regenerateSecret="+$RegenerateSecret.toString()
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
 
-    Get-AcanocoSpace $Identity
+    Get-CmsSpace $Identity
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Remove-AcanocoSpace { 
+# .ExternalHelp PsCms.psm1-Help.xml
+function Remove-CmsSpace { 
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -436,12 +436,12 @@ function Remove-AcanocoSpace {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove coSpace")) {
-        Open-AcanoAPI "api/v1/coSpaces/$Identity" -DELETE
+        Open-CmsAPI "api/v1/coSpaces/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanocoSpaceMembers {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSpaceMembers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]
@@ -492,11 +492,11 @@ function Get-AcanocoSpaceMembers {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).coSpaceUsers.coSpaceUser | fl
+    return (Open-CmsAPI $nodeLocation).coSpaceUsers.coSpaceUser | fl
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanocoSpaceMember {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSpaceMember {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -509,17 +509,17 @@ function Get-AcanocoSpaceMember {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanocoSpaceMembers $Identity
+            Get-CmsSpaceMembers $Identity
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/coSpaces/$Identity/coSpaceUsers/$coSpaceMemberID").coSpaceUser
+            return (Open-CmsAPI "api/v1/coSpaces/$Identity/coSpaceUsers/$coSpaceMemberID").coSpaceUser
         }
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function New-AcanocoSpaceMember {
+# .ExternalHelp PsCms.psm1-Help.xml
+function New-CmsSpaceMember {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Identity,
@@ -599,13 +599,13 @@ function New-AcanocoSpaceMember {
         $data += "&canDeleteAllMessages="+$CanDeleteAllMessages
     }
 
-    [string]$NewcoSpaceMemberID = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewcoSpaceMemberID = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanocoSpaceMember $Identity -coSpaceMemberID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsSpaceMember $Identity -coSpaceMemberID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Set-AcanocoSpaceMember {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Set-CmsSpaceMember {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Identity,
@@ -722,13 +722,13 @@ function Set-AcanocoSpaceMember {
         $data += "canDeleteAllMessages=$CanDeleteAllMessages"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
 
-    Get-AcanocoSpaceMember $Identity -coSpaceMemberID $coSpaceMemberId
+    Get-CmsSpaceMember $Identity -coSpaceMemberID $coSpaceMemberId
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Remove-AcanocoSpaceMember {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Remove-CmsSpaceMember {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true)]
@@ -738,12 +738,12 @@ function Remove-AcanocoSpaceMember {
     )
 
     if ($PSCmdlet.ShouldProcess("$UserId","Remove user from cospace with id $Identity")) {
-        Open-AcanoAPI "api/v1/coSpaces/$Identity/coSpaceUsers/$UserId" -DELETE
+        Open-CmsAPI "api/v1/coSpaces/$Identity/coSpaceUsers/$UserId" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function New-AcanocoSpaceMessage {
+# .ExternalHelp PsCms.psm1-Help.xml
+function New-CmsSpaceMessage {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Identity,
@@ -757,12 +757,12 @@ function New-AcanocoSpaceMessage {
     $data = "message=$Message"
     $data += "&from=$From"
 
-    [string]$NewcoSpaceMessage = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewcoSpaceMessage = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    ## NOT IMPLEMENTED YET Get-AcanocoSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMessage.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    ## NOT IMPLEMENTED YET Get-CmsSpaceMember -coSpaceID $coSpaceId -coSpaceUserID $NewcoSpaceMessage.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Remove-AcanocoSpaceMessages {
+function Remove-CmsSpaceMessages {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true)]
@@ -791,15 +791,15 @@ function Remove-AcanocoSpaceMessages {
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove messages in coSpace")) {
         if ($modifiers -gt 0) {
-            Open-AcanoAPI $nodeLocation -DELETE -Data $data
+            Open-CmsAPI $nodeLocation -DELETE -Data $data
         } else {
-            Open-AcanoAPI $nodeLocation -DELETE
+            Open-CmsAPI $nodeLocation -DELETE
         }
     } 
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanocoSpaceAccessMethods {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSpaceAccessMethods {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true,Position=1)]
@@ -850,11 +850,11 @@ function Get-AcanocoSpaceAccessMethods {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).accessMethods.accessMethod | fl
+    return (Open-CmsAPI $nodeLocation).accessMethods.accessMethod | fl
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanocoSpaceAccessMethod {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSpaceAccessMethod {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -867,17 +867,17 @@ function Get-AcanocoSpaceAccessMethod {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanocoSpaceAccessMethods $Identity
+            Get-CmsSpaceAccessMethods $Identity
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/coSpaces/$Identity/accessMethods/$coSpaceAccessMethodID").accessMethod
+            return (Open-CmsAPI "api/v1/coSpaces/$Identity/accessMethods/$coSpaceAccessMethodID").accessMethod
         }
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function New-AcanocoSpaceAccessMethod {
+# .ExternalHelp PsCms.psm1-Help.xml
+function New-CmsSpaceAccessMethod {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Identity,
@@ -953,13 +953,13 @@ function New-AcanocoSpaceAccessMethod {
         $data += "scope=$Scope"
     }
 
-    [string]$NewcoSpaceAccessMethod = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewcoSpaceAccessMethod = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanocoSpaceAccessMethod $Identity -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsSpaceAccessMethod $Identity -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Set-AcanocoSpaceAccessMethod {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Set-CmsSpaceAccessMethod {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -1049,14 +1049,14 @@ function Set-AcanocoSpaceAccessMethod {
         $data += "scope=$Scope"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanocoSpaceAccessMethod $Identity -coSpaceAccessMethodID $coSpaceAccessMethodID
+    Get-CmsSpaceAccessMethod $Identity -coSpaceAccessMethodID $coSpaceAccessMethodID
 
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Remove-AcanocoSpaceAccessMethod {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Remove-CmsSpaceAccessMethod {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true)]
@@ -1066,22 +1066,22 @@ function Remove-AcanocoSpaceAccessMethod {
     )
 
     if ($PSCmdlet.ShouldProcess("$coSpaceAccessMethodID","Remove access method from coSpace $Identity")) {
-        Open-AcanoAPI "api/v1/coSpaces/$Identity/accessMethods/$coSpaceAccessMethodID" -DELETE
+        Open-CmsAPI "api/v1/coSpaces/$Identity/accessMethods/$coSpaceAccessMethodID" -DELETE
     }
 }
 
-function Start-AcanocoSpaceCallDiagnosticsGeneration {
+function Start-CmsSpaceCallDiagnosticsGeneration {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity
     )
 
-    Open-AcanoAPI "api/v1/coSpaces/$Identity/diagnostics" -POST
+    Open-CmsAPI "api/v1/coSpaces/$Identity/diagnostics" -POST
 
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoOutboundDialPlanRules {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsOutboundDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -1115,11 +1115,11 @@ function Get-AcanoOutboundDialPlanRules {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).outboundDialPlanRules.outboundDialPlanRule
+    return (Open-CmsAPI $nodeLocation).outboundDialPlanRules.outboundDialPlanRule
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoOutboundDialPlanRule {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsOutboundDialPlanRule {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -1129,16 +1129,16 @@ function Get-AcanoOutboundDialPlanRule {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoOutboundDialPlanRules
+            Get-CmsOutboundDialPlanRules
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/outboundDialPlanRules/$Identity").outboundDialPlanRule
+            return (Open-CmsAPI "api/v1/outboundDialPlanRules/$Identity").outboundDialPlanRule
         } 
     }  
 }
 
-function New-AcanoOutboundDialPlanRule {
+function New-CmsOutboundDialPlanRule {
     [CmdletBinding(DefaultParameterSetName="NoCallbridgeId")]
     Param (
         [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$true)]
@@ -1230,12 +1230,12 @@ function New-AcanoOutboundDialPlanRule {
         $data += "&callRouting=$CallRouting"
     }
 
-    [string]$NewOutboundDialPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewOutboundDialPlanRuleId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoOutboundDialPlanRule $NewOutboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsOutboundDialPlanRule $NewOutboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoOutboundDialPlanRule {
+function Set-CmsOutboundDialPlanRule {
     [CmdletBinding(DefaultParameterSetName="NoCallbridgeId")]
     Param (
         [parameter(ParameterSetName="NoCallbridgeId",Mandatory=$true,Position=1)]
@@ -1382,12 +1382,12 @@ function Set-AcanoOutboundDialPlanRule {
         $data += "callRouting=$CallRouting"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoOutboundDialPlanRule $Identity
+    Get-CmsOutboundDialPlanRule $Identity
 }
 
-function Remove-AcanoOutboundDialPlanRule {
+function Remove-CmsOutboundDialPlanRule {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -1395,12 +1395,12 @@ function Remove-AcanoOutboundDialPlanRule {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove outbound dial plan rule")) {
-        Open-AcanoAPI "/api/v1/outboundDialPlanRules/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/outboundDialPlanRules/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoInboundDialPlanRules {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsInboundDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -1447,11 +1447,11 @@ function Get-AcanoInboundDialPlanRules {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).inboundDialPlanRules.inboundDialPlanRule
+    return (Open-CmsAPI $nodeLocation).inboundDialPlanRules.inboundDialPlanRule
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoInboundDialPlanRule {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsInboundDialPlanRule {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -1461,16 +1461,16 @@ function Get-AcanoInboundDialPlanRule {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoInboundDialPlanRules
+            Get-CmsInboundDialPlanRules
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/inboundDialPlanRules/$Identity").inboundDialPlanRule
+            return (Open-CmsAPI "api/v1/inboundDialPlanRules/$Identity").inboundDialPlanRule
         } 
     }
 }
 
-function New-AcanoInboundDialPlanRule {
+function New-CmsInboundDialPlanRule {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Domain,
@@ -1520,12 +1520,12 @@ function New-AcanoInboundDialPlanRule {
         $data += "&tenant=$Tenant"
     }
 
-    [string]$NewInboundDialPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewInboundDialPlanRuleId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoInboundDialPlanRule $NewInboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsInboundDialPlanRule $NewInboundDialPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoInboundDialPlanRule {
+function Set-CmsInboundDialPlanRule {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -1609,12 +1609,12 @@ function Set-AcanoInboundDialPlanRule {
         $data += "tenant=$Tenant"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoInboundDialPlanRule $Identity
+    Get-CmsInboundDialPlanRule $Identity
 }
 
-function Remove-AcanoInboundDialPlanRule {
+function Remove-CmsInboundDialPlanRule {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -1622,12 +1622,12 @@ function Remove-AcanoInboundDialPlanRule {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove inbound dial plan rule")) {
-        Open-AcanoAPI "/api/v1/inboundDialPlanRules/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/inboundDialPlanRules/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallForwardingDialPlanRules {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallForwardingDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -1661,11 +1661,11 @@ function Get-AcanoCallForwardingDialPlanRules {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).forwardingDialPlanRules.forwardingDialPlanRule
+    return (Open-CmsAPI $nodeLocation).forwardingDialPlanRules.forwardingDialPlanRule
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallForwardingDialPlanRule {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallForwardingDialPlanRule {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -1675,16 +1675,16 @@ function Get-AcanoCallForwardingDialPlanRule {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoCallForwardingDialPlanRules
+            Get-CmsCallForwardingDialPlanRules
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/forwardingDialPlanRules/$Identity").forwardingDialPlanRule
+            return (Open-CmsAPI "api/v1/forwardingDialPlanRules/$Identity").forwardingDialPlanRule
         } 
     }
 }
 
-function New-AcanoCallForwardingDialPlanRule {
+function New-CmsCallForwardingDialPlanRule {
     Param (
         [parameter(Mandatory=$true)]
         [string]$MatchPattern,
@@ -1725,12 +1725,12 @@ function New-AcanoCallForwardingDialPlanRule {
         $data += "&tenant=$Tenant"
     }
 
-    [string]$NewCallForwardingPlanRuleId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewCallForwardingPlanRuleId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallForwardingDialPlanRule $NewCallForwardingPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsCallForwardingDialPlanRule $NewCallForwardingPlanRuleId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoCallForwardingDialPlanRule {
+function Set-CmsCallForwardingDialPlanRule {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -1801,12 +1801,12 @@ function Set-AcanoCallForwardingDialPlanRule {
         $data += "tenant=$Tenant"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallForwardingDialPlanRule $Identity
+    Get-CmsCallForwardingDialPlanRule $Identity
 }
 
-function Remove-AcanoCallForwardingDialPlanRule {
+function Remove-CmsCallForwardingDialPlanRule {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -1814,12 +1814,12 @@ function Remove-AcanoCallForwardingDialPlanRule {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove call forwarding rule")) {
-        Open-AcanoAPI "/api/v1/forwardingDialPlanRules/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/forwardingDialPlanRules/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCalls {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCalls {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -1866,11 +1866,11 @@ function Get-AcanoCalls {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).calls.call
+    return (Open-CmsAPI $nodeLocation).calls.call
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCall {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCall {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -1880,16 +1880,16 @@ function Get-AcanoCall {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoCalls
+            Get-CmsCalls
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/calls/$Identity").call
+            return (Open-CmsAPI "api/v1/calls/$Identity").call
         } 
     }
 }
 
-function New-AcanoCall {
+function New-CmsCall {
     Param (
         [parameter(Mandatory=$true)]
         [string]$CoSpaceId,
@@ -1939,12 +1939,12 @@ function New-AcanoCall {
         $data += "&joinAudioMuteOverride=$JoinAudioMuteOverride"
     }
 
-    [string]$NewCallId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewCallId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCall $NewCallId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsCall $NewCallId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoCall {
+function Set-CmsCall {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -2012,12 +2012,12 @@ function Set-AcanoCall {
         $data += "joinAudioMuteOverride=$JoinAudioMuteOverride"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCall $Identity
+    Get-CmsCall $Identity
 }
 
-function Remove-AcanoCall {
+function Remove-CmsCall {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -2025,12 +2025,12 @@ function Remove-AcanoCall {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove call")) {
-        Open-AcanoAPI "/api/v1/calls/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/calls/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallProfiles {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
@@ -2056,11 +2056,11 @@ function Get-AcanoCallProfiles {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).callProfiles.callProfile
+    return (Open-CmsAPI $nodeLocation).callProfiles.callProfile
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallProfile {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -2070,16 +2070,16 @@ function Get-AcanoCallProfile {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoCallProfiles
+            Get-CmsCallProfiles
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/callProfiles/$Identity").callProfile | fl
+            return (Open-CmsAPI "api/v1/callProfiles/$Identity").callProfile | fl
         } 
     }
 }
 
-function New-AcanoCallProfile {
+function New-CmsCallProfile {
     Param (
         [parameter(Mandatory=$false)]
         [string]$ParticipantLimit,
@@ -2126,12 +2126,12 @@ function New-AcanoCallProfile {
         $data += "locked=$Locked"
     }
 
-    [string]$NewCallProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewCallProfileId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallProfile -$NewCallProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsCallProfile -$NewCallProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoCallProfile {
+function Set-CmsCallProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -2180,12 +2180,12 @@ function Set-AcanoCallProfile {
         $data += "locked=$Locked"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallProfile $Identity
+    Get-CmsCallProfile $Identity
 }
 
-function Remove-AcanoCallProfile {
+function Remove-CmsCallProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -2193,12 +2193,12 @@ function Remove-AcanoCallProfile {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove call profile")) {
-        Open-AcanoAPI "/api/v1/callProfiles/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/callProfiles/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallLegs {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallLegs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -2350,11 +2350,11 @@ function Get-AcanoCallLegs {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).callLegs.callLeg
+    return (Open-CmsAPI $nodeLocation).callLegs.callLeg
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallLeg {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallLeg {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -2364,16 +2364,16 @@ function Get-AcanoCallLeg {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoCallLegs
+            Get-CmsCallLegs
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/callLegs/$Identity").callLeg
+            return (Open-CmsAPI "api/v1/callLegs/$Identity").callLeg
         } 
     }
 }
 
-function New-AcanoCallLeg {
+function New-CmsCallLeg {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Identity,
@@ -2600,12 +2600,12 @@ function New-AcanoCallLeg {
         $data += "&dtmfSequence=$DtmfSequence"
     }
 
-    [string]$NewCallLegId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewCallLegId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallLeg $NewCallLegId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsCallLeg $NewCallLegId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoCallLeg {
+function Set-CmsCallLeg {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Identity,
@@ -2934,12 +2934,12 @@ function Set-AcanoCallLeg {
         $data += "bfcpMode=$BfcpMode"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallLeg $Identity
+    Get-CmsCallLeg $Identity
 }
 
-function Remove-AcanoCallLeg {
+function Remove-CmsCallLeg {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -2947,11 +2947,11 @@ function Remove-AcanoCallLeg {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove call leg")) {
-        Open-AcanoAPI "/api/v1/callLegs/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/callLegs/$Identity" -DELETE
     }
 }
 
-function New-AcanoCallLegParticipant {
+function New-CmsCallLegParticipant {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -3178,13 +3178,13 @@ function New-AcanoCallLegParticipant {
         $data += "&dtmfSequence=$DtmfSequence"
     }
 
-    [string]$NewCallLegParticipantId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewCallLegParticipantId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoParticipant $NewCallLegParticipantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsParticipant $NewCallLegParticipantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallLegProfiles {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallLegProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -3234,11 +3234,11 @@ function Get-AcanoCallLegProfiles {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).callLegProfiles.callLegProfile
+    return (Open-CmsAPI $nodeLocation).callLegProfiles.callLegProfile
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallLegProfile {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallLegProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -3248,16 +3248,16 @@ function Get-AcanoCallLegProfile {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoCallLegProfiles
+            Get-CmsCallLegProfiles
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/callLegProfiles/$Identity").callLegProfile
+            return (Open-CmsAPI "api/v1/callLegProfiles/$Identity").callLegProfile
         } 
     }
 }
 
-function New-AcanoCallLegProfile {
+function New-CmsCallLegProfile {
     Param (
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -3579,12 +3579,12 @@ function New-AcanoCallLegProfile {
         $data += "callLockAllowed=$CallLockAllowed"
     }
 
-    [string]$NewCallLegProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewCallLegProfileId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallLegProfile $NewCallLegProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsCallLegProfile $NewCallLegProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoCallLegProfile {
+function Set-CmsCallLegProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -3908,12 +3908,12 @@ function Set-AcanoCallLegProfile {
         $data += "callLockAllowed=$CallLockAllowed"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallLegProfile $Identity
+    Get-CmsCallLegProfile $Identity
 }
 
-function Remove-AcanoCallLegProfile {
+function Remove-CmsCallLegProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -3921,34 +3921,34 @@ function Remove-AcanoCallLegProfile {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove call leg profile")) {
-        Open-AcanoAPI "/api/v1/callLegProfiles/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/callLegProfiles/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallLegProfileUsages {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallLegProfileUsages {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/callLegProfiles/$Identity/usage").callLegProfileUsage
+    return (Open-CmsAPI "api/v1/callLegProfiles/$Identity/usage").callLegProfileUsage
 
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallLegProfileTrace {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallLegProfileTrace {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/callLegs/$Identity/callLegProfileTrace").callLegProfileTrace
+    return (Open-CmsAPI "api/v1/callLegs/$Identity/callLegProfileTrace").callLegProfileTrace
 
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoDialTransforms {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsDialTransforms {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -3982,11 +3982,11 @@ function Get-AcanoDialTransforms {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).dialTransforms.dialTransform
+    return (Open-CmsAPI $nodeLocation).dialTransforms.dialTransform
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoDialTransform {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsDialTransform {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -3996,16 +3996,16 @@ function Get-AcanoDialTransform {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoDialTransforms
+            Get-CmsDialTransforms
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/dialTransforms/$Identity").dialTransform
+            return (Open-CmsAPI "api/v1/dialTransforms/$Identity").dialTransform
         }
     }
 }
 
-function New-AcanoDialTransform {
+function New-CmsDialTransform {
     Param (
         [parameter(Mandatory=$false)]
         [ValidateSet("raw","strip","phone")]
@@ -4042,12 +4042,12 @@ function New-AcanoDialTransform {
 
     $data
 
-    [string]$NewDialTransformId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewDialTransformId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoDialTransform $NewDialTransformId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsDialTransform $NewDialTransformId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoDialTransform {
+function Set-CmsDialTransform {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -4106,12 +4106,12 @@ function Set-AcanoDialTransform {
         $data += "Action=$Action"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoDialTransform $Identity
+    Get-CmsDialTransform $Identity
 }
 
-function Remove-AcanoDialTransform {
+function Remove-CmsDialTransform {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -4119,12 +4119,12 @@ function Remove-AcanoDialTransform {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove dial transform rule")) {
-        Open-AcanoAPI "/api/v1/dialTransforms/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/dialTransforms/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallBrandingProfiles {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallBrandingProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -4161,11 +4161,11 @@ function Get-AcanoCallBrandingProfiles {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).callBrandingProfiles.callBrandingProfile
+    return (Open-CmsAPI $nodeLocation).callBrandingProfiles.callBrandingProfile
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallBrandingProfile {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallBrandingProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -4175,16 +4175,16 @@ function Get-AcanoCallBrandingProfile {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoCallBrandingProfiles
+            Get-CmsCallBrandingProfiles
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/callBrandingProfiles/$Identity").callBrandingProfile
+            return (Open-CmsAPI "api/v1/callBrandingProfiles/$Identity").callBrandingProfile
         }
     }
 }
 
-function New-AcanoCallBrandingProfile {
+function New-CmsCallBrandingProfile {
     Param (
         [parameter(Mandatory=$false)]
         [string]$InvitationTemplate,
@@ -4208,12 +4208,12 @@ function New-AcanoCallBrandingProfile {
         $data += "resourceLocation=$ResourceLocation"
     }
 
-    [string]$NewCallBrandingProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewCallBrandingProfileId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallBrandingProfile $NewCallBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsCallBrandingProfile $NewCallBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoCallBrandingProfile {
+function Set-CmsCallBrandingProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -4239,12 +4239,12 @@ function Set-AcanoCallBrandingProfile {
         $data += "resourceLocation=$ResourceLocation"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallBrandingProfile $Identity
+    Get-CmsCallBrandingProfile $Identity
 }
 
-function Remove-AcanoCallBrandingProfile {
+function Remove-CmsCallBrandingProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -4252,12 +4252,12 @@ function Remove-AcanoCallBrandingProfile {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove call branding profile")) {
-        Open-AcanoAPI "/api/v1/CallBrandingProfiles/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/CallBrandingProfiles/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoDtmfProfiles {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsDtmfProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -4294,11 +4294,11 @@ function Get-AcanoDtmfProfiles {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).dtmfProfiles.dtmfProfile
+    return (Open-CmsAPI $nodeLocation).dtmfProfiles.dtmfProfile
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoDtmfProfile {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsDtmfProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -4308,16 +4308,16 @@ function Get-AcanoDtmfProfile {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoDtmfProfiles
+            Get-CmsDtmfProfiles
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/dtmfProfiles/$Identity").dtmfProfile
+            return (Open-CmsAPI "api/v1/dtmfProfiles/$Identity").dtmfProfile
         }
     }
 }
 
-function New-AcanoDtmfProfile {
+function New-CmsDtmfProfile {
     Param (
         [parameter(Mandatory=$false)]
         [string]$LockCall,
@@ -4523,12 +4523,12 @@ function New-AcanoDtmfProfile {
         $data += "endCall=$EndCall"
     }
 
-    [string]$NewDtmfProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewDtmfProfileId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoDtmfProfile $NewDtmfProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsDtmfProfile $NewDtmfProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoDtmfProfile {
+function Set-CmsDtmfProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -4736,12 +4736,12 @@ function Set-AcanoDtmfProfile {
         $data += "endCall=$EndCall"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoDtmfProfile $Identity
+    Get-CmsDtmfProfile $Identity
 }
 
-function Remove-AcanoDtmfProfile {
+function Remove-CmsDtmfProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -4749,12 +4749,12 @@ function Remove-AcanoDtmfProfile {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove DTMF profile")) {
-        Open-AcanoAPI "/api/v1/dtmfProfiles/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/dtmfProfiles/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoIvrs {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsIvrs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -4801,11 +4801,11 @@ function Get-AcanoIvrs {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).ivrs.ivr
+    return (Open-CmsAPI $nodeLocation).ivrs.ivr
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoIvr {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsIvr {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -4815,16 +4815,16 @@ function Get-AcanoIvr {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoIvrs
+            Get-CmsIvrs
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/ivrs/$Identity").ivr
+            return (Open-CmsAPI "api/v1/ivrs/$Identity").ivr
         }
     }
 }
 
-function New-AcanoIvr {
+function New-CmsIvr {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Uri,
@@ -4865,12 +4865,12 @@ function New-AcanoIvr {
         $data += "&reesolveLyncConferenceIds=$ResolveLyncConferenceIds"
     }
 
-    [string]$NewIvrId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewIvrId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoIvr $NewIvrId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsIvr $NewIvrId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoIvr {
+function Set-CmsIvr {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -4938,12 +4938,12 @@ function Set-AcanoIvr {
         $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoIvr $Identity
+    Get-CmsIvr $Identity
 }
 
-function Remove-AcanoIvr {
+function Remove-CmsIvr {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -4951,12 +4951,12 @@ function Remove-AcanoIvr {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove IVR")) {
-        Open-AcanoAPI "/api/v1/ivrs/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/ivrs/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoIvrBrandingProfiles {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsIvrBrandingProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -5003,11 +5003,11 @@ function Get-AcanoIvrBrandingProfiles {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).ivrBrandingProfiles.ivrBrandingProfile
+    return (Open-CmsAPI $nodeLocation).ivrBrandingProfiles.ivrBrandingProfile
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoIvrBrandingProfile {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsIvrBrandingProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -5017,16 +5017,16 @@ function Get-AcanoIvrBrandingProfile {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoIvrBrandingProfiles
+            Get-CmsIvrBrandingProfiles
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/ivrBrandingProfiles/$Identity").ivrBrandingProfile
+            return (Open-CmsAPI "api/v1/ivrBrandingProfiles/$Identity").ivrBrandingProfile
         }
     }
 }
 
-function New-AcanoIvrBrandingProfile {
+function New-CmsIvrBrandingProfile {
     Param (
         [parameter(Mandatory=$false)]
         [string]$ResourceLocation
@@ -5039,12 +5039,12 @@ function New-AcanoIvrBrandingProfile {
         $data += "resourceLocation=$ResourceLocation"
     }
 
-    [string]$NewIvrBrandingProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewIvrBrandingProfileId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoIvrBrandingProfile $NewIvrBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsIvrBrandingProfile $NewIvrBrandingProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoIvrBrandingProfile {
+function Set-CmsIvrBrandingProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -5059,12 +5059,12 @@ function Set-AcanoIvrBrandingProfile {
         $data += "resourceLocation=$ResourceLocation"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoIvrBrandingProfile $Identity
+    Get-CmsIvrBrandingProfile $Identity
 }
 
-function Remove-AcanoIvrBrandingProfile {
+function Remove-CmsIvrBrandingProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -5072,12 +5072,12 @@ function Remove-AcanoIvrBrandingProfile {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove IVR Branding profile")) {
-        Open-AcanoAPI "/api/v1/ivrBrandingProfiles/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/ivrBrandingProfiles/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoParticipants {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsParticipants {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -5138,11 +5138,11 @@ function Get-AcanoParticipants {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).participants.participant
+    return (Open-CmsAPI $nodeLocation).participants.participant
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoParticipant {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsParticipant {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -5152,28 +5152,28 @@ function Get-AcanoParticipant {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoParticipants
+            Get-CmsParticipants
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/participants/$Identity").participant
+            return (Open-CmsAPI "api/v1/participants/$Identity").participant
         }
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoParticipantCallLegs {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsParticipantCallLegs {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/participants/$Identity/callLegs").callLeg
+    return (Open-CmsAPI "api/v1/participants/$Identity/callLegs").callLeg
 
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoUsers {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsUsers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -5220,11 +5220,11 @@ function Get-AcanoUsers {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).users.user
+    return (Open-CmsAPI $nodeLocation).users.user
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoUser {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsUser {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -5234,28 +5234,28 @@ function Get-AcanoUser {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoUsers
+            Get-CmsUsers
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/users/$Identity").user
+            return (Open-CmsAPI "api/v1/users/$Identity").user
         }
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoUsercoSpaces {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsUsercoSpaces {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/users/$Identity/usercoSpaces").userCoSpaces.userCoSpace
+    return (Open-CmsAPI "api/v1/users/$Identity/usercoSpaces").userCoSpaces.userCoSpace
 
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoUserProfiles {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsUserProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -5292,11 +5292,11 @@ function Get-AcanoUserProfiles {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).userProfiles.userProfile
+    return (Open-CmsAPI $nodeLocation).userProfiles.userProfile
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoUserProfile {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsUserProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -5306,16 +5306,16 @@ function Get-AcanoUserProfile {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoUserProfiles
+            Get-CmsUserProfiles
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/userProfiles/$Identity").userProfile
+            return (Open-CmsAPI "api/v1/userProfiles/$Identity").userProfile
         }
     }
 }
 
-function New-AcanoUserProfile {
+function New-CmsUserProfile {
     Param (
         [parameter(Mandatory=$false)]
         [ValidateSet("true","false")]
@@ -5374,12 +5374,12 @@ function New-AcanoUserProfile {
         $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"
     }
 
-    [string]$NewUserProfileId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewUserProfileId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoUserProfile $NewUserProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsUserProfile $NewUserProfileId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoUserProfile {
+function Set-CmsUserProfile {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -5440,12 +5440,12 @@ function Set-AcanoUserProfile {
         $data += "userToUserMessagingAllowed=$UserToUserMessagingAllowed"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoUserProfile $Identity
+    Get-CmsUserProfile $Identity
 }
 
-function Remove-AcanoUserProfile {
+function Remove-CmsUserProfile {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -5453,36 +5453,36 @@ function Remove-AcanoUserProfile {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove user profile")) {
-        Open-AcanoAPI "/api/v1/userProfiles/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/userProfiles/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoSystemStatus {
-    return (Open-AcanoAPI "api/v1/system/status").status
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSystemStatus {
+    return (Open-CmsAPI "api/v1/system/status").status
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoSystemAlarms {
-    return (Open-AcanoAPI "api/v1/system/alarms").alarms.alarm
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSystemAlarms {
+    return (Open-CmsAPI "api/v1/system/alarms").alarms.alarm
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoSystemAlarm {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSystemAlarm {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/system/alarms/$Identity").alarm
+    return (Open-CmsAPI "api/v1/system/alarms/$Identity").alarm
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoSystemDatabaseStatus {
-    return (Open-AcanoAPI "api/v1/system/database").database
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSystemDatabaseStatus {
+    return (Open-CmsAPI "api/v1/system/database").database
 }
 
-function Get-AcanoCdrRecieverUris {
+function Get-CmsCdrRecieverUris {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
@@ -5508,10 +5508,10 @@ function Get-AcanoCdrRecieverUris {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).cdrRecievers.cdrReciever
+    return (Open-CmsAPI $nodeLocation).cdrRecievers.cdrReciever
 }
 
-function Get-AcanoCdrRecieverUri {
+function Get-CmsCdrRecieverUri {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -5521,16 +5521,16 @@ function Get-AcanoCdrRecieverUri {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoCdrRecieverUris
+            Get-CmsCdrRecieverUris
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/system/cdrRecievers/$Identity").cdrReciever
+            return (Open-CmsAPI "api/v1/system/cdrRecievers/$Identity").cdrReciever
         }
     }
 }
 
-function New-AcanoCdrRecieverUri {
+function New-CmsCdrRecieverUri {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Uri
@@ -5539,12 +5539,12 @@ function New-AcanoCdrRecieverUri {
     $nodeLocation = "/api/v1/system/cdrRecievers"
     $data = "uri=$Uri"
 
-    [string]$NewCdrRecieverUriId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewCdrRecieverUriId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCdrRecieverUri $NewCdrRecieverUriId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsCdrRecieverUri $NewCdrRecieverUriId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoCdrRecieverUri {
+function Set-CmsCdrRecieverUri {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -5559,12 +5559,12 @@ function Set-AcanoCdrRecieverUri {
         $data += "uri=$Uri"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCdrRecieverUri $Identity
+    Get-CmsCdrRecieverUri $Identity
 }
 
-function Remove-AcanoCdrRecieverUri {
+function Remove-CmsCdrRecieverUri {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -5572,15 +5572,15 @@ function Remove-AcanoCdrRecieverUri {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove CDR reciever")) {
-        Open-AcanoAPI "/api/v1/system/cdrRecievers/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/system/cdrRecievers/$Identity" -DELETE
     }
 }
 
-function Get-AcanoLegacyCdrReceiverUri {
-    return (Open-AcanoAPI "api/v1/system/cdrReceiver").cdrReceiver
+function Get-CmsLegacyCdrReceiverUri {
+    return (Open-CmsAPI "api/v1/system/cdrReceiver").cdrReceiver
 }
 
-function Set-AcanoLegacyCdrRecieverUri {
+function Set-CmsLegacyCdrRecieverUri {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
      Param (
         [parameter(Mandatory=$false,Position=1)]
@@ -5593,29 +5593,29 @@ function Set-AcanoLegacyCdrRecieverUri {
     if ($Uri -ne "") {
         $data += "&uri=$Uri"
         
-        [string]$NewCdrRecieverUri = Open-AcanoAPI $nodeLocation -POST -Data $data
+        [string]$NewCdrRecieverUri = Open-CmsAPI $nodeLocation -POST -Data $data
     } 
     
     else {
         if ($PSCmdlet.ShouldProcess("Legacy CDR Reciever","Remove")) {
-            Open-AcanoAPI $nodeLocation -PUT -Data $data
+            Open-CmsAPI $nodeLocation -PUT -Data $data
         }
     }
 
-    Get-AcanoLegacyCdrReceiverUri
+    Get-CmsLegacyCdrReceiverUri
 }
 
-function Remove-AcanoLegacyCdrRecieverUri {
-    ##Triggers a PUT on Set-AcanoLegacyCdrRecieverUri, which effectively removes the CDR reciever.
-    Set-AcanoLegacyCdrRecieverUri
+function Remove-CmsLegacyCdrRecieverUri {
+    ##Triggers a PUT on Set-CmsLegacyCdrRecieverUri, which effectively removes the CDR reciever.
+    Set-CmsLegacyCdrRecieverUri
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoGlobalProfile {
-    return (Open-AcanoAPI "api/v1/system/profiles").profiles
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsGlobalProfile {
+    return (Open-CmsAPI "api/v1/system/profiles").profiles
 }
 
-function Set-AcanoGlobalProfile {
+function Set-CmsGlobalProfile {
     Param (
         [parameter(Mandatory=$false)]
         [string]$CallLegProfile,
@@ -5719,13 +5719,13 @@ function Set-AcanoGlobalProfile {
     }
     $data
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoGlobalProfile
+    Get-CmsGlobalProfile
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoTurnServers {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsTurnServers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -5759,11 +5759,11 @@ function Get-AcanoTurnServers {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).turnServers.turnServer
+    return (Open-CmsAPI $nodeLocation).turnServers.turnServer
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoTurnServer {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsTurnServer {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -5773,25 +5773,25 @@ function Get-AcanoTurnServer {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoTurnServers
+            Get-CmsTurnServers
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/turnServers/$Identity").turnServer
+            return (Open-CmsAPI "api/v1/turnServers/$Identity").turnServer
         }
     }
 }
 
-function Get-AcanoTurnServerStatus {
+function Get-CmsTurnServerStatus {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/turnServers/$Identity/status").turnServer.host
+    return (Open-CmsAPI "api/v1/turnServers/$Identity/status").turnServer.host
 }
 
-function New-AcanoTurnServer {
+function New-CmsTurnServer {
     Param (
         [parameter(Mandatory=$false)]
         [string]$ServerAddress,
@@ -5802,7 +5802,7 @@ function New-AcanoTurnServer {
         [parameter(Mandatory=$false)]
         [string]$Password,
         [parameter(Mandatory=$false)]
-        [ValidateSet("acano","lyncEdge","standard")]
+        [ValidateSet("Cms","lyncEdge","standard")]
         [string]$Type,
         [parameter(Mandatory=$false)]
         [string]$NumRegistrations,
@@ -5866,12 +5866,12 @@ function New-AcanoTurnServer {
         $data += "tcpPortNumberOverride=$TcpPortNumberOverride"
     }
 
-    [string]$NewTurnServerId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewTurnServerId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoTurnServer $NewTurnServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsTurnServer $NewTurnServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoTurnServer {
+function Set-CmsTurnServer {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -5884,7 +5884,7 @@ function Set-AcanoTurnServer {
         [parameter(Mandatory=$false)]
         [string]$Password,
         [parameter(Mandatory=$false)]
-        [ValidateSet("acano","lyncEdge","standard")]
+        [ValidateSet("Cms","lyncEdge","standard")]
         [string]$Type,
         [parameter(Mandatory=$false)]
         [string]$NumRegistrations,
@@ -5948,12 +5948,12 @@ function Set-AcanoTurnServer {
         $data += "tcpPortNumberOverride=$TcpPortNumberOverride"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoTurnServer $Identity
+    Get-CmsTurnServer $Identity
 }
 
-function Remove-AcanoTurnServer {
+function Remove-CmsTurnServer {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -5961,12 +5961,12 @@ function Remove-AcanoTurnServer {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove TURN server")) {
-        Open-AcanoAPI "/api/v1/turnServers/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/turnServers/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoWebBridges {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsWebBridges {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -6013,11 +6013,11 @@ function Get-AcanoWebBridges {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).webBridges.webBridge
+    return (Open-CmsAPI $nodeLocation).webBridges.webBridge
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoWebBridge {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsWebBridge {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -6027,16 +6027,16 @@ function Get-AcanoWebBridge {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoWebBridges
+            Get-CmsWebBridges
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/webBridges/$Identity").webBridge
+            return (Open-CmsAPI "api/v1/webBridges/$Identity").webBridge
         }
     }
 }
 
-function New-AcanoWebBridge {
+function New-CmsWebBridge {
     Param (
         [parameter(Mandatory=$false)]
         [string]$Url,
@@ -6136,12 +6136,12 @@ function New-AcanoWebBridge {
         $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"
     }
 
-    [string]$NewWebBridgeId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewWebBridgeId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoWebBridge $NewWebBridgeId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsWebBridge $NewWebBridgeId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoWebBridge {
+function Set-CmsWebBridge {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -6242,12 +6242,12 @@ function Set-AcanoWebBridge {
         $data += "resolveLyncConferenceIds=$ResolveLyncConferenceIds"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoWebBridge $Identity
+    Get-CmsWebBridge $Identity
 }
 
-function Remove-AcanoWebBridge {
+function Remove-CmsWebBridge {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -6255,21 +6255,21 @@ function Remove-AcanoWebBridge {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove web bridge")) {
-        Open-AcanoAPI "/api/v1/webBridges/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/webBridges/$Identity" -DELETE
     }
 }
 
-function Update-AcanoWebBridgeCustomization {
+function Update-CmsWebBridgeCustomization {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity
     )
 
-    Open-AcanoAPI "/api/v1/webBridges/$Identity/updateCustomization" -POST -ReturnResponse | Out-Null
+    Open-CmsAPI "/api/v1/webBridges/$Identity/updateCustomization" -POST -ReturnResponse | Out-Null
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallBridges {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallBridges {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
@@ -6289,11 +6289,11 @@ function Get-AcanoCallBridges {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).callBridges.callBridge
+    return (Open-CmsAPI $nodeLocation).callBridges.callBridge
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoCallBridge {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsCallBridge {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -6303,16 +6303,16 @@ function Get-AcanoCallBridge {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoCallBridges
+            Get-CmsCallBridges
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/callBridges/$Identity").callBridge
+            return (Open-CmsAPI "api/v1/callBridges/$Identity").callBridge
         }
     }
 }
 
-function New-AcanoCallBridge {
+function New-CmsCallBridge {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Name,
@@ -6333,12 +6333,12 @@ function New-AcanoCallBridge {
         $data += "&sipDomain=$SipDomain"
     }
 
-    [string]$NewCallBridgeId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewCallBridgeId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoCallBridge $NewCallBridgeId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsCallBridge $NewCallBridgeId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoCallBridge {
+function Set-CmsCallBridge {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -6374,12 +6374,12 @@ function Set-AcanoCallBridge {
         $data += "sipAddress=$SipDomain"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallBridge $Identity
+    Get-CmsCallBridge $Identity
 }
 
-function Remove-AcanoCallBridge {
+function Remove-CmsCallBridge {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -6387,16 +6387,16 @@ function Remove-AcanoCallBridge {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove callbridge")) {
-        Open-AcanoAPI "/api/v1/callBridges/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/callBridges/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoXmppServer {
-    return (Open-AcanoAPI "api/v1/system/configuration/xmpp").xmpp
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsXmppServer {
+    return (Open-CmsAPI "api/v1/system/configuration/xmpp").xmpp
 }
 
-function Set-AcanoXmppServer {
+function Set-CmsXmppServer {
      Param (
         [parameter(Mandatory=$false)]
         [string]$UniqueName,
@@ -6440,16 +6440,16 @@ function Set-AcanoXmppServer {
         $data += "serverAddressOverride=$ServerAddressOverride"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoXmppServer
+    Get-CmsXmppServer
 }
 
-function Get-AcanoCallBridgeCluster {
-    return (Open-AcanoAPI "api/v1/system/configuration/cluster").cluster
+function Get-CmsCallBridgeCluster {
+    return (Open-CmsAPI "api/v1/system/configuration/cluster").cluster
 }
 
-function Set-AcanoCallBridgeCluster {
+function Set-CmsCallBridgeCluster {
      Param (
         [parameter(Mandatory=$false)]
         [string]$UniqueName,
@@ -6483,13 +6483,13 @@ function Set-AcanoCallBridgeCluster {
         $data += "participantLimit=$ParticipantLimit"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoCallBridgeCluster
+    Get-CmsCallBridgeCluster
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoSystemDiagnostics {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSystemDiagnostics {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -6536,31 +6536,31 @@ function Get-AcanoSystemDiagnostics {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).diagnostics.diagnostic
+    return (Open-CmsAPI $nodeLocation).diagnostics.diagnostic
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoSystemDiagnostic {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSystemDiagnostic {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/system/diagnostics/$Identity").diagnostic
+    return (Open-CmsAPI "api/v1/system/diagnostics/$Identity").diagnostic
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoSystemDiagnosticContent {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsSystemDiagnosticContent {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity
     )
 
-    return (Open-AcanoAPI "api/v1/system/diagnostics/$Identity/contents").diagnostic
+    return (Open-CmsAPI "api/v1/system/diagnostics/$Identity/contents").diagnostic
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoLdapServers {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsLdapServers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -6594,11 +6594,11 @@ function Get-AcanoLdapServers {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).ldapServers.ldapServer
+    return (Open-CmsAPI $nodeLocation).ldapServers.ldapServer
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoLdapServer {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsLdapServer {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -6608,16 +6608,16 @@ function Get-AcanoLdapServer {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoLdapServers
+            Get-CmsLdapServers
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/ldapServers/$Identity").ldapServer
+            return (Open-CmsAPI "api/v1/ldapServers/$Identity").ldapServer
         }
     }
 }
 
-function New-AcanoLdapServer {
+function New-CmsLdapServer {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Address,
@@ -6644,12 +6644,12 @@ function New-AcanoLdapServer {
         $data += "&password=$Password"
     }
 
-    [string]$NewLdapServerId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewLdapServerId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoLdapServer $NewLdapServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsLdapServer $NewLdapServerId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoLdapServer {
+function Set-CmsLdapServer {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -6706,12 +6706,12 @@ function Set-AcanoLdapServer {
         $data += "secure=$Secure"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoLdapServer $Identity
+    Get-CmsLdapServer $Identity
 }
 
-function Remove-AcanoLdapServer {
+function Remove-CmsLdapServer {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -6719,12 +6719,12 @@ function Remove-AcanoLdapServer {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove LDAP server")) {
-        Open-AcanoAPI "/api/v1/ldapServers/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/ldapServers/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoLdapMappings {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsLdapMappings {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -6758,11 +6758,11 @@ function Get-AcanoLdapMappings {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).ldapMappings.ldapMapping
+    return (Open-CmsAPI $nodeLocation).ldapMappings.ldapMapping
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoLdapMapping {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsLdapMapping {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -6772,16 +6772,16 @@ function Get-AcanoLdapMapping {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoLdapMappings
+            Get-CmsLdapMappings
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/ldapMappings/$Identity").ldapMapping
+            return (Open-CmsAPI "api/v1/ldapMappings/$Identity").ldapMapping
         }
     }
 }
 
-function New-AcanoLdapMapping {
+function New-CmsLdapMapping {
     Param (
         [parameter(Mandatory=$false)]
         [string]$JidMapping,
@@ -6865,12 +6865,12 @@ function New-AcanoLdapMapping {
         $data += "coSpaceCallIdMapping=$CoSpaceCallIdMapping"
     }
 
-    [string]$NewLdapMappingId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewLdapMappingId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoLdapMapping $NewLdapMappingId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsLdapMapping $NewLdapMappingId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoLdapMapping {
+function Set-CmsLdapMapping {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -6956,12 +6956,12 @@ function Set-AcanoLdapMapping {
         $data += "coSpaceCallIdMapping=$CoSpaceCallIdMapping"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoLdapMapping $Identity
+    Get-CmsLdapMapping $Identity
 }
 
-function Remove-AcanoLdapMapping {
+function Remove-CmsLdapMapping {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -6969,12 +6969,12 @@ function Remove-AcanoLdapMapping {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove LDAP mapping")) {
-        Open-AcanoAPI "/api/v1/ldapMappings/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/ldapMappings/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoLdapSources {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsLdapSources {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -7021,11 +7021,11 @@ function Get-AcanoLdapSources {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).ldapSources.ldapSource
+    return (Open-CmsAPI $nodeLocation).ldapSources.ldapSource
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoLdapSource {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsLdapSource {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -7035,16 +7035,16 @@ function Get-AcanoLdapSource {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoLdapSources
+            Get-CmsLdapSources
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/ldapSources/$Identity").ldapSource
+            return (Open-CmsAPI "api/v1/ldapSources/$Identity").ldapSource
         }
     }
 }
 
-function New-AcanoLdapSource {
+function New-CmsLdapSource {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Server,
@@ -7070,12 +7070,12 @@ function New-AcanoLdapSource {
         $data += "&tenant=$Tenant"
     }
 
-    [string]$NewLdapSourceId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewLdapSourceId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoLdapSource $NewLdapSourceId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsLdapSource $NewLdapSourceId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoLdapSource {
+function Set-CmsLdapSource {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -7131,12 +7131,12 @@ function Set-AcanoLdapSource {
         $data += "tenant=$Tenant"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoLdapSource $Identity
+    Get-CmsLdapSource $Identity
 }
 
-function Remove-AcanoLdapSource {
+function Remove-CmsLdapSource {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -7144,12 +7144,12 @@ function Remove-AcanoLdapSource {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove LDAP source")) {
-        Open-AcanoAPI "/api/v1/ldapSources/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/ldapSources/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoLdapSyncs {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsLdapSyncs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
@@ -7169,11 +7169,11 @@ function Get-AcanoLdapSyncs {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).ldapSyncs.ldapSync
+    return (Open-CmsAPI $nodeLocation).ldapSyncs.ldapSync
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoLdapSync {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsLdapSync {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -7183,16 +7183,16 @@ function Get-AcanoLdapSync {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoLdapSyncs
+            Get-CmsLdapSyncs
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/ldapSyncs/$Identity").ldapSync
+            return (Open-CmsAPI "api/v1/ldapSyncs/$Identity").ldapSync
         }
     }
 }
 
-function New-AcanoLdapSync {
+function New-CmsLdapSync {
     Param (
         [parameter(Mandatory=$false)]
         [string]$Tenant,
@@ -7226,12 +7226,12 @@ function New-AcanoLdapSync {
         $data += "removeWhenFinished=$RemoveWhenFinished"
     }
 
-    [string]$NewLdapSyncId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewLdapSyncId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoLdapSync $NewLdapSyncId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsLdapSync $NewLdapSyncId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Remove-AcanoLdapSync {
+function Remove-CmsLdapSync {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -7239,12 +7239,12 @@ function Remove-AcanoLdapSync {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Stop ongoing LDAP Sync")) {
-        Open-AcanoAPI "/api/v1/ldapSyncs/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/ldapSyncs/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoExternalDirectorySearchLocations {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsExternalDirectorySearchLocations {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -7278,11 +7278,11 @@ function Get-AcanoExternalDirectorySearchLocations {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).directorySearchLocations.directorySearchLocation
+    return (Open-CmsAPI $nodeLocation).directorySearchLocations.directorySearchLocation
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoExternalDirectorySearchLocation {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsExternalDirectorySearchLocation {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -7292,16 +7292,16 @@ function Get-AcanoExternalDirectorySearchLocation {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoExternalDirectorySearchLocations
+            Get-CmsExternalDirectorySearchLocations
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/directorySearchLocations/$Identity").directorySearchLocation
+            return (Open-CmsAPI "api/v1/directorySearchLocations/$Identity").directorySearchLocation
         }
     }
 }
 
-function New-AcanoExternalDirectorySearchLocation {
+function New-CmsExternalDirectorySearchLocation {
     Param (
         [parameter(Mandatory=$true)]
         [string]$LdapServer,
@@ -7388,12 +7388,12 @@ function New-AcanoExternalDirectorySearchLocation {
         $data += "&organization=$Organization"
     }
 
-    [string]$NewexdirsearchId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewexdirsearchId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoExternalDirectorySearchLocation $NewexdirsearchId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsExternalDirectorySearchLocation $NewexdirsearchId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoExternalDirectorySearchLocation {
+function Set-CmsExternalDirectorySearchLocation {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -7539,12 +7539,12 @@ function Set-AcanoExternalDirectorySearchLocation {
         $data += "organization=$Organization"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoExternalDirectorySearchLocation $Identity
+    Get-CmsExternalDirectorySearchLocation $Identity
 }
 
-function Remove-AcanoExternalDirectorySearchLocation {
+function Remove-CmsExternalDirectorySearchLocation {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -7552,12 +7552,12 @@ function Remove-AcanoExternalDirectorySearchLocation {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove external directory search location")) {
-        Open-AcanoAPI "/api/v1/directorySearchLocations/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/directorySearchLocations/$Identity" -DELETE
     }
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoTenants {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsTenants {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$false)]
@@ -7591,11 +7591,11 @@ function Get-AcanoTenants {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).tenants.tenant
+    return (Open-CmsAPI $nodeLocation).tenants.tenant
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoTenant {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsTenant {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -7605,16 +7605,16 @@ function Get-AcanoTenant {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoTenants
+            Get-CmsTenants
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/tenants/$Identity").tenant
+            return (Open-CmsAPI "api/v1/tenants/$Identity").tenant
         }
     }
 }
 
-function New-AcanoTenant {
+function New-CmsTenant {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Name,
@@ -7671,12 +7671,12 @@ function New-AcanoTenant {
         $data += "&userProfile=$UserProfile"
     }
 
-    [string]$NewTenantId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewTenantId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoTenant $NewTenantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsTenant $NewTenantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoTenant {
+function Set-CmsTenant {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -7772,12 +7772,12 @@ function Set-AcanoTenant {
         $data += "userProfile=$UserProfile"
     }
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoTenant $Identity
+    Get-CmsTenant $Identity
 }
 
-function Remove-AcanoTenant {
+function Remove-CmsTenant {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -7785,11 +7785,11 @@ function Remove-AcanoTenant {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove tenant")) {
-        Open-AcanoAPI "/api/v1/tenants/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/tenants/$Identity" -DELETE
     }
 }
 
-function Get-AcanoTenantGroups {
+function Get-CmsTenantGroups {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
@@ -7815,10 +7815,10 @@ function Get-AcanoTenantGroups {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).tenantGroups.tenantGroup
+    return (Open-CmsAPI $nodeLocation).tenantGroups.tenantGroup
 }
 
-function Get-AcanoTenantGroup {
+function Get-CmsTenantGroup {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -7828,26 +7828,26 @@ function Get-AcanoTenantGroup {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoTenantGroups
+            Get-CmsTenantGroups
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/tenantGroups/$Identity").tenantGroup
+            return (Open-CmsAPI "api/v1/tenantGroups/$Identity").tenantGroup
         }
     }
 }
 
-function New-AcanoTenantGroup {
+function New-CmsTenantGroup {
 
     $nodeLocation = "/api/v1/tenantGroups"
     $data = ""
 
-    [string]$NewTenantGroupId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewTenantGroupId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoTenantGroup $NewTenantGroupId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsTenantGroup $NewTenantGroupId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Remove-AcanoTenantGroup {
+function Remove-CmsTenantGroup {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -7855,11 +7855,11 @@ function Remove-AcanoTenantGroup {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove tenant group")) {
-        Open-AcanoAPI "/api/v1/tenantGroups/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/tenantGroups/$Identity" -DELETE
     }
 }
 
-function New-AcanoAccessQuery {
+function New-CmsAccessQuery {
     Param (
         [parameter(Mandatory=$false)]
         [string]$Tenant,
@@ -7893,11 +7893,11 @@ function New-AcanoAccessQuery {
         $data += "callId=$CallId"
     }
 
-    return (Open-AcanoAPI $nodeLocation -POST -Data $data -ReturnResponse).accessQuery
+    return (Open-CmsAPI $nodeLocation -POST -Data $data -ReturnResponse).accessQuery
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoRecorders {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsRecorders {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
         [parameter(ParameterSetName="Offset",Mandatory=$true)]
@@ -7923,11 +7923,11 @@ function Get-AcanoRecorders {
         }
     }
 
-    return (Open-AcanoAPI $nodeLocation).recorders.recorder
+    return (Open-CmsAPI $nodeLocation).recorders.recorder
 }
 
-# .ExternalHelp PsAcano.psm1-Help.xml
-function Get-AcanoRecorder {
+# .ExternalHelp PsCms.psm1-Help.xml
+function Get-CmsRecorder {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
         [parameter(ParameterSetName="getSingle",Mandatory=$true,Position=1)]
@@ -7937,16 +7937,16 @@ function Get-AcanoRecorder {
     switch ($PsCmdlet.ParameterSetName) { 
 
         "getAll"  {
-            Get-AcanoRecorders
+            Get-CmsRecorders
         } 
 
         "getSingle"  {
-            return (Open-AcanoAPI "api/v1/recorders/$Identity").recorder
+            return (Open-CmsAPI "api/v1/recorders/$Identity").recorder
         }
     }
 }
 
-function New-AcanoRecorder {
+function New-CmsRecorder {
     Param (
         [parameter(Mandatory=$true)]
         [string]$Url
@@ -7955,12 +7955,12 @@ function New-AcanoRecorder {
     $nodeLocation = "/api/v1/recorders"
     $data = "Url=$Url"
 
-    [string]$NewRecorderId = Open-AcanoAPI $nodeLocation -POST -Data $data
+    [string]$NewRecorderId = Open-CmsAPI $nodeLocation -POST -Data $data
     
-    Get-AcanoRecorder $NewRecorderId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
+    Get-CmsRecorder $NewRecorderId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-function Set-AcanoRecorder {
+function Set-CmsRecorder {
     Param (
         [parameter(Mandatory=$true,Position=1)]
         [string]$Identity,
@@ -7971,12 +7971,12 @@ function Set-AcanoRecorder {
     $nodeLocation = "/api/v1/recorders/$Identity"
     $data = "url=$Url"
 
-    Open-AcanoAPI $nodeLocation -PUT -Data $data
+    Open-CmsAPI $nodeLocation -PUT -Data $data
     
-    Get-AcanoRecorder $Identity
+    Get-CmsRecorder $Identity
 }
 
-function Remove-AcanoRecorder {
+function Remove-CmsRecorder {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -7984,6 +7984,178 @@ function Remove-AcanoRecorder {
     )
 
     if ($PSCmdlet.ShouldProcess("$Identity","Remove recorder")) {
-        Open-AcanoAPI "/api/v1/recorders/$Identity" -DELETE
+        Open-CmsAPI "/api/v1/recorders/$Identity" -DELETE
     }
 }
+
+New-Alias -Name Get-AcanoCall -Value Get-CmsCall
+New-Alias -Name Get-AcanoCallBrandingProfile -Value Get-CmsCallBrandingProfile
+New-Alias -Name Get-AcanoCallBrandingProfiles -Value Get-CmsCallBrandingProfiles
+New-Alias -Name Get-AcanoCallBridge -Value Get-CmsCallBridge
+New-Alias -Name Get-AcanoCallBridgeCluster -Value Get-CmsCallBridgeCluster
+New-Alias -Name Get-AcanoCallBridges -Value Get-CmsCallBridges
+New-Alias -Name Get-AcanoCallForwardingDialPlanRule -Value Get-CmsCallForwardingDialPlanRule
+New-Alias -Name Get-AcanoCallForwardingDialPlanRules -Value Get-CmsCallForwardingDialPlanRules
+New-Alias -Name Get-AcanoCallLeg -Value Get-CmsCallLeg
+New-Alias -Name Get-AcanoCallLegProfile -Value Get-CmsCallLegProfile
+New-Alias -Name Get-AcanoCallLegProfiles -Value Get-CmsCallLegProfiles
+New-Alias -Name Get-AcanoCallLegProfileTrace -Value Get-CmsCallLegProfileTrace
+New-Alias -Name Get-AcanoCallLegProfileUsages -Value Get-CmsCallLegProfileUsages
+New-Alias -Name Get-AcanoCallLegs -Value Get-CmsCallLegs
+New-Alias -Name Get-AcanoCallProfile -Value Get-CmsCallProfile
+New-Alias -Name Get-AcanoCallProfiles -Value Get-CmsCallProfiles
+New-Alias -Name Get-AcanoCalls -Value Get-CmsCalls
+New-Alias -Name Get-AcanoCdrRecieverUri -Value Get-CmsCdrRecieverUri
+New-Alias -Name Get-AcanoCdrRecieverUris -Value Get-CmsCdrRecieverUris
+New-Alias -Name Get-AcanocoSpace -Value Get-CmsSpace
+New-Alias -Name Get-AcanocoSpaceAccessMethod -Value Get-CmsSpaceAccessMethod
+New-Alias -Name Get-AcanocoSpaceAccessMethods -Value Get-CmsSpaceAccessMethods
+New-Alias -Name Get-AcanocoSpaceMember -Value Get-CmsSpaceMember
+New-Alias -Name Get-AcanocoSpaceMembers -Value Get-CmsSpaceMembers
+New-Alias -Name Get-AcanocoSpaces -Value Get-CmsSpaces
+New-Alias -Name Get-AcanoDialTransform -Value Get-CmsDialTransform
+New-Alias -Name Get-AcanoDialTransforms -Value Get-CmsDialTransforms
+New-Alias -Name Get-AcanoDtmfProfile -Value Get-CmsDtmfProfile
+New-Alias -Name Get-AcanoDtmfProfiles -Value Get-CmsDtmfProfiles
+New-Alias -Name Get-AcanoExternalDirectorySearchLocation -Value Get-CmsExternalDirectorySearchLocation
+New-Alias -Name Get-AcanoExternalDirectorySearchLocations -Value Get-CmsExternalDirectorySearchLocations
+New-Alias -Name Get-AcanoGlobalProfile -Value Get-CmsGlobalProfile
+New-Alias -Name Get-AcanoInboundDialPlanRule -Value Get-CmsInboundDialPlanRule
+New-Alias -Name Get-AcanoInboundDialPlanRules -Value Get-CmsInboundDialPlanRules
+New-Alias -Name Get-AcanoIvr -Value Get-CmsIvr
+New-Alias -Name Get-AcanoIvrBrandingProfile -Value Get-CmsIvrBrandingProfile
+New-Alias -Name Get-AcanoIvrBrandingProfiles -Value Get-CmsIvrBrandingProfiles
+New-Alias -Name Get-AcanoIvrs -Value Get-CmsIvrs
+New-Alias -Name Get-AcanoLdapMapping -Value Get-CmsLdapMapping
+New-Alias -Name Get-AcanoLdapMappings -Value Get-CmsLdapMappings
+New-Alias -Name Get-AcanoLdapServer -Value Get-CmsLdapServer
+New-Alias -Name Get-AcanoLdapServers -Value Get-CmsLdapServers
+New-Alias -Name Get-AcanoLdapSource -Value Get-CmsLdapSource
+New-Alias -Name Get-AcanoLdapSources -Value Get-CmsLdapSources
+New-Alias -Name Get-AcanoLdapSync -Value Get-CmsLdapSync
+New-Alias -Name Get-AcanoLdapSyncs -Value Get-CmsLdapSyncs
+New-Alias -Name Get-AcanoLegacyCdrReceiverUri -Value Get-CmsLegacyCdrReceiverUri
+New-Alias -Name Get-AcanoOutboundDialPlanRule -Value Get-CmsOutboundDialPlanRule
+New-Alias -Name Get-AcanoOutboundDialPlanRules -Value Get-CmsOutboundDialPlanRules
+New-Alias -Name Get-AcanoParticipant -Value Get-CmsParticipant
+New-Alias -Name Get-AcanoParticipantCallLegs -Value Get-CmsParticipantCallLegs
+New-Alias -Name Get-AcanoParticipants -Value Get-CmsParticipants
+New-Alias -Name Get-AcanoRecorder -Value Get-CmsRecorder
+New-Alias -Name Get-AcanoRecorders -Value Get-CmsRecorders
+New-Alias -Name Get-AcanoSystemAlarm -Value Get-CmsSystemAlarm
+New-Alias -Name Get-AcanoSystemAlarms -Value Get-CmsSystemAlarms
+New-Alias -Name Get-AcanoSystemDatabaseStatus -Value Get-CmsSystemDatabaseStatus
+New-Alias -Name Get-AcanoSystemDiagnostic -Value Get-CmsSystemDiagnostic
+New-Alias -Name Get-AcanoSystemDiagnosticContent -Value Get-CmsSystemDiagnosticContent
+New-Alias -Name Get-AcanoSystemDiagnostics -Value Get-CmsSystemDiagnostics
+New-Alias -Name Get-AcanoSystemStatus -Value Get-CmsSystemStatus
+New-Alias -Name Get-AcanoTenant -Value Get-CmsTenant
+New-Alias -Name Get-AcanoTenantGroup -Value Get-CmsTenantGroup
+New-Alias -Name Get-AcanoTenantGroups -Value Get-CmsTenantGroups
+New-Alias -Name Get-AcanoTenants -Value Get-CmsTenants
+New-Alias -Name Get-AcanoTurnServer -Value Get-CmsTurnServer
+New-Alias -Name Get-AcanoTurnServers -Value Get-CmsTurnServers
+New-Alias -Name Get-AcanoTurnServerStatus -Value Get-CmsTurnServerStatus
+New-Alias -Name Get-AcanoUser -Value Get-CmsUser
+New-Alias -Name Get-AcanoUsercoSpaces -Value Get-CmsUsercoSpaces
+New-Alias -Name Get-AcanoUserProfile -Value Get-CmsUserProfile
+New-Alias -Name Get-AcanoUserProfiles -Value Get-CmsUserProfiles
+New-Alias -Name Get-AcanoUsers -Value Get-CmsUsers
+New-Alias -Name Get-AcanoWebBridge -Value Get-CmsWebBridge
+New-Alias -Name Get-AcanoWebBridges -Value Get-CmsWebBridges
+New-Alias -Name Get-AcanoXmppServer -Value Get-CmsXmppServer
+New-Alias -Name New-AcanoAccessQuery -Value New-CmsAccessQuery
+New-Alias -Name New-AcanoCall -Value New-CmsCall
+New-Alias -Name New-AcanoCallBrandingProfile -Value New-CmsCallBrandingProfile
+New-Alias -Name New-AcanoCallBridge -Value New-CmsCallBridge
+New-Alias -Name New-AcanoCallForwardingDialPlanRule -Value New-CmsCallForwardingDialPlanRule
+New-Alias -Name New-AcanoCallLeg -Value New-CmsCallLeg
+New-Alias -Name New-AcanoCallLegParticipant -Value New-CmsCallLegParticipant
+New-Alias -Name New-AcanoCallLegProfile -Value New-CmsCallLegProfile
+New-Alias -Name New-AcanoCallProfile -Value New-CmsCallProfile
+New-Alias -Name New-AcanoCdrRecieverUri -Value New-CmsCdrRecieverUri
+New-Alias -Name New-AcanocoSpace -Value New-CmsSpace
+New-Alias -Name New-AcanocoSpaceAccessMethod -Value New-CmsSpaceAccessMethod
+New-Alias -Name New-AcanocoSpaceMember -Value New-CmsSpaceMember
+New-Alias -Name New-AcanocoSpaceMessage -Value New-CmsSpaceMessage
+New-Alias -Name New-AcanoDialTransform -Value New-CmsDialTransform
+New-Alias -Name New-AcanoDtmfProfile -Value New-CmsDtmfProfile
+New-Alias -Name New-AcanoExternalDirectorySearchLocation -Value New-CmsExternalDirectorySearchLocation
+New-Alias -Name New-AcanoInboundDialPlanRule -Value New-CmsInboundDialPlanRule
+New-Alias -Name New-AcanoIvr -Value New-CmsIvr
+New-Alias -Name New-AcanoIvrBrandingProfile -Value New-CmsIvrBrandingProfile
+New-Alias -Name New-AcanoLdapMapping -Value New-CmsLdapMapping
+New-Alias -Name New-AcanoLdapServer -Value New-CmsLdapServer
+New-Alias -Name New-AcanoLdapSource -Value New-CmsLdapSource
+New-Alias -Name New-AcanoLdapSync -Value New-CmsLdapSync
+New-Alias -Name New-AcanoOutboundDialPlanRule -Value New-CmsOutboundDialPlanRule
+New-Alias -Name New-AcanoRecorder -Value New-CmsRecorder
+New-Alias -Name New-AcanoSession -Value New-CmsSession
+New-Alias -Name New-AcanoTenant -Value New-CmsTenant
+New-Alias -Name New-AcanoTenantGroup -Value New-CmsTenantGroup
+New-Alias -Name New-AcanoTurnServer -Value New-CmsTurnServer
+New-Alias -Name New-AcanoUserProfile -Value New-CmsUserProfile
+New-Alias -Name New-AcanoWebBridge -Value New-CmsWebBridge
+New-Alias -Name Open-AcanoAPI -Value Open-CmsAPI
+New-Alias -Name Remove-AcanoCall -Value Remove-CmsCall
+New-Alias -Name Remove-AcanoCallBrandingProfile -Value Remove-CmsCallBrandingProfile
+New-Alias -Name Remove-AcanoCallBridge -Value Remove-CmsCallBridge
+New-Alias -Name Remove-AcanoCallForwardingDialPlanRule -Value Remove-CmsCallForwardingDialPlanRule
+New-Alias -Name Remove-AcanoCallLeg -Value Remove-CmsCallLeg
+New-Alias -Name Remove-AcanoCallLegProfile -Value Remove-CmsCallLegProfile
+New-Alias -Name Remove-AcanoCallProfile -Value Remove-CmsCallProfile
+New-Alias -Name Remove-AcanoCdrRecieverUri -Value Remove-CmsCdrRecieverUri
+New-Alias -Name Remove-AcanocoSpace -Value Remove-CmsSpace
+New-Alias -Name Remove-AcanocoSpaceAccessMethod -Value Remove-CmsSpaceAccessMethod
+New-Alias -Name Remove-AcanocoSpaceMember -Value Remove-CmsSpaceMember
+New-Alias -Name Remove-AcanocoSpaceMessages -Value Remove-CmsSpaceMessages
+New-Alias -Name Remove-AcanoDialTransform -Value Remove-CmsDialTransform
+New-Alias -Name Remove-AcanoDtmfProfile -Value Remove-CmsDtmfProfile
+New-Alias -Name Remove-AcanoExternalDirectorySearchLocation -Value Remove-CmsExternalDirectorySearchLocation
+New-Alias -Name Remove-AcanoInboundDialPlanRule -Value Remove-CmsInboundDialPlanRule
+New-Alias -Name Remove-AcanoIvr -Value Remove-CmsIvr
+New-Alias -Name Remove-AcanoIvrBrandingProfile -Value Remove-CmsIvrBrandingProfile
+New-Alias -Name Remove-AcanoLdapMapping -Value Remove-CmsLdapMapping
+New-Alias -Name Remove-AcanoLdapServer -Value Remove-CmsLdapServer
+New-Alias -Name Remove-AcanoLdapSource -Value Remove-CmsLdapSource
+New-Alias -Name Remove-AcanoLdapSync -Value Remove-CmsLdapSync
+New-Alias -Name Remove-AcanoLegacyCdrRecieverUri -Value Remove-CmsLegacyCdrRecieverUri
+New-Alias -Name Remove-AcanoOutboundDialPlanRule -Value Remove-CmsOutboundDialPlanRule
+New-Alias -Name Remove-AcanoRecorder -Value Remove-CmsRecorder
+New-Alias -Name Remove-AcanoTenant -Value Remove-CmsTenant
+New-Alias -Name Remove-AcanoTenantGroup -Value Remove-CmsTenantGroup
+New-Alias -Name Remove-AcanoTurnServer -Value Remove-CmsTurnServer
+New-Alias -Name Remove-AcanoUserProfile -Value Remove-CmsUserProfile
+New-Alias -Name Remove-AcanoWebBridge -Value Remove-CmsWebBridge
+New-Alias -Name Set-AcanoCall -Value Set-CmsCall
+New-Alias -Name Set-AcanoCallBrandingProfile -Value Set-CmsCallBrandingProfile
+New-Alias -Name Set-AcanoCallBridge -Value Set-CmsCallBridge
+New-Alias -Name Set-AcanoCallBridgeCluster -Value Set-CmsCallBridgeCluster
+New-Alias -Name Set-AcanoCallForwardingDialPlanRule -Value Set-CmsCallForwardingDialPlanRule
+New-Alias -Name Set-AcanoCallLeg -Value Set-CmsCallLeg
+New-Alias -Name Set-AcanoCallLegProfile -Value Set-CmsCallLegProfile
+New-Alias -Name Set-AcanoCallProfile -Value Set-CmsCallProfile
+New-Alias -Name Set-AcanoCdrRecieverUri -Value Set-CmsCdrRecieverUri
+New-Alias -Name Set-AcanocoSpace -Value Set-CmsSpace
+New-Alias -Name Set-AcanocoSpaceAccessMethod -Value Set-CmsSpaceAccessMethod
+New-Alias -Name Set-AcanocoSpaceMember -Value Set-CmsSpaceMember
+New-Alias -Name Set-AcanoDialTransform -Value Set-CmsDialTransform
+New-Alias -Name Set-AcanoDtmfProfile -Value Set-CmsDtmfProfile
+New-Alias -Name Set-AcanoExternalDirectorySearchLocation -Value Set-CmsExternalDirectorySearchLocation
+New-Alias -Name Set-AcanoGlobalProfile -Value Set-CmsGlobalProfile
+New-Alias -Name Set-AcanoInboundDialPlanRule -Value Set-CmsInboundDialPlanRule
+New-Alias -Name Set-AcanoIvr -Value Set-CmsIvr
+New-Alias -Name Set-AcanoIvrBrandingProfile -Value Set-CmsIvrBrandingProfile
+New-Alias -Name Set-AcanoLdapMapping -Value Set-CmsLdapMapping
+New-Alias -Name Set-AcanoLdapServer -Value Set-CmsLdapServer
+New-Alias -Name Set-AcanoLdapSource -Value Set-CmsLdapSource
+New-Alias -Name Set-AcanoLegacyCdrRecieverUri -Value Set-CmsLegacyCdrRecieverUri
+New-Alias -Name Set-AcanoOutboundDialPlanRule -Value Set-CmsOutboundDialPlanRule
+New-Alias -Name Set-AcanoRecorder -Value Set-CmsRecorder
+New-Alias -Name Set-AcanoTenant -Value Set-CmsTenant
+New-Alias -Name Set-AcanoTurnServer -Value Set-CmsTurnServer
+New-Alias -Name Set-AcanoUserProfile -Value Set-CmsUserProfile
+New-Alias -Name Set-AcanoWebBridge -Value Set-CmsWebBridge
+New-Alias -Name Set-AcanoXmppServer -Value Set-CmsXmppServer
+New-Alias -Name Start-AcanocoSpaceCallDiagnosticsGeneration -Value Start-CmsSpaceCallDiagnosticsGeneration
+New-Alias -Name Update-AcanoWebBridgeCustomization -Value Update-CmsWebBridgeCustomization

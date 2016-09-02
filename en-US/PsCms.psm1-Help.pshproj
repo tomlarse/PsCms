@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <ModuleObject xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" fVersion="1.1" type="Script" mclass="External" useSupports="false">
-  <Name>PsAcano</Name>
+  <Name>PsCms</Name>
   <Version>0.1</Version>
-  <Description>PowerShell implementation of the Acano API</Description>
-  <ModulePath>D:\Scripts\PsAcano\PsAcano.psd1</ModulePath>
+  <Description>PowerShell implementation of the Cms API</Description>
+  <ModulePath>D:\Scripts\PsCms\PsCms.psd1</ModulePath>
   <HasManifest>false</HasManifest>
   <OverridePostCount>false</OverridePostCount>
   <FetchPostCount xsi:nil="true" />
   <Cmdlets>
-    <CmdletObject verb="Get" noun="AcanoCall">
-      <Name>Get-AcanoCall</Name>
+    <CmdletObject verb="Get" noun="CmsCall">
+      <Name>Get-CmsCall</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given call
 </Synopsis>
@@ -27,7 +27,7 @@
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="CallID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCall [-CallID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCall [-CallID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -70,7 +70,7 @@
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCall -CallID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsCall -CallID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the given call
 </Description>
@@ -81,8 +81,8 @@
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallBrandingProfile">
-      <Name>Get-AcanoCallBrandingProfile</Name>
+    <CmdletObject verb="Get" noun="CmsCallBrandingProfile">
+      <Name>Get-CmsCallBrandingProfile</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given call branding profile
 </Synopsis>
@@ -100,7 +100,7 @@
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="CallBrandingProfileID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallBrandingProfile [-CallBrandingProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallBrandingProfile [-CallBrandingProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -143,7 +143,7 @@
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallBrandingProfile -CallBrandingProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsCallBrandingProfile -CallBrandingProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the call branding profile
 </Description>
@@ -154,10 +154,10 @@
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallBrandingProfiles">
-      <Name>Get-AcanoCallBrandingProfiles</Name>
+    <CmdletObject verb="Get" noun="CmsCallBrandingProfiles">
+      <Name>Get-CmsCallBrandingProfiles</Name>
       <GeneralHelp>
-        <Synopsis>Returns all active call branding profiles on the Acano server
+        <Synopsis>Returns all active call branding profiles on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on all active call branding profiles
 </Description>
@@ -174,8 +174,8 @@
         <CommandParameterSetInfo2 Name="Offset" Params="UsageFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallBrandingProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoCallBrandingProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallBrandingProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallBrandingProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -246,7 +246,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallBrandingProfiles
+          <Cmd>Get-CmsCallBrandingProfiles
 </Cmd>
           <Description>Will return all active call legs
 </Description>
@@ -254,7 +254,7 @@ Possible values are
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanocoSpaces -UsageFilter "Unreferenced"
+          <Cmd>Get-CmsSpaces -UsageFilter "Unreferenced"
 </Cmd>
           <Description>Will return all call branding profiles who is not referenced by another object
 </Description>
@@ -265,8 +265,8 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallBridge">
-      <Name>Get-AcanoCallBridge</Name>
+    <CmdletObject verb="Get" noun="CmsCallBridge">
+      <Name>Get-CmsCallBridge</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given call bridge
 </Synopsis>
@@ -284,7 +284,7 @@ Possible values are
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="CallBridgeID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallBridge [-CallBridgeID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallBridge [-CallBridgeID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -327,7 +327,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallBridge -CallBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsCallBridge -CallBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the call bridge
 </Description>
@@ -338,10 +338,10 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallBridges">
-      <Name>Get-AcanoCallBridges</Name>
+    <CmdletObject verb="Get" noun="CmsCallBridges">
+      <Name>Get-CmsCallBridges</Name>
       <GeneralHelp>
-        <Synopsis>Returns call bridges currently configured on the Acano server
+        <Synopsis>Returns call bridges currently configured on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on call bridges
 </Description>
@@ -358,8 +358,8 @@ Possible values are
         <CommandParameterSetInfo2 Name="Offset" Params="Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallBridges [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoCallBridges -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallBridges [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallBridges -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -414,7 +414,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallBridges
+          <Cmd>Get-CmsCallBridges
 </Cmd>
           <Description>Will return all call bridges
 </Description>
@@ -425,8 +425,8 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallForwardingDialPlanRules">
-      <Name>Get-AcanoCallForwardingDialPlanRules</Name>
+    <CmdletObject verb="Get" noun="CmsCallForwardingDialPlanRules">
+      <Name>Get-CmsCallForwardingDialPlanRules</Name>
       <GeneralHelp>
         <Synopsis>Returns call forwarding dial plan rules
 </Synopsis>
@@ -445,8 +445,8 @@ Possible values are
         <CommandParameterSetInfo2 Name="Offset" Params="Filter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallForwardingDialPlanRules [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoCallForwardingDialPlanRules [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallForwardingDialPlanRules [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallForwardingDialPlanRules [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -513,7 +513,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallForwardingDialPlanRules
+          <Cmd>Get-CmsCallForwardingDialPlanRules
 </Cmd>
           <Description>Will return all call forwarding dial plan rules
 </Description>
@@ -521,7 +521,7 @@ Possible values are
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoCallForwardingDialPlanRules -Filter contoso.com
+          <Cmd>Get-CmsCallForwardingDialPlanRules -Filter contoso.com
 </Cmd>
           <Description>Will return all call forwarding dial plan rules matching "contoso.com"
 </Description>
@@ -532,8 +532,8 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallLeg">
-      <Name>Get-AcanoCallLeg</Name>
+    <CmdletObject verb="Get" noun="CmsCallLeg">
+      <Name>Get-CmsCallLeg</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given call leg
 </Synopsis>
@@ -551,7 +551,7 @@ Possible values are
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="CallLegID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallLeg [-CallLegID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallLeg [-CallLegID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -594,7 +594,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallLeg -CallLegID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsCallLeg -CallLegID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the call Leg
 </Description>
@@ -605,8 +605,8 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallLegProfile">
-      <Name>Get-AcanoCallLegProfile</Name>
+    <CmdletObject verb="Get" noun="CmsCallLegProfile">
+      <Name>Get-CmsCallLegProfile</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given call leg profile
 </Synopsis>
@@ -624,7 +624,7 @@ Possible values are
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="CallLegProfileID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallLegProfile [-CallLegProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallLegProfile [-CallLegProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -667,7 +667,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallLegProfile -CallLegProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsCallLegProfile -CallLegProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the call leg profile
 </Description>
@@ -678,10 +678,10 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallLegProfiles">
-      <Name>Get-AcanoCallLegProfiles</Name>
+    <CmdletObject verb="Get" noun="CmsCallLegProfiles">
+      <Name>Get-CmsCallLegProfiles</Name>
       <GeneralHelp>
-        <Synopsis>Returns all active call leg profiles on the Acano server
+        <Synopsis>Returns all active call leg profiles on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on all active call leg profiles
 </Description>
@@ -698,8 +698,8 @@ Possible values are
         <CommandParameterSetInfo2 Name="Offset" Params="Filter UsageFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallLegProfiles [-Filter &lt;String&gt;] [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoCallLegProfiles [-Filter &lt;String&gt;] [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallLegProfiles [-Filter &lt;String&gt;] [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallLegProfiles [-Filter &lt;String&gt;] [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -783,7 +783,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallLegProfiles
+          <Cmd>Get-CmsCallLegProfiles
 </Cmd>
           <Description>Will return all active call legs
 </Description>
@@ -791,7 +791,7 @@ Possible values are
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanocoSpaces -Filter "Greg"
+          <Cmd>Get-CmsSpaces -Filter "Greg"
 </Cmd>
           <Description>Will return all active call leg profiles whos name contains "Greg"
 </Description>
@@ -802,8 +802,8 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallLegProfileTrace">
-      <Name>Get-AcanoCallLegProfileTrace</Name>
+    <CmdletObject verb="Get" noun="CmsCallLegProfileTrace">
+      <Name>Get-CmsCallLegProfileTrace</Name>
       <GeneralHelp>
         <Synopsis>Returns information about how a call legs call profile has been arrived at.
 </Synopsis>
@@ -821,7 +821,7 @@ Possible values are
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="CallLegID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallLegProfileTrace [-CallLegID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallLegProfileTrace [-CallLegID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -864,7 +864,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallLegProfileTrace -CallLegID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsCallLegProfileTrace -CallLegID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on where the given call leg profile is used
 </Description>
@@ -875,8 +875,8 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallLegProfileUsages">
-      <Name>Get-AcanoCallLegProfileUsages</Name>
+    <CmdletObject verb="Get" noun="CmsCallLegProfileUsages">
+      <Name>Get-CmsCallLegProfileUsages</Name>
       <GeneralHelp>
         <Synopsis>Returns information about where a given call leg profile is used
 </Synopsis>
@@ -894,7 +894,7 @@ Possible values are
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="CallLegProfileID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallLegProfileUsages [-CallLegProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallLegProfileUsages [-CallLegProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -937,7 +937,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallLegProfileUsages -CallLegProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsCallLegProfileUsages -CallLegProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on where the given call leg profile is used
 </Description>
@@ -948,10 +948,10 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallLegs">
-      <Name>Get-AcanoCallLegs</Name>
+    <CmdletObject verb="Get" noun="CmsCallLegs">
+      <Name>Get-CmsCallLegs</Name>
       <GeneralHelp>
-        <Synopsis>Returns all active call legs on the Acano server
+        <Synopsis>Returns all active call legs on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on all active call legs
 </Description>
@@ -968,8 +968,8 @@ Possible values are
         <CommandParameterSetInfo2 Name="Offset" Params="Filter TenantFilter ParticipantFilter OwnerIDSet Alarms CallID Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallLegs [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-ParticipantFilter &lt;String&gt;] [-OwnerIDSet &lt;String&gt; {true | false | } ] [-Alarms &lt;String&gt;] [-CallID &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoCallLegs [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-ParticipantFilter &lt;String&gt;] [-OwnerIDSet &lt;String&gt; {true | false | } ] [-Alarms &lt;String&gt;] [-CallID &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallLegs [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-ParticipantFilter &lt;String&gt;] [-OwnerIDSet &lt;String&gt; {true | false | } ] [-Alarms &lt;String&gt;] [-CallID &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallLegs [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-ParticipantFilter &lt;String&gt;] [-OwnerIDSet &lt;String&gt; {true | false | } ] [-Alarms &lt;String&gt;] [-CallID &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -1035,7 +1035,7 @@ The supported alarm names are:
     - packetLoss        – packet loss is currently affecting this call leg
     - excessiveJitter   – there is currently a high level of jitter on one or more of 
                           this call leg’s active media streams
-    - highRoundTripTime – the Acano solution measures the round trip time between 
+    - highRoundTripTime – the Cms solution measures the round trip time between 
                           itself and the call leg destination; if a media stream is 
                           detected to have a high round trip time (which might impact 
                           call quality), then this alarm condition is set for the call 
@@ -1106,7 +1106,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallLegs
+          <Cmd>Get-CmsCallLegs
 </Cmd>
           <Description>Will return all active call legs
 </Description>
@@ -1114,7 +1114,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanocoSpaces -Filter "Greg"
+          <Cmd>Get-CmsSpaces -Filter "Greg"
 </Cmd>
           <Description>Will return all active call legs whos URI contains "Greg"
 </Description>
@@ -1125,8 +1125,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallProfile">
-      <Name>Get-AcanoCallProfile</Name>
+    <CmdletObject verb="Get" noun="CmsCallProfile">
+      <Name>Get-CmsCallProfile</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given call profile
 </Synopsis>
@@ -1144,7 +1144,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="CallProfileID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallProfile [-CallProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallProfile [-CallProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -1187,7 +1187,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallProfile -CallProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsCallProfile -CallProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the call profile
 </Description>
@@ -1198,8 +1198,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallProfiles">
-      <Name>Get-AcanoCallProfiles</Name>
+    <CmdletObject verb="Get" noun="CmsCallProfiles">
+      <Name>Get-CmsCallProfiles</Name>
       <GeneralHelp>
         <Synopsis>Returns configured call profiles
 </Synopsis>
@@ -1218,8 +1218,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallProfiles [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoCallProfiles -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallProfiles [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallProfiles -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -1274,7 +1274,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCallProfiles
+          <Cmd>Get-CmsCallProfiles
 </Cmd>
           <Description>Will return all configured call profiles
 </Description>
@@ -1282,7 +1282,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoCalls -Limit 2
+          <Cmd>Get-CmsCalls -Limit 2
 </Cmd>
           <Description>Will return 2 configured call profiles
 </Description>
@@ -1293,8 +1293,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCalls">
-      <Name>Get-AcanoCalls</Name>
+    <CmdletObject verb="Get" noun="CmsCalls">
+      <Name>Get-CmsCalls</Name>
       <GeneralHelp>
         <Synopsis>Returns current active calls
 </Synopsis>
@@ -1313,8 +1313,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="coSpaceFilter TenantFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCalls [-coSpaceFilter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoCalls [-coSpaceFilter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCalls [-coSpaceFilter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCalls [-coSpaceFilter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -1393,7 +1393,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCalls
+          <Cmd>Get-CmsCalls
 </Cmd>
           <Description>Will return all current active calls
 </Description>
@@ -1401,7 +1401,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoCalls -coSpaceFilter ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsCalls -coSpaceFilter ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return all current active calls on the given coSpace
 </Description>
@@ -1412,8 +1412,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCdrReceiverUri">
-      <Name>Get-AcanoCdrReceiverUri</Name>
+    <CmdletObject verb="Get" noun="CmsCdrReceiverUri">
+      <Name>Get-CmsCdrReceiverUri</Name>
       <GeneralHelp>
         <Synopsis>Returns information about the configured CDR receiver
 </Synopsis>
@@ -1431,13 +1431,13 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCdrReceiverUri</string>
+        <string>Get-CmsCdrReceiverUri</string>
       </Syntax>
       <Parameters />
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoCdrReceiverUri
+          <Cmd>Get-CmsCdrReceiverUri
 </Cmd>
           <Description>Will return URI of the configured CDR receiver
 </Description>
@@ -1448,8 +1448,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanocoSpace">
-      <Name>Get-AcanocoSpace</Name>
+    <CmdletObject verb="Get" noun="CmsSpace">
+      <Name>Get-CmsSpace</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given coSpace</Synopsis>
         <Description>Use this Cmdlet to get information on a coSpace</Description>
@@ -1465,7 +1465,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanocoSpace [-coSpaceID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSpace [-coSpaceID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -1507,7 +1507,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanocoSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f</Cmd>
+          <Cmd>Get-CmsSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f</Cmd>
           <Description>Will return information on the coSpace</Description>
           <Output />
         </Example>
@@ -1516,8 +1516,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanocoSpaceAccessMethod">
-      <Name>Get-AcanocoSpaceAccessMethod</Name>
+    <CmdletObject verb="Get" noun="CmsSpaceAccessMethod">
+      <Name>Get-CmsSpaceAccessMethod</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given coSpace access method</Synopsis>
         <Description>Use this Cmdlet to get information on a coSpace access method
@@ -1534,7 +1534,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceAccessMethodID coSpaceID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanocoSpaceAccessMethod [-coSpaceAccessMethodID] &lt;String&gt; -coSpaceID &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSpaceAccessMethod [-coSpaceAccessMethodID] &lt;String&gt; -coSpaceID &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -1588,7 +1588,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanocoSpaces -coSpaceAccessMethodID 61a1229d-3198-43b3-9423-6857d22bdcc9 -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsSpaces -coSpaceAccessMethodID 61a1229d-3198-43b3-9423-6857d22bdcc9 -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the access method
 </Description>
@@ -1599,8 +1599,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanocoSpaceAccessMethods">
-      <Name>Get-AcanocoSpaceAccessMethods</Name>
+    <CmdletObject verb="Get" noun="CmsSpaceAccessMethods">
+      <Name>Get-CmsSpaceAccessMethods</Name>
       <GeneralHelp>
         <Synopsis>Returns all access methods of a given coSpace
 </Synopsis>
@@ -1619,8 +1619,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="coSpaceID Filter CallLegProfileFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanocoSpaceAccessMethods [-coSpaceID] &lt;String&gt; [-Filter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanocoSpaceAccessMethods [-coSpaceID] &lt;String&gt; [-Filter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSpaceAccessMethods [-coSpaceID] &lt;String&gt; [-Filter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSpaceAccessMethods [-coSpaceID] &lt;String&gt; [-Filter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -1710,7 +1710,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-Get-AcanocoSpaceAccessMethods -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd
+          <Cmd>Get-Get-CmsSpaceAccessMethods -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd
 </Cmd>
           <Description>Will return all access methods of the provided coSpaceID
 </Description>
@@ -1718,7 +1718,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-Get-AcanocoSpaceAccessMethods -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd -Filter "Greg"
+          <Cmd>Get-Get-CmsSpaceAccessMethods -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd -Filter "Greg"
 </Cmd>
           <Description>Will return all coSpace access methods who matches "Greg"
 </Description>
@@ -1729,8 +1729,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanocoSpaceMember">
-      <Name>Get-AcanocoSpaceMember</Name>
+    <CmdletObject verb="Get" noun="CmsSpaceMember">
+      <Name>Get-CmsSpaceMember</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given coSpace member user
 </Synopsis>
@@ -1748,7 +1748,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceUserID coSpaceID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanocoSpaceMember [-coSpaceUserID] &lt;String&gt; -coSpaceID &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSpaceMember [-coSpaceUserID] &lt;String&gt; -coSpaceID &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -1802,7 +1802,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanocoSpaces -coSpaceUserID 61a1229d-3198-43b3-9423-6857d22bdcc9 -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsSpaces -coSpaceUserID 61a1229d-3198-43b3-9423-6857d22bdcc9 -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the member user
 </Description>
@@ -1813,8 +1813,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanocoSpaceMembers">
-      <Name>Get-AcanocoSpaceMembers</Name>
+    <CmdletObject verb="Get" noun="CmsSpaceMembers">
+      <Name>Get-CmsSpaceMembers</Name>
       <GeneralHelp>
         <Synopsis>Returns all members of a given coSpace
 </Synopsis>
@@ -1833,8 +1833,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="coSpaceID Filter CallLegProfileFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanocoSpaceMembers [-coSpaceID] &lt;String&gt; [-Filter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanocoSpaceMembers [-coSpaceID] &lt;String&gt; [-Filter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSpaceMembers [-coSpaceID] &lt;String&gt; [-Filter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSpaceMembers [-coSpaceID] &lt;String&gt; [-Filter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -1924,7 +1924,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanocoSpaceMembers -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd
+          <Cmd>Get-CmsSpaceMembers -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd
 </Cmd>
           <Description>Will return all members of the provided coSpaceID
 </Description>
@@ -1932,7 +1932,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanocoSpaceMembers -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd -Filter "Greg"
+          <Cmd>Get-CmsSpaceMembers -coSpaceID 279e740b-df03-4917-9b3f-ff25734d01fd -Filter "Greg"
 </Cmd>
           <Description>Will return all coSpace members whos userJid contains "Greg"
 </Description>
@@ -1943,10 +1943,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanocoSpaces">
-      <Name>Get-AcanocoSpaces</Name>
+    <CmdletObject verb="Get" noun="CmsSpaces">
+      <Name>Get-CmsSpaces</Name>
       <GeneralHelp>
-        <Synopsis>Returns coSpaces currently configured on the Acano server</Synopsis>
+        <Synopsis>Returns coSpaces currently configured on the Cms server</Synopsis>
         <Description>Use this Cmdlet to get information on coSpaces</Description>
         <Notes />
         <InputType />
@@ -1961,8 +1961,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter TenantFilter CallLegProfileFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanocoSpaces [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanocoSpaces [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSpaces [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSpaces [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-CallLegProfileFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -2052,13 +2052,13 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanocoSpaces</Cmd>
+          <Cmd>Get-CmsSpaces</Cmd>
           <Description>Will return all coSpaces</Description>
           <Output />
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanocoSpaces -Filter "Greg"</Cmd>
+          <Cmd>Get-CmsSpaces -Filter "Greg"</Cmd>
           <Description>Will return all coSpaces whos name contains "Greg"</Description>
           <Output />
         </Example>
@@ -2067,8 +2067,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoDialTransform">
-      <Name>Get-AcanoDialTransform</Name>
+    <CmdletObject verb="Get" noun="CmsDialTransform">
+      <Name>Get-CmsDialTransform</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given dial transform rule
 </Synopsis>
@@ -2086,7 +2086,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="DialTransformID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoDialTransform [-DialTransformID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsDialTransform [-DialTransformID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -2129,7 +2129,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoDialTransform -DialTransformID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsDialTransform -DialTransformID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the dial transform rule
 </Description>
@@ -2140,12 +2140,12 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoDialTransforms">
-      <Name>Get-AcanoDialTransforms</Name>
+    <CmdletObject verb="Get" noun="CmsDialTransforms">
+      <Name>Get-CmsDialTransforms</Name>
       <GeneralHelp>
-        <Synopsis>Returns all Dial Transforms on the Acano Server
+        <Synopsis>Returns all Dial Transforms on the Cms Server
 </Synopsis>
-        <Description>Use this Cmdlet to get information on Dial Transforms on the Acano Server
+        <Description>Use this Cmdlet to get information on Dial Transforms on the Cms Server
 </Description>
         <Notes />
         <InputType />
@@ -2160,8 +2160,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoDialTransforms [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoDialTransforms [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsDialTransforms [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsDialTransforms [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -2228,7 +2228,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoDialTransforms
+          <Cmd>Get-CmsDialTransforms
 </Cmd>
           <Description>Will return all dial transforms
 </Description>
@@ -2236,7 +2236,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoDialTransforms -Filter "Greg"
+          <Cmd>Get-CmsDialTransforms -Filter "Greg"
 </Cmd>
           <Description>Will return all dial transforms whos name contains "Greg"
 </Description>
@@ -2247,8 +2247,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoDtmfProfile">
-      <Name>Get-AcanoDtmfProfile</Name>
+    <CmdletObject verb="Get" noun="CmsDtmfProfile">
+      <Name>Get-CmsDtmfProfile</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given DTMF profile
 </Synopsis>
@@ -2266,7 +2266,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="DtmfProfileID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoDtmfProfile [-DtmfProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsDtmfProfile [-DtmfProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -2309,7 +2309,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoDtmfProfile -DtmfProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsDtmfProfile -DtmfProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the DTMF profile
 </Description>
@@ -2320,10 +2320,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoDtmfProfiles">
-      <Name>Get-AcanoDtmfProfiles</Name>
+    <CmdletObject verb="Get" noun="CmsDtmfProfiles">
+      <Name>Get-CmsDtmfProfiles</Name>
       <GeneralHelp>
-        <Synopsis>Returns all configured DTMF profiles on the Acano server
+        <Synopsis>Returns all configured DTMF profiles on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on configured DTMF profiles
 </Description>
@@ -2340,8 +2340,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="UsageFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoDtmfProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoDtmfProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsDtmfProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsDtmfProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -2409,7 +2409,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoDtmfProfiles
+          <Cmd>Get-CmsDtmfProfiles
 </Cmd>
           <Description>Will return all DTMF profiles
 </Description>
@@ -2417,7 +2417,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoDtmfProfiles -UsageFilter "Unreferenced"
+          <Cmd>Get-CmsDtmfProfiles -UsageFilter "Unreferenced"
 </Cmd>
           <Description>Will return all DTMF profiles who is not referenced by another object
 </Description>
@@ -2428,8 +2428,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoExternalDirectorySearchLocation">
-      <Name>Get-AcanoExternalDirectorySearchLocation</Name>
+    <CmdletObject verb="Get" noun="CmsExternalDirectorySearchLocation">
+      <Name>Get-CmsExternalDirectorySearchLocation</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given external directory search location
 </Synopsis>
@@ -2447,7 +2447,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ExternalDirectorySearchLocationID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoExternalDirectorySearchLocation [-ExternalDirectorySearchLocationID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsExternalDirectorySearchLocation [-ExternalDirectorySearchLocationID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -2490,7 +2490,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoExternalDirectorySearchLocation -ExternalDirectorySearchLocationID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsExternalDirectorySearchLocation -ExternalDirectorySearchLocationID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the external directory search location
 </Description>
@@ -2501,10 +2501,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoExternalDirectorySearchLocations">
-      <Name>Get-AcanoExternalDirectorySearchLocations</Name>
+    <CmdletObject verb="Get" noun="CmsExternalDirectorySearchLocations">
+      <Name>Get-CmsExternalDirectorySearchLocations</Name>
       <GeneralHelp>
-        <Synopsis>Returns external directory search locations currently configured on the Acano server
+        <Synopsis>Returns external directory search locations currently configured on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on external directory search locations
 </Description>
@@ -2521,8 +2521,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="TenantFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoExternalDirectorySearchLocations [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoExternalDirectorySearchLocations [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsExternalDirectorySearchLocations [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsExternalDirectorySearchLocations [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -2589,7 +2589,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoExternalDirectorySearchLocations
+          <Cmd>Get-CmsExternalDirectorySearchLocations
 </Cmd>
           <Description>Will return all LDAP mappings
 </Description>
@@ -2597,7 +2597,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoLdapSources -TenantFilter ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsLdapSources -TenantFilter ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the external directory search locations associated with that tenant
 </Description>
@@ -2608,8 +2608,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoGlobalProfile">
-      <Name>Get-AcanoGlobalProfile</Name>
+    <CmdletObject verb="Get" noun="CmsGlobalProfile">
+      <Name>Get-CmsGlobalProfile</Name>
       <GeneralHelp>
         <Synopsis>Returns information about the global profile
 </Synopsis>
@@ -2627,13 +2627,13 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoGlobalProfile</string>
+        <string>Get-CmsGlobalProfile</string>
       </Syntax>
       <Parameters />
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoGlobalProfile
+          <Cmd>Get-CmsGlobalProfile
 </Cmd>
           <Description>Will return the global profile
 </Description>
@@ -2644,8 +2644,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoInboundDialPlanRule">
-      <Name>Get-AcanoInboundDialPlanRule</Name>
+    <CmdletObject verb="Get" noun="CmsInboundDialPlanRule">
+      <Name>Get-CmsInboundDialPlanRule</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given inbound dial plan rule
 </Synopsis>
@@ -2663,7 +2663,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="InboundDialPlanRuleID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoInboundDialPlanRule [-InboundDialPlanRuleID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsInboundDialPlanRule [-InboundDialPlanRuleID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -2706,7 +2706,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanocoSpaces -InboundDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsSpaces -InboundDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the inbound dial plan rule
 </Description>
@@ -2717,8 +2717,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoInboundDialPlanRules">
-      <Name>Get-AcanoInboundDialPlanRules</Name>
+    <CmdletObject verb="Get" noun="CmsInboundDialPlanRules">
+      <Name>Get-CmsInboundDialPlanRules</Name>
       <GeneralHelp>
         <Synopsis>Returns inbound dial plan rules
 </Synopsis>
@@ -2737,8 +2737,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter TenantFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoInboundDialPlanRules [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoInboundDialPlanRules [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsInboundDialPlanRules [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsInboundDialPlanRules [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -2817,7 +2817,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoInboundDialPlanRules
+          <Cmd>Get-CmsInboundDialPlanRules
 </Cmd>
           <Description>Will return all inbound dial plan rules
 </Description>
@@ -2825,7 +2825,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoInboundDialPlanRules -Filter contoso.com
+          <Cmd>Get-CmsInboundDialPlanRules -Filter contoso.com
 </Cmd>
           <Description>Will return all inbound dial plan rules matching "contoso.com"
 </Description>
@@ -2836,8 +2836,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoIvr">
-      <Name>Get-AcanoIvr</Name>
+    <CmdletObject verb="Get" noun="CmsIvr">
+      <Name>Get-CmsIvr</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given IVR
 
@@ -2857,7 +2857,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="IvrID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoIvr [-IvrID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsIvr [-IvrID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -2900,7 +2900,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoIvr -IvrID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsIvr -IvrID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the IVR
 </Description>
@@ -2911,8 +2911,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoIvrBrandingProfile">
-      <Name>Get-AcanoIvrBrandingProfile</Name>
+    <CmdletObject verb="Get" noun="CmsIvrBrandingProfile">
+      <Name>Get-CmsIvrBrandingProfile</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given IVR Branding Profile
 </Synopsis>
@@ -2930,7 +2930,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="IvrBrandingProfileID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoIvrBrandingProfile [-IvrBrandingProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsIvrBrandingProfile [-IvrBrandingProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -2973,7 +2973,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoIvrBrandingProfile -IvrID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsIvrBrandingProfile -IvrID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the IVR Branding Profile
 </Description>
@@ -2984,10 +2984,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoIvrBrandingProfiles">
-      <Name>Get-AcanoIvrBrandingProfiles</Name>
+    <CmdletObject verb="Get" noun="CmsIvrBrandingProfiles">
+      <Name>Get-CmsIvrBrandingProfiles</Name>
       <GeneralHelp>
-        <Synopsis>Returns IVR branding profiles currently configured on the Acano server
+        <Synopsis>Returns IVR branding profiles currently configured on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on IVR branding profiles
 </Description>
@@ -3004,8 +3004,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter TenantFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoIvrBrandingProfiles [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoIvrBrandingProfiles [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsIvrBrandingProfiles [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsIvrBrandingProfiles [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3084,7 +3084,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoIvrBrandingProfiles
+          <Cmd>Get-CmsIvrBrandingProfiles
 </Cmd>
           <Description>Will return all IVRs
 </Description>
@@ -3092,7 +3092,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoIvrBrandingProfiles -Filter "Greg"
+          <Cmd>Get-CmsIvrBrandingProfiles -Filter "Greg"
 </Cmd>
           <Description>Will return all IVR branding profiles whos name contains "Greg"
 </Description>
@@ -3103,10 +3103,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoIvrs">
-      <Name>Get-AcanoIvrs</Name>
+    <CmdletObject verb="Get" noun="CmsIvrs">
+      <Name>Get-CmsIvrs</Name>
       <GeneralHelp>
-        <Synopsis>Returns IVRs currently configured on the Acano server
+        <Synopsis>Returns IVRs currently configured on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on IVRs
 </Description>
@@ -3123,8 +3123,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter TenantFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoIvrs [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoIvrs [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsIvrs [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsIvrs [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3203,7 +3203,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoIvrs
+          <Cmd>Get-CmsIvrs
 </Cmd>
           <Description>Will return all IVRs
 </Description>
@@ -3211,7 +3211,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoIvrs -Filter "Greg"
+          <Cmd>Get-CmsIvrs -Filter "Greg"
 </Cmd>
           <Description>Will return all IVRs whos name contains "Greg"
 </Description>
@@ -3222,8 +3222,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoLdapMapping">
-      <Name>Get-AcanoLdapMapping</Name>
+    <CmdletObject verb="Get" noun="CmsLdapMapping">
+      <Name>Get-CmsLdapMapping</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given LDAP mapping
 </Synopsis>
@@ -3241,7 +3241,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LdapMappingID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoLdapMapping [-LdapMappingID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapMapping [-LdapMappingID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -3284,7 +3284,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoLdapMapping -LdapMappingID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsLdapMapping -LdapMappingID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the LDAP Mapping
 </Description>
@@ -3295,10 +3295,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoLdapMappings">
-      <Name>Get-AcanoLdapMappings</Name>
+    <CmdletObject verb="Get" noun="CmsLdapMappings">
+      <Name>Get-CmsLdapMappings</Name>
       <GeneralHelp>
-        <Synopsis>Returns LDAP mappings currently configured on the Acano server
+        <Synopsis>Returns LDAP mappings currently configured on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on LDAP mappings
 </Description>
@@ -3315,8 +3315,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoLdapMappings [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoLdapMappings [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapMappings [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapMappings [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3383,7 +3383,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-Get-AcanoLdapMappings
+          <Cmd>Get-Get-CmsLdapMappings
 </Cmd>
           <Description>Will return all LDAP mappings
 </Description>
@@ -3391,7 +3391,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoLdapMappings -Filter "Greg"
+          <Cmd>Get-CmsLdapMappings -Filter "Greg"
 </Cmd>
           <Description>Will return all LDAP mappings whos URI contains "Greg"
 </Description>
@@ -3402,8 +3402,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoLdapServer">
-      <Name>Get-AcanoLdapServer</Name>
+    <CmdletObject verb="Get" noun="CmsLdapServer">
+      <Name>Get-CmsLdapServer</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given LDAP server
 </Synopsis>
@@ -3421,7 +3421,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LdapServerID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoLdapServer [-LdapServerID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapServer [-LdapServerID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -3464,7 +3464,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoLdapServer -LdapServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsLdapServer -LdapServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the LDAP Server
 </Description>
@@ -3475,10 +3475,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoLdapServers">
-      <Name>Get-AcanoLdapServers</Name>
+    <CmdletObject verb="Get" noun="CmsLdapServers">
+      <Name>Get-CmsLdapServers</Name>
       <GeneralHelp>
-        <Synopsis>Returns LDAP servers currently configured on the Acano server
+        <Synopsis>Returns LDAP servers currently configured on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on LDAP servers
 </Description>
@@ -3495,8 +3495,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoLdapServers [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoLdapServers [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapServers [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapServers [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3563,7 +3563,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-Get-AcanoLdapServers
+          <Cmd>Get-Get-CmsLdapServers
 </Cmd>
           <Description>Will return all LDAP servers
 </Description>
@@ -3571,7 +3571,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoLdapServers -Filter "Greg"
+          <Cmd>Get-CmsLdapServers -Filter "Greg"
 </Cmd>
           <Description>Will return all LDAP servers whos URI contains "Greg"
 </Description>
@@ -3582,8 +3582,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoLdapSource">
-      <Name>Get-AcanoLdapSource</Name>
+    <CmdletObject verb="Get" noun="CmsLdapSource">
+      <Name>Get-CmsLdapSource</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given LDAP Source
 </Synopsis>
@@ -3601,7 +3601,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LdapSourceID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoLdapSource [-LdapSourceID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapSource [-LdapSourceID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -3644,7 +3644,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoLdapSource -LdapSourceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsLdapSource -LdapSourceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the LDAP Source
 </Description>
@@ -3655,10 +3655,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoLdapSources">
-      <Name>Get-AcanoLdapSources</Name>
+    <CmdletObject verb="Get" noun="CmsLdapSources">
+      <Name>Get-CmsLdapSources</Name>
       <GeneralHelp>
-        <Synopsis>Returns LDAP sources currently configured on the Acano server
+        <Synopsis>Returns LDAP sources currently configured on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on LDAP sources
 </Description>
@@ -3675,8 +3675,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter TenantFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoLdapSources [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoLdapSources [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapSources [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapSources [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3755,7 +3755,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-Get-AcanoLdapSources
+          <Cmd>Get-Get-CmsLdapSources
 </Cmd>
           <Description>Will return all LDAP mappings
 </Description>
@@ -3763,7 +3763,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoLdapSources -Filter "Greg"
+          <Cmd>Get-CmsLdapSources -Filter "Greg"
 </Cmd>
           <Description>Will return all LDAP sources whos URI contains "Greg"
 </Description>
@@ -3774,8 +3774,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoLdapSync">
-      <Name>Get-AcanoLdapSync</Name>
+    <CmdletObject verb="Get" noun="CmsLdapSync">
+      <Name>Get-CmsLdapSync</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given LDAP sync currently pending and in-progress
 </Synopsis>
@@ -3793,7 +3793,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="LdapSyncID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoLdapSync [-LdapSyncID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapSync [-LdapSyncID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -3836,7 +3836,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoLdapSync -LdapSyncID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsLdapSync -LdapSyncID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the LDAP sync currently pending and in-progress
 </Description>
@@ -3847,10 +3847,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoLdapSyncs">
-      <Name>Get-AcanoLdapSyncs</Name>
+    <CmdletObject verb="Get" noun="CmsLdapSyncs">
+      <Name>Get-CmsLdapSyncs</Name>
       <GeneralHelp>
-        <Synopsis>Returns LDAP syncs currently pending and in-progress on the Acano server
+        <Synopsis>Returns LDAP syncs currently pending and in-progress on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on LDAP syncs currently pending and in-progress
 </Description>
@@ -3867,8 +3867,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoLdapSyncs [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoLdapSyncs -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapSyncs [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsLdapSyncs -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -3923,7 +3923,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoLdapSyncs
+          <Cmd>Get-CmsLdapSyncs
 </Cmd>
           <Description>Will return all LDAP syncs currently pending and in-progress
 </Description>
@@ -3934,8 +3934,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoOutboundDialPlanRule">
-      <Name>Get-AcanoOutboundDialPlanRule</Name>
+    <CmdletObject verb="Get" noun="CmsOutboundDialPlanRule">
+      <Name>Get-CmsOutboundDialPlanRule</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given outbound dial plan rule
 </Synopsis>
@@ -3953,7 +3953,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="OutboundDialPlanRuleID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoOutboundDialPlanRule [-OutboundDialPlanRuleID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsOutboundDialPlanRule [-OutboundDialPlanRuleID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -4006,7 +4006,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanocoOutboundDialPlanRule -OutboundDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsOutboundDialPlanRule -OutboundDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the outbound dial plan rule
 </Description>
@@ -4017,8 +4017,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoOutboundDialPlanRules">
-      <Name>Get-AcanoOutboundDialPlanRules</Name>
+    <CmdletObject verb="Get" noun="CmsOutboundDialPlanRules">
+      <Name>Get-CmsOutboundDialPlanRules</Name>
       <GeneralHelp>
         <Synopsis>Returns outbound dial plan rules
 </Synopsis>
@@ -4037,8 +4037,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoOutboundDialPlanRules [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoOutboundDialPlanRules [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsOutboundDialPlanRules [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsOutboundDialPlanRules [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4105,7 +4105,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoOutboundDialPlanRules
+          <Cmd>Get-CmsOutboundDialPlanRules
 </Cmd>
           <Description>Will return all outbound dial plan rules
 </Description>
@@ -4113,7 +4113,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoOutboundDialPlanRules -Filter contoso.com
+          <Cmd>Get-CmsOutboundDialPlanRules -Filter contoso.com
 </Cmd>
           <Description>Will return all outbound dial plan rules matching "contoso.com"
 </Description>
@@ -4124,8 +4124,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoParticipant">
-      <Name>Get-AcanoParticipant</Name>
+    <CmdletObject verb="Get" noun="CmsParticipant">
+      <Name>Get-CmsParticipant</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given participant
 </Synopsis>
@@ -4143,7 +4143,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ParticipantID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoParticipant [-ParticipantID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsParticipant [-ParticipantID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -4186,7 +4186,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoParticipant -ParticipantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsParticipant -ParticipantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the participant
 </Description>
@@ -4197,8 +4197,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoParticipantCallLegs">
-      <Name>Get-AcanoParticipantCallLegs</Name>
+    <CmdletObject verb="Get" noun="CmsParticipantCallLegs">
+      <Name>Get-CmsParticipantCallLegs</Name>
       <GeneralHelp>
         <Synopsis>Returns the participants active call legs
 </Synopsis>
@@ -4216,7 +4216,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ParticipantID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoParticipantCallLegs [-ParticipantID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsParticipantCallLegs [-ParticipantID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -4259,7 +4259,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoParticipantCallLegs -ParticipantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsParticipantCallLegs -ParticipantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the participants active call legs
 </Description>
@@ -4270,10 +4270,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoParticipants">
-      <Name>Get-AcanoParticipants</Name>
+    <CmdletObject verb="Get" noun="CmsParticipants">
+      <Name>Get-CmsParticipants</Name>
       <GeneralHelp>
-        <Synopsis>Returns all active participants on the Acano server
+        <Synopsis>Returns all active participants on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on all active participants
 </Description>
@@ -4290,8 +4290,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter TenantFilter callBridgeFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoParticipants [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-callBridgeFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoParticipants [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-callBridgeFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsParticipants [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-callBridgeFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsParticipants [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-callBridgeFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4382,7 +4382,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoParticipants
+          <Cmd>Get-CmsParticipants
 </Cmd>
           <Description>Will return all active participants
 </Description>
@@ -4390,7 +4390,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoParticipants -Filter "Greg"
+          <Cmd>Get-CmsParticipants -Filter "Greg"
 </Cmd>
           <Description>Will return all active participants whos URI contains "Greg"
 </Description>
@@ -4401,8 +4401,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoSystemAlarm">
-      <Name>Get-AcanoSystemAlarm</Name>
+    <CmdletObject verb="Get" noun="CmsSystemAlarm">
+      <Name>Get-CmsSystemAlarm</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given system alarm
 </Synopsis>
@@ -4420,7 +4420,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="AlarmID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoSystemAlarm [-AlarmID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSystemAlarm [-AlarmID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -4463,7 +4463,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoSystemAlarm -AlarmID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsSystemAlarm -AlarmID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the alarm
 </Description>
@@ -4474,8 +4474,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoSystemAlarms">
-      <Name>Get-AcanoSystemAlarms</Name>
+    <CmdletObject verb="Get" noun="CmsSystemAlarms">
+      <Name>Get-CmsSystemAlarms</Name>
       <GeneralHelp>
         <Synopsis>Returns information about the system alarms
 </Synopsis>
@@ -4493,13 +4493,13 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoSystemAlarms</string>
+        <string>Get-CmsSystemAlarms</string>
       </Syntax>
       <Parameters />
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoSystemAlarms
+          <Cmd>Get-CmsSystemAlarms
 </Cmd>
           <Description>Will return information on the system alarms
 </Description>
@@ -4510,8 +4510,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoSystemDatabaseStatus">
-      <Name>Get-AcanoSystemDatabaseStatus</Name>
+    <CmdletObject verb="Get" noun="CmsSystemDatabaseStatus">
+      <Name>Get-CmsSystemDatabaseStatus</Name>
       <GeneralHelp>
         <Synopsis>Returns information about the system database status
 </Synopsis>
@@ -4529,13 +4529,13 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoSystemDatabaseStatus</string>
+        <string>Get-CmsSystemDatabaseStatus</string>
       </Syntax>
       <Parameters />
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoSystemDatabaseStatus
+          <Cmd>Get-CmsSystemDatabaseStatus
 </Cmd>
           <Description>Will return information on the system database status
 </Description>
@@ -4546,8 +4546,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoSystemDiagnostic">
-      <Name>Get-AcanoSystemDiagnostic</Name>
+    <CmdletObject verb="Get" noun="CmsSystemDiagnostic">
+      <Name>Get-CmsSystemDiagnostic</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given system diagnostic
 </Synopsis>
@@ -4565,7 +4565,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="SystemDiagnosticID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoSystemDiagnostic [-SystemDiagnosticID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSystemDiagnostic [-SystemDiagnosticID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -4608,7 +4608,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoSystemDiagnostic -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsSystemDiagnostic -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the system diagnostic
 </Description>
@@ -4619,8 +4619,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoSystemDiagnosticContent">
-      <Name>Get-AcanoSystemDiagnosticContent</Name>
+    <CmdletObject verb="Get" noun="CmsSystemDiagnosticContent">
+      <Name>Get-CmsSystemDiagnosticContent</Name>
       <GeneralHelp>
         <Synopsis>Returns the content of a given system diagnostic
 </Synopsis>
@@ -4638,7 +4638,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="SystemDiagnosticID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoSystemDiagnosticContent [-SystemDiagnosticID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSystemDiagnosticContent [-SystemDiagnosticID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -4681,7 +4681,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoSystemDiagnosticContent -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsSystemDiagnosticContent -SystemDiagnosticID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return the content of the system diagnostic
 </Description>
@@ -4692,12 +4692,12 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoSystemDiagnostics">
-      <Name>Get-AcanoSystemDiagnostics</Name>
+    <CmdletObject verb="Get" noun="CmsSystemDiagnostics">
+      <Name>Get-CmsSystemDiagnostics</Name>
       <GeneralHelp>
-        <Synopsis>Returns system diagnostics from the Acano server
+        <Synopsis>Returns system diagnostics from the Cms server
 </Synopsis>
-        <Description>Use this Cmdlet to get system diagnostics from the Acano server
+        <Description>Use this Cmdlet to get system diagnostics from the Cms server
 </Description>
         <Notes />
         <InputType />
@@ -4712,8 +4712,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="CoSpaceFilter CallCorrelatorFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoSystemDiagnostics [-CoSpaceFilter &lt;String&gt;] [-CallCorrelatorFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoSystemDiagnostics [-CoSpaceFilter &lt;String&gt;] [-CallCorrelatorFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSystemDiagnostics [-CoSpaceFilter &lt;String&gt;] [-CallCorrelatorFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsSystemDiagnostics [-CoSpaceFilter &lt;String&gt;] [-CallCorrelatorFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -4792,7 +4792,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoSystemDiagnostics
+          <Cmd>Get-CmsSystemDiagnostics
 </Cmd>
           <Description>Will return all system diagnostics
 </Description>
@@ -4803,8 +4803,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoSystemStatus">
-      <Name>Get-AcanoSystemStatus</Name>
+    <CmdletObject verb="Get" noun="CmsSystemStatus">
+      <Name>Get-CmsSystemStatus</Name>
       <GeneralHelp>
         <Synopsis>Returns information about the system status
 </Synopsis>
@@ -4822,13 +4822,13 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoSystemStatus</string>
+        <string>Get-CmsSystemStatus</string>
       </Syntax>
       <Parameters />
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoSystemStatus
+          <Cmd>Get-CmsSystemStatus
 </Cmd>
           <Description>Will return information on the system status
 </Description>
@@ -4839,8 +4839,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoTenant">
-      <Name>Get-AcanoTenant</Name>
+    <CmdletObject verb="Get" noun="CmsTenant">
+      <Name>Get-CmsTenant</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given Tenant
 </Synopsis>
@@ -4858,7 +4858,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="TenantID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoTenant [-TenantID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsTenant [-TenantID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -4901,7 +4901,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoTenant -TenantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsTenant -TenantID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the Tenant
 </Description>
@@ -4912,10 +4912,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoTenants">
-      <Name>Get-AcanoTenants</Name>
+    <CmdletObject verb="Get" noun="CmsTenants">
+      <Name>Get-CmsTenants</Name>
       <GeneralHelp>
-        <Synopsis>Returns Tenants currently configured on the Acano server
+        <Synopsis>Returns Tenants currently configured on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on Tenants
 </Description>
@@ -4932,8 +4932,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoTenants [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoTenants [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsTenants [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsTenants [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5000,7 +5000,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-Get-AcanoTenants
+          <Cmd>Get-Get-CmsTenants
 </Cmd>
           <Description>Will return all Tenants
 </Description>
@@ -5008,7 +5008,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoTenants -Filter "Greg"
+          <Cmd>Get-CmsTenants -Filter "Greg"
 </Cmd>
           <Description>Will return all Tenants whos URI contains "Greg"
 </Description>
@@ -5019,8 +5019,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoTurnServer">
-      <Name>Get-AcanoTurnServer</Name>
+    <CmdletObject verb="Get" noun="CmsTurnServer">
+      <Name>Get-CmsTurnServer</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given TURN server
 </Synopsis>
@@ -5038,7 +5038,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="TurnServerID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoTurnServer [-TurnServerID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsTurnServer [-TurnServerID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -5081,7 +5081,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoTurnServer -TurnServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsTurnServer -TurnServerID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the TURN Server
 </Description>
@@ -5092,10 +5092,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoTurnServers">
-      <Name>Get-AcanoTurnServers</Name>
+    <CmdletObject verb="Get" noun="CmsTurnServers">
+      <Name>Get-CmsTurnServers</Name>
       <GeneralHelp>
-        <Synopsis>Returns TURN servers currently configured on the Acano server
+        <Synopsis>Returns TURN servers currently configured on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on TURN servers
 </Description>
@@ -5112,8 +5112,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="Filter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoTurnServers [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoTurnServers [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsTurnServers [-Filter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsTurnServers [-Filter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5180,7 +5180,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-Get-AcanoTurnServers
+          <Cmd>Get-Get-CmsTurnServers
 </Cmd>
           <Description>Will return all TURN servers
 </Description>
@@ -5188,7 +5188,7 @@ The supported alarm names are:
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoTurnServers -Filter "Greg"
+          <Cmd>Get-CmsTurnServers -Filter "Greg"
 </Cmd>
           <Description>Will return all TURN servers whos URI contains "Greg"
 </Description>
@@ -5199,8 +5199,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoUser">
-      <Name>Get-AcanoUser</Name>
+    <CmdletObject verb="Get" noun="CmsUser">
+      <Name>Get-CmsUser</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given user
 </Synopsis>
@@ -5218,7 +5218,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="UserID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoUser [-UserID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsUser [-UserID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -5261,7 +5261,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoUser -UserID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsUser -UserID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the user
 </Description>
@@ -5272,8 +5272,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoUsercoSpaces">
-      <Name>Get-AcanoUsercoSpaces</Name>
+    <CmdletObject verb="Get" noun="CmsUsercoSpaces">
+      <Name>Get-CmsUsercoSpaces</Name>
       <GeneralHelp>
         <Synopsis>Returns a users coSpaces
 </Synopsis>
@@ -5291,7 +5291,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="UserID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoUsercoSpaces [-UserID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsUsercoSpaces [-UserID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -5334,7 +5334,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoUsercoSpaces -UserID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsUsercoSpaces -UserID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the users coSpaces
 </Description>
@@ -5345,8 +5345,8 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoUserProfile">
-      <Name>Get-AcanoUserProfile</Name>
+    <CmdletObject verb="Get" noun="CmsUserProfile">
+      <Name>Get-CmsUserProfile</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given user profile
 </Synopsis>
@@ -5364,7 +5364,7 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="UserProfileID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoUserProfile [-UserProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsUserProfile [-UserProfileID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -5407,7 +5407,7 @@ The supported alarm names are:
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoUserProfile -UserProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsUserProfile -UserProfileID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the user profile
 </Description>
@@ -5418,10 +5418,10 @@ The supported alarm names are:
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoUserProfiles">
-      <Name>Get-AcanoUserProfiles</Name>
+    <CmdletObject verb="Get" noun="CmsUserProfiles">
+      <Name>Get-CmsUserProfiles</Name>
       <GeneralHelp>
-        <Synopsis>Returns all configured user profiles on the Acano server
+        <Synopsis>Returns all configured user profiles on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on configured user profiles
 </Description>
@@ -5438,8 +5438,8 @@ The supported alarm names are:
         <CommandParameterSetInfo2 Name="Offset" Params="UsageFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoUserProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoUserProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsUserProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsUserProfiles [-UsageFilter &lt;String&gt; {unreferenced | referenced | } ] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5510,7 +5510,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoUserProfiles
+          <Cmd>Get-CmsUserProfiles
 </Cmd>
           <Description>Will return all user profiles
 </Description>
@@ -5518,7 +5518,7 @@ Possible values are
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoUserProfiles -UsageFilter "Unreferenced"
+          <Cmd>Get-CmsUserProfiles -UsageFilter "Unreferenced"
 </Cmd>
           <Description>Will return all user profiles who is not referenced by another object
 </Description>
@@ -5529,10 +5529,10 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoUsers">
-      <Name>Get-AcanoUsers</Name>
+    <CmdletObject verb="Get" noun="CmsUsers">
+      <Name>Get-CmsUsers</Name>
       <GeneralHelp>
-        <Synopsis>Returns users currently configured on the Acano server
+        <Synopsis>Returns users currently configured on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to get information on users
 </Description>
@@ -5549,8 +5549,8 @@ Possible values are
         <CommandParameterSetInfo2 Name="Offset" Params="Filter TenantFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoUsers [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoUsers [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsUsers [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsUsers [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5629,7 +5629,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoUsers
+          <Cmd>Get-CmsUsers
 </Cmd>
           <Description>Will return all users
 </Description>
@@ -5637,7 +5637,7 @@ Possible values are
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoUsers -Filter "Greg"
+          <Cmd>Get-CmsUsers -Filter "Greg"
 </Cmd>
           <Description>Will return all users whos URI contains "Greg"
 </Description>
@@ -5648,8 +5648,8 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoWebBridge">
-      <Name>Get-AcanoWebBridge</Name>
+    <CmdletObject verb="Get" noun="CmsWebBridge">
+      <Name>Get-CmsWebBridge</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given web bridge
 </Synopsis>
@@ -5667,7 +5667,7 @@ Possible values are
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="WebBridgeID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoWebBridge [-WebBridgeID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsWebBridge [-WebBridgeID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -5710,7 +5710,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoWebBridge -WebBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsWebBridge -WebBridgeID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the web bridge
 </Description>
@@ -5721,10 +5721,10 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoWebBridges">
-      <Name>Get-AcanoWebBridges</Name>
+    <CmdletObject verb="Get" noun="CmsWebBridges">
+      <Name>Get-CmsWebBridges</Name>
       <GeneralHelp>
-        <Synopsis>Returns Web bridges currently configured on the Acano server</Synopsis>
+        <Synopsis>Returns Web bridges currently configured on the Cms server</Synopsis>
         <Description>Use this Cmdlet to get information on Web bridges</Description>
         <Notes />
         <InputType />
@@ -5739,8 +5739,8 @@ Possible values are
         <CommandParameterSetInfo2 Name="Offset" Params="Filter TenantFilter Limit Offset Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoWebBridges [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Get-AcanoWebBridges [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsWebBridges [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] [-Limit &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsWebBridges [-Filter &lt;String&gt;] [-TenantFilter &lt;String&gt;] -Limit &lt;String&gt; [-Offset &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="false" pos="named" globbing="false">
@@ -5819,7 +5819,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoWebBridges
+          <Cmd>Get-CmsWebBridges
 </Cmd>
           <Description>Will return all Web bridges
 </Description>
@@ -5827,7 +5827,7 @@ Possible values are
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Get-AcanoWebBridges -Filter "Greg"
+          <Cmd>Get-CmsWebBridges -Filter "Greg"
 </Cmd>
           <Description>Will return all Web bridges whos name contains "Greg"
 </Description>
@@ -5838,8 +5838,8 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoXmppServer">
-      <Name>Get-AcanoXmppServer</Name>
+    <CmdletObject verb="Get" noun="CmsXmppServer">
+      <Name>Get-CmsXmppServer</Name>
       <GeneralHelp>
         <Synopsis>Returns information about the XMPP server
 </Synopsis>
@@ -5857,13 +5857,13 @@ Possible values are
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoXmppServer</string>
+        <string>Get-CmsXmppServer</string>
       </Syntax>
       <Parameters />
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanoXmppServer
+          <Cmd>Get-CmsXmppServer
 </Cmd>
           <Description>Will return information on the XMPP server
 </Description>
@@ -5874,10 +5874,10 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="New" noun="AcanocoSpace">
-      <Name>New-AcanocoSpace</Name>
+    <CmdletObject verb="New" noun="CmsSpace">
+      <Name>New-CmsSpace</Name>
       <GeneralHelp>
-        <Synopsis>Creates a new coSpace on the Acano server</Synopsis>
+        <Synopsis>Creates a new coSpace on the Cms server</Synopsis>
         <Description>Use this Cmdlet to create a new coSpace</Description>
         <Notes />
         <InputType />
@@ -5891,7 +5891,7 @@ Possible values are
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="Name Uri SecondaryUri CallId CdrTag Passcode DefaultLayout TenantID CallLegProfile CallProfile CallBrandingProfile RequireCallID Secret Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>New-AcanocoSpace [-Name] &lt;String&gt; [-Uri] &lt;String&gt; [[-SecondaryUri] &lt;String&gt;] [[-CallId] &lt;String&gt;] [[-CdrTag] &lt;String&gt;] [[-Passcode] &lt;String&gt;] [[-DefaultLayout] &lt;String&gt;] [[-TenantID] &lt;String&gt;] [[-CallLegProfile] &lt;String&gt;] [[-CallProfile] &lt;String&gt;] [[-CallBrandingProfile] &lt;String&gt;] [[-RequireCallID] &lt;Boolean&gt;] [[-Secret] &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>New-CmsSpace [-Name] &lt;String&gt; [-Uri] &lt;String&gt; [[-SecondaryUri] &lt;String&gt;] [[-CallId] &lt;String&gt;] [[-CdrTag] &lt;String&gt;] [[-Passcode] &lt;String&gt;] [[-DefaultLayout] &lt;String&gt;] [[-TenantID] &lt;String&gt;] [[-CallLegProfile] &lt;String&gt;] [[-CallProfile] &lt;String&gt;] [[-CallBrandingProfile] &lt;String&gt;] [[-RequireCallID] &lt;Boolean&gt;] [[-Secret] &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="0" globbing="false">
@@ -5943,7 +5943,7 @@ Possible values are
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description>Up to 100 characters of free form text to identify this coSpace in a CDR; when a "callStart" CDR is generated for a call associated with this coSpace, this tag will be written (as "cdrTag") to the callStart CDR. See the Acano solution CDR Reference for details.</Description>
+          <Description>Up to 100 characters of free form text to identify this coSpace in a CDR; when a "callStart" CDR is generated for a call associated with this coSpace, this tag will be written (as "cdrTag") to the callStart CDR. See the Cms solution CDR Reference for details.</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="5" globbing="false">
@@ -6073,7 +6073,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>New-AcanocoSpace -Name "Gregs coSpace" -Uri "greg.cs"</Cmd>
+          <Cmd>New-CmsSpace -Name "Gregs coSpace" -Uri "greg.cs"</Cmd>
           <Description>Will create a new coSpace named "Gregs coSpace" with uri "greg.cs"</Description>
           <Output />
         </Example>
@@ -6082,8 +6082,8 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="New" noun="AcanocoSpaceMember">
-      <Name>New-AcanocoSpaceMember</Name>
+    <CmdletObject verb="New" noun="CmsSpaceMember">
+      <Name>New-CmsSpaceMember</Name>
       <GeneralHelp>
         <Synopsis>Adds a member to a coSpace</Synopsis>
         <Description>Use this cmdlet to add a user to a coSpace</Description>
@@ -6099,7 +6099,7 @@ Possible values are
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceId UserJid CallLegProfile CanDestroy CanAddRemoveMember CanChangeName CanChangeUri CanChangeCallId CanChangePasscode CanPostMessage CanRemoveSelf CanDeleteAllMessages Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>New-AcanocoSpaceMember [-coSpaceId] &lt;String&gt; [-UserJid] &lt;String&gt; [[-CallLegProfile] &lt;String&gt;] [[-CanDestroy] &lt;Boolean&gt;] [[-CanAddRemoveMember] &lt;Boolean&gt;] [[-CanChangeName] &lt;Boolean&gt;] [[-CanChangeUri] &lt;Boolean&gt;] [[-CanChangeCallId] &lt;Boolean&gt;] [[-CanChangePasscode] &lt;Boolean&gt;] [[-CanPostMessage] &lt;Boolean&gt;] [[-CanRemoveSelf] &lt;Boolean&gt;] [[-CanDeleteAllMessages] &lt;Boolean&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>New-CmsSpaceMember [-coSpaceId] &lt;String&gt; [-UserJid] &lt;String&gt; [[-CallLegProfile] &lt;String&gt;] [[-CanDestroy] &lt;Boolean&gt;] [[-CanAddRemoveMember] &lt;Boolean&gt;] [[-CanChangeName] &lt;Boolean&gt;] [[-CanChangeUri] &lt;Boolean&gt;] [[-CanChangeCallId] &lt;Boolean&gt;] [[-CanChangePasscode] &lt;Boolean&gt;] [[-CanPostMessage] &lt;Boolean&gt;] [[-CanRemoveSelf] &lt;Boolean&gt;] [[-CanDeleteAllMessages] &lt;Boolean&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="0" globbing="false">
@@ -6262,7 +6262,7 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>New-AcanocoSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -UserJid greg@contoso.com
+          <Cmd>New-CmsSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -UserJid greg@contoso.com
 </Cmd>
           <Description>Will add greg@contoso.com as a member of this coSpace
 </Description>
@@ -6273,10 +6273,10 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="New" noun="AcanoSession">
-      <Name>New-AcanoSession</Name>
+    <CmdletObject verb="New" noun="CmsSession">
+      <Name>New-CmsSession</Name>
       <GeneralHelp>
-        <Synopsis>Initializes the connection to the Acano Server</Synopsis>
+        <Synopsis>Initializes the connection to the Cms Server</Synopsis>
         <Description>This Cmdlet should be run when connecting to the server</Description>
         <Notes />
         <InputType />
@@ -6290,7 +6290,7 @@ Possible values are
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="APIAddress Port Credential IgnoreSSLTrust Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>New-AcanoSession [-APIAddress] &lt;String&gt; [[-Port] &lt;String&gt;] [-Credential] &lt;PSCredential&gt; [-IgnoreSSLTrust] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>New-CmsSession [-APIAddress] &lt;String&gt; [[-Port] &lt;String&gt;] [-Credential] &lt;PSCredential&gt; [-IgnoreSSLTrust] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="0" globbing="false">
@@ -6300,7 +6300,7 @@ Possible values are
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description>The FQDN or IP address of the Acano Server</Description>
+          <Description>The FQDN or IP address of the Cms Server</Description>
           <DefaultValue />
         </ParameterDescription>
         <ParameterDescription type="String" varLen="false" required="false" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -6333,7 +6333,7 @@ Possible values are
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description>If present, connect to the Acano server API even if the certificate running on Webadmin is untrusted.
+          <Description>If present, connect to the Cms server API even if the certificate running on Webadmin is untrusted.
 </Description>
           <DefaultValue />
         </ParameterDescription>
@@ -6366,8 +6366,8 @@ Possible values are
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>New-AcanoSession -APIAddress acano.contoso.com -Port 445 -Credential (Get-Credential &lt;apiusername&gt;)</Cmd>
-          <Description>Will connect to acano.contoso.com on port 445 with the supplied credentials.</Description>
+          <Cmd>New-CmsSession -APIAddress Cms.contoso.com -Port 445 -Credential (Get-Credential &lt;apiusername&gt;)</Cmd>
+          <Description>Will connect to Cms.contoso.com on port 445 with the supplied credentials.</Description>
           <Output />
         </Example>
       </Examples>
@@ -6375,10 +6375,10 @@ Possible values are
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Open" noun="AcanoAPI">
-      <Name>Open-AcanoAPI</Name>
+    <CmdletObject verb="Open" noun="CmsAPI">
+      <Name>Open-CmsAPI</Name>
       <GeneralHelp>
-        <Synopsis>Opens a given node location in the Acano API directly</Synopsis>
+        <Synopsis>Opens a given node location in the Cms API directly</Synopsis>
         <Description>Used by the other Cmdlets in the module. If none of the switches are given it is assumed
 to be a GET request.</Description>
         <Notes />
@@ -6396,10 +6396,10 @@ to be a GET request.</Description>
         <CommandParameterSetInfo2 Name="GET" Params="NodeLocation Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Open-AcanoAPI [-NodeLocation] &lt;String&gt; -DELETE &lt;SwitchParameter&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Open-AcanoAPI [-NodeLocation] &lt;String&gt; -PUT &lt;SwitchParameter&gt; -Data &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Open-AcanoAPI [-NodeLocation] &lt;String&gt; -POST &lt;SwitchParameter&gt; -Data &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
-        <string>Open-AcanoAPI [-NodeLocation] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Open-CmsAPI [-NodeLocation] &lt;String&gt; -DELETE &lt;SwitchParameter&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Open-CmsAPI [-NodeLocation] &lt;String&gt; -PUT &lt;SwitchParameter&gt; -Data &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Open-CmsAPI [-NodeLocation] &lt;String&gt; -POST &lt;SwitchParameter&gt; -Data &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Open-CmsAPI [-NodeLocation] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -6487,8 +6487,8 @@ to be a GET request.</Description>
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Remove" noun="AcanocoSpace">
-      <Name>Remove-AcanocoSpace</Name>
+    <CmdletObject verb="Remove" noun="CmsSpace">
+      <Name>Remove-CmsSpace</Name>
       <GeneralHelp>
         <Synopsis>Deletes a coSpace
 </Synopsis>
@@ -6506,7 +6506,7 @@ to be a GET request.</Description>
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Remove-AcanocoSpace [-coSpaceID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Remove-CmsSpace [-coSpaceID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -6549,7 +6549,7 @@ to be a GET request.</Description>
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Remove-AcanocoSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Remove-CmsSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will delete the coSpace
 </Description>
@@ -6560,8 +6560,8 @@ to be a GET request.</Description>
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Remove" noun="AcanocoSpaceMember">
-      <Name>Remove-AcanocoSpaceMember</Name>
+    <CmdletObject verb="Remove" noun="CmsSpaceMember">
+      <Name>Remove-CmsSpaceMember</Name>
       <GeneralHelp>
         <Synopsis>Removes a coSpace Member
 </Synopsis>
@@ -6579,7 +6579,7 @@ to be a GET request.</Description>
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceId UserId Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Remove-AcanocoSpaceMember [-coSpaceId] &lt;String&gt; [-UserId] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Remove-CmsSpaceMember [-coSpaceId] &lt;String&gt; [-UserId] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="0" globbing="false">
@@ -6633,7 +6633,7 @@ to be a GET request.</Description>
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Remove-AcanocoSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f -UserId
+          <Cmd>Remove-CmsSpace -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f -UserId
 </Cmd>
           <Description>Will delete the coSpace member
 </Description>
@@ -6644,10 +6644,10 @@ to be a GET request.</Description>
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Set" noun="AcanocoSpace">
-      <Name>Set-AcanocoSpace</Name>
+    <CmdletObject verb="Set" noun="CmsSpace">
+      <Name>Set-CmsSpace</Name>
       <GeneralHelp>
-        <Synopsis>Makes changes to a coSpace on the Acano server
+        <Synopsis>Makes changes to a coSpace on the Cms server
 </Synopsis>
         <Description>Use this Cmdlet to make changes to a coSpace
 </Description>
@@ -6663,7 +6663,7 @@ to be a GET request.</Description>
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceId Name Uri SecondaryUri CallId CdrTag Passcode DefaultLayout TenantId CallLegProfile CallProfile CallBrandingProfile RequireCallId Secret RegenerateSecret Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Set-AcanocoSpace [-coSpaceId] &lt;String&gt; [-Name &lt;String&gt;] [-Uri &lt;String&gt;] [-SecondaryUri &lt;String&gt;] [-CallId &lt;String&gt;] [-CdrTag &lt;String&gt;] [-Passcode &lt;String&gt;] [-DefaultLayout &lt;String&gt;] [-TenantId &lt;String&gt;] [-CallLegProfile &lt;String&gt;] [-CallProfile &lt;String&gt;] [-CallBrandingProfile &lt;String&gt;] [-RequireCallId &lt;Boolean&gt;] [-Secret &lt;String&gt;] [-RegenerateSecret] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Set-CmsSpace [-coSpaceId] &lt;String&gt; [-Name &lt;String&gt;] [-Uri &lt;String&gt;] [-SecondaryUri &lt;String&gt;] [-CallId &lt;String&gt;] [-CdrTag &lt;String&gt;] [-Passcode &lt;String&gt;] [-DefaultLayout &lt;String&gt;] [-TenantId &lt;String&gt;] [-CallLegProfile &lt;String&gt;] [-CallProfile &lt;String&gt;] [-CallBrandingProfile &lt;String&gt;] [-RequireCallId &lt;Boolean&gt;] [-Secret &lt;String&gt;] [-RegenerateSecret] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -6728,7 +6728,7 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description>Up to 100 characters of free form text to identify this coSpace in a CDR; when a "callStart" CDR is generated for a call associated with this coSpace, this tag will be written (as "cdrTag") to the callStart CDR. See the Acano solution CDR Reference for details.
+          <Description>Up to 100 characters of free form text to identify this coSpace in a CDR; when a "callStart" CDR is generated for a call associated with this coSpace, this tag will be written (as "cdrTag") to the callStart CDR. See the Cms solution CDR Reference for details.
 </Description>
           <DefaultValue />
         </ParameterDescription>
@@ -6871,7 +6871,7 @@ to be a GET request.</Description>
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Set-AcanocoSpace -coSpaceId "ce03f08f-547f-4df1-b531-ae3a64a9c18f" -Name "Gregs coSpace" -Uri "greg.cs"
+          <Cmd>Set-CmsSpace -coSpaceId "ce03f08f-547f-4df1-b531-ae3a64a9c18f" -Name "Gregs coSpace" -Uri "greg.cs"
 </Cmd>
           <Description>Will change the name and the URI of the coSpace
 </Description>
@@ -6879,7 +6879,7 @@ to be a GET request.</Description>
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>Set-AcanocoSpace -coSpaceId "ce03f08f-547f-4df1-b531-ae3a64a9c18f" -RegenerateSecret
+          <Cmd>Set-CmsSpace -coSpaceId "ce03f08f-547f-4df1-b531-ae3a64a9c18f" -RegenerateSecret
 </Cmd>
           <Description>Will generate a new secret for the coSpace
 </Description>
@@ -6890,8 +6890,8 @@ to be a GET request.</Description>
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Set" noun="AcanocoSpaceMember">
-      <Name>Set-AcanocoSpaceMember</Name>
+    <CmdletObject verb="Set" noun="CmsSpaceMember">
+      <Name>Set-CmsSpaceMember</Name>
       <GeneralHelp>
         <Synopsis>Makes changes to a coSpace Member
 </Synopsis>
@@ -6909,7 +6909,7 @@ to be a GET request.</Description>
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceId UserId CallLegProfile CanDestroy CanAddRemoveMember CanChangeName CanChangeUri CanChangeCallId CanChangePasscode CanPostMessage CanRemoveSelf CanDeleteAllMessages Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Set-AcanocoSpaceMember [-coSpaceId] &lt;String&gt; [-UserId] &lt;String&gt; [[-CallLegProfile] &lt;String&gt;] [[-CanDestroy] &lt;Boolean&gt;] [[-CanAddRemoveMember] &lt;Boolean&gt;] [[-CanChangeName] &lt;Boolean&gt;] [[-CanChangeUri] &lt;Boolean&gt;] [[-CanChangeCallId] &lt;Boolean&gt;] [[-CanChangePasscode] &lt;Boolean&gt;] [[-CanPostMessage] &lt;Boolean&gt;] [[-CanRemoveSelf] &lt;Boolean&gt;] [[-CanDeleteAllMessages] &lt;Boolean&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Set-CmsSpaceMember [-coSpaceId] &lt;String&gt; [-UserId] &lt;String&gt; [[-CallLegProfile] &lt;String&gt;] [[-CanDestroy] &lt;Boolean&gt;] [[-CanAddRemoveMember] &lt;Boolean&gt;] [[-CanChangeName] &lt;Boolean&gt;] [[-CanChangeUri] &lt;Boolean&gt;] [[-CanChangeCallId] &lt;Boolean&gt;] [[-CanChangePasscode] &lt;Boolean&gt;] [[-CanPostMessage] &lt;Boolean&gt;] [[-CanRemoveSelf] &lt;Boolean&gt;] [[-CanDeleteAllMessages] &lt;Boolean&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="0" globbing="false">
@@ -7082,7 +7082,7 @@ to be a GET request.</Description>
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>New-AcanocoSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -UserJid greg@contoso.com
+          <Cmd>New-CmsSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -UserJid greg@contoso.com
 </Cmd>
           <Description>Will add greg@contoso.com as a member of this coSpace
 </Description>
@@ -7093,8 +7093,8 @@ to be a GET request.</Description>
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Get" noun="AcanoCallForwardingDialPlanRule">
-      <Name>Get-AcanoCallForwardingDialPlanRule</Name>
+    <CmdletObject verb="Get" noun="CmsCallForwardingDialPlanRule">
+      <Name>Get-CmsCallForwardingDialPlanRule</Name>
       <GeneralHelp>
         <Synopsis>Returns information about a given call forwarding dial plan rule
 </Synopsis>
@@ -7112,7 +7112,7 @@ to be a GET request.</Description>
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="ForwardingDialPlanRuleID Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Get-AcanoCallForwardingDialPlanRule [-ForwardingDialPlanRuleID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Get-CmsCallForwardingDialPlanRule [-ForwardingDialPlanRuleID] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="1" globbing="false">
@@ -7155,7 +7155,7 @@ to be a GET request.</Description>
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Get-AcanocoSpaces -ForwardingDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
+          <Cmd>Get-CmsSpaces -ForwardingDialPlanRuleID ce03f08f-547f-4df1-b531-ae3a64a9c18f
 </Cmd>
           <Description>Will return information on the call forwarding dial plan rule
 </Description>
@@ -7166,8 +7166,8 @@ to be a GET request.</Description>
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="New" noun="AcanocoSpaceAccessMethod">
-      <Name>New-AcanocoSpaceAccessMethod</Name>
+    <CmdletObject verb="New" noun="CmsSpaceAccessMethod">
+      <Name>New-CmsSpaceAccessMethod</Name>
       <GeneralHelp>
         <Synopsis>Creates a new coSpace access method</Synopsis>
         <Description />
@@ -7183,7 +7183,7 @@ to be a GET request.</Description>
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceId Uri CallId Passcode CallLegProfile Secret Scope Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>New-AcanocoSpaceAccessMethod [-coSpaceId] &lt;String&gt; [[-Uri] &lt;String&gt;] [[-CallId] &lt;String&gt;] [[-Passcode] &lt;String&gt;] [[-CallLegProfile] &lt;String&gt;] [[-Secret] &lt;String&gt;] [[-Scope] &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>New-CmsSpaceAccessMethod [-coSpaceId] &lt;String&gt; [[-Uri] &lt;String&gt;] [[-CallId] &lt;String&gt;] [[-Passcode] &lt;String&gt;] [[-CallLegProfile] &lt;String&gt;] [[-Secret] &lt;String&gt;] [[-Scope] &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="0" globbing="false">
@@ -7253,7 +7253,7 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description>The visibility of this coSpace access method to users of Acano clients who are members of the coSpace
+          <Description>The visibility of this coSpace access method to users of Cms clients who are members of the coSpace
 
     -- If provided as public - details of this coSpace access method can be made available to members of the coSpace
     -- If provided as private - details of this coSpace access method will not be made available to members of the coSpace </Description>
@@ -7294,7 +7294,7 @@ to be a GET request.</Description>
         </Example>
         <Example>
           <Name>Example 2</Name>
-          <Cmd>New-AcanocoSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -Uri newAccessMethod@contoso.com</Cmd>
+          <Cmd>New-CmsSpaceMember -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -Uri newAccessMethod@contoso.com</Cmd>
           <Description>Will create a new access method</Description>
           <Output />
         </Example>
@@ -7303,8 +7303,8 @@ to be a GET request.</Description>
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="New" noun="AcanocoSpaceMessage">
-      <Name>New-AcanocoSpaceMessage</Name>
+    <CmdletObject verb="New" noun="CmsSpaceMessage">
+      <Name>New-CmsSpaceMessage</Name>
       <GeneralHelp>
         <Synopsis>Posts a message to a coSpace</Synopsis>
         <Description />
@@ -7320,7 +7320,7 @@ to be a GET request.</Description>
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceId Message From Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>New-AcanocoSpaceMessage [-coSpaceId] &lt;String&gt; [-Message] &lt;String&gt; [[-From] &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>New-CmsSpaceMessage [-coSpaceId] &lt;String&gt; [-Message] &lt;String&gt; [[-From] &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="0" globbing="false">
@@ -7382,7 +7382,7 @@ to be a GET request.</Description>
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>New-AcanocoSpaceMessage -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -Message "This is the message that gets posted" -From greg@contoso.com</Cmd>
+          <Cmd>New-CmsSpaceMessage -coSpaceId 61a1229d-3198-43b3-9423-6857d22bdcc9 -Message "This is the message that gets posted" -From greg@contoso.com</Cmd>
           <Description>Posts a message to a coSpace</Description>
           <Output />
         </Example>
@@ -7391,8 +7391,8 @@ to be a GET request.</Description>
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Remove" noun="AcanocoSpaceAccessMethod">
-      <Name>Remove-AcanocoSpaceAccessMethod</Name>
+    <CmdletObject verb="Remove" noun="CmsSpaceAccessMethod">
+      <Name>Remove-CmsSpaceAccessMethod</Name>
       <GeneralHelp>
         <Synopsis>Removes a coSpace Access Method</Synopsis>
         <Description />
@@ -7408,7 +7408,7 @@ to be a GET request.</Description>
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceId AccessMethodId Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Remove-AcanocoSpaceAccessMethod [-coSpaceId] &lt;String&gt; [-AccessMethodId] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Remove-CmsSpaceAccessMethod [-coSpaceId] &lt;String&gt; [-AccessMethodId] &lt;String&gt; [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="0" globbing="false">
@@ -7460,7 +7460,7 @@ to be a GET request.</Description>
       <Examples>
         <Example>
           <Name>Example 1</Name>
-          <Cmd>Remove-AcanocoSpaceAccessMethod -AccessMethodId e03f08f-547f-4df1-b531-ae3a64a9c18f -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f</Cmd>
+          <Cmd>Remove-CmsSpaceAccessMethod -AccessMethodId e03f08f-547f-4df1-b531-ae3a64a9c18f -coSpaceID ce03f08f-547f-4df1-b531-ae3a64a9c18f</Cmd>
           <Description />
           <Output />
         </Example>
@@ -7469,8 +7469,8 @@ to be a GET request.</Description>
       <SupportInformation ad="false" rsat="false" ps2="false" ps3="false" ps4="false" ps5="false" wxp="false" wv="false" w7="false" w8="false" w81="false" w2k3s="false" w2k3e="false" w2k3d="false" w2k8s="false" w2k8e="false" w2k8d="false" w2k8r2s="false" w2k8r2e="false" w2k8r2d="false" w2k12s="false" w2k12d="false" w2k12r2s="false" w2k12r2d="false" />
       <Publish>false</Publish>
     </CmdletObject>
-    <CmdletObject verb="Set" noun="AcanocoSpaceAccessMethod">
-      <Name>Set-AcanocoSpaceAccessMethod</Name>
+    <CmdletObject verb="Set" noun="CmsSpaceAccessMethod">
+      <Name>Set-CmsSpaceAccessMethod</Name>
       <GeneralHelp>
         <Synopsis>Makes changes to a coSpace Access Method</Synopsis>
         <Description />
@@ -7486,7 +7486,7 @@ to be a GET request.</Description>
         <CommandParameterSetInfo2 Name="__AllParameterSets" Params="coSpaceId Uri CallId Passcode CallLegProfile Secret RegenerateSecret Scope Verbose Debug ErrorAction WarningAction InformationAction ErrorVariable WarningVariable InformationVariable OutVariable OutBuffer PipelineVariable" />
       </ParamSets>
       <Syntax>
-        <string>Set-AcanocoSpaceAccessMethod [-coSpaceId] &lt;String&gt; [[-Uri] &lt;String&gt;] [[-CallId] &lt;String&gt;] [[-Passcode] &lt;String&gt;] [[-CallLegProfile] &lt;String&gt;] [[-Secret] &lt;String&gt;] [-RegenerateSecret] [[-Scope] &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
+        <string>Set-CmsSpaceAccessMethod [-coSpaceId] &lt;String&gt; [[-Uri] &lt;String&gt;] [[-CallId] &lt;String&gt;] [[-Passcode] &lt;String&gt;] [[-CallLegProfile] &lt;String&gt;] [[-Secret] &lt;String&gt;] [-RegenerateSecret] [[-Scope] &lt;String&gt;] [-InformationAction &lt;ActionPreference&gt;] [-InformationVariable &lt;String&gt;]</string>
       </Syntax>
       <Parameters>
         <ParameterDescription type="String" varLen="false" required="true" dynamic="false" pipeRemaining="false" pipe="false" pipeProp="false" isPos="true" pos="0" globbing="false">
@@ -7566,7 +7566,7 @@ to be a GET request.</Description>
             <string>System.Management.Automation.ArgumentTypeConverterAttribute</string>
           </Attributes>
           <Aliases />
-          <Description>The visibility of this coSpace access method to users of Acano clients who are members of the coSpace
+          <Description>The visibility of this coSpace access method to users of Cms clients who are members of the coSpace
 
     -- If provided as public - details of this coSpace access method can be made available to members of the coSpace
     -- If provided as private - details of this coSpace access method will not be made available to members of the coSpace </Description>
