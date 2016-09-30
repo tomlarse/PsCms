@@ -1,4 +1,3 @@
-# .ExternalHelp PsCms.psm1-Help.xml
 function Open-CmsAPI {
     Param (
         [parameter(ParameterSetName="GET",Mandatory=$true,Position=1)]
@@ -64,7 +63,6 @@ function Open-CmsAPI {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function New-CmsSession {
     Param (
         [parameter(Mandatory=$true)]
@@ -102,7 +100,6 @@ function New-CmsSession {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSpaces {
 [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -169,7 +166,6 @@ function Get-CmsSpaces {
     return (Open-CmsAPI $nodeLocation).coSpaces.coSpace
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSpace {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -191,7 +187,6 @@ function Get-CmsSpace {
     } 
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function New-CmsSpace {
     Param (
         [parameter(Mandatory=$true)]
@@ -293,7 +288,6 @@ function New-CmsSpace {
     Get-CmsSpace $NewcoSpaceID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Set-CmsSpace {
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -479,7 +473,6 @@ function Set-CmsSpace {
     Get-CmsSpace $Identity
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Remove-CmsSpace { 
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
@@ -492,7 +485,6 @@ function Remove-CmsSpace {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSpaceMembers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -547,7 +539,6 @@ function Get-CmsSpaceMembers {
     return (Open-CmsAPI $nodeLocation).coSpaceUsers.coSpaceUser | fl
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSpaceMember {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -570,7 +561,6 @@ function Get-CmsSpaceMember {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function New-CmsSpaceMember {
     Param (
         [parameter(Mandatory=$true)]
@@ -656,7 +646,6 @@ function New-CmsSpaceMember {
     Get-CmsSpaceMember $Identity -coSpaceMemberID $NewcoSpaceMemberID.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Set-CmsSpaceMember {
     Param (
         [parameter(Mandatory=$true)]
@@ -779,7 +768,6 @@ function Set-CmsSpaceMember {
     Get-CmsSpaceMember $Identity -coSpaceMemberID $coSpaceMemberId
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Remove-CmsSpaceMember {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
@@ -794,7 +782,6 @@ function Remove-CmsSpaceMember {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function New-CmsSpaceMessage {
     Param (
         [parameter(Mandatory=$true)]
@@ -850,7 +837,6 @@ function Remove-CmsSpaceMessages {
     } 
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSpaceAccessMethods {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -905,7 +891,6 @@ function Get-CmsSpaceAccessMethods {
     return (Open-CmsAPI $nodeLocation).accessMethods.accessMethod | fl
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSpaceAccessMethod {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -928,7 +913,6 @@ function Get-CmsSpaceAccessMethod {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function New-CmsSpaceAccessMethod {
     Param (
         [parameter(Mandatory=$true)]
@@ -1010,7 +994,6 @@ function New-CmsSpaceAccessMethod {
     Get-CmsSpaceAccessMethod $Identity -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Set-CmsSpaceAccessMethod {
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -1107,7 +1090,6 @@ function Set-CmsSpaceAccessMethod {
 
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Remove-CmsSpaceAccessMethod {
 [CmdletBinding(SupportsShouldProcess, ConfirmImpact='High')]
     Param (
@@ -1122,7 +1104,6 @@ function Remove-CmsSpaceAccessMethod {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSpaceBulkParameterSets {
 
     $nodeLocation = "api/v1/coSpaceBulkParameterSets"
@@ -1130,7 +1111,6 @@ function Get-CmsSpaceBulkParameterSets {
     return (Open-CmsAPI $nodeLocation).coSpaceBulkParameterSets.coSpaceBulkParameterSet
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSpaceBulkParameterSet {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -1326,7 +1306,6 @@ function Start-CmsSpaceCallDiagnosticsGeneration {
 
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsOutboundDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -1364,7 +1343,6 @@ function Get-CmsOutboundDialPlanRules {
     return (Open-CmsAPI $nodeLocation).outboundDialPlanRules.outboundDialPlanRule
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsOutboundDialPlanRule {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -1645,7 +1623,6 @@ function Remove-CmsOutboundDialPlanRule {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsInboundDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -1696,7 +1673,6 @@ function Get-CmsInboundDialPlanRules {
     return (Open-CmsAPI $nodeLocation).inboundDialPlanRules.inboundDialPlanRule
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsInboundDialPlanRule {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -1872,7 +1848,6 @@ function Remove-CmsInboundDialPlanRule {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallForwardingDialPlanRules {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -1910,7 +1885,6 @@ function Get-CmsCallForwardingDialPlanRules {
     return (Open-CmsAPI $nodeLocation).forwardingDialPlanRules.forwardingDialPlanRule
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallForwardingDialPlanRule {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -2080,7 +2054,6 @@ function Remove-CmsCallForwardingDialPlanRule {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCalls {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -2131,7 +2104,6 @@ function Get-CmsCalls {
     return (Open-CmsAPI $nodeLocation).calls.call
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCall {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -2291,7 +2263,6 @@ function Remove-CmsCall {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -2321,7 +2292,6 @@ function Get-CmsCallProfiles {
     return (Open-CmsAPI $nodeLocation).callProfiles.callProfile
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -2459,7 +2429,6 @@ function Remove-CmsCallProfile {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallLegs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -2615,7 +2584,7 @@ function Get-CmsCallLegs {
     return (Open-CmsAPI $nodeLocation).callLegs.callLeg
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
+
 function Get-CmsCallLeg {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -3445,7 +3414,6 @@ function New-CmsCallLegParticipant {
     Get-CmsParticipant $NewCallLegParticipantId.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallLegProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -3499,7 +3467,6 @@ function Get-CmsCallLegProfiles {
     return (Open-CmsAPI $nodeLocation).callLegProfiles.callLegProfile
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallLegProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -4227,7 +4194,6 @@ function Remove-CmsCallLegProfile {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallLegProfileUsages {
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -4238,7 +4204,6 @@ function Get-CmsCallLegProfileUsages {
 
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallLegProfileTrace {
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -4249,7 +4214,6 @@ function Get-CmsCallLegProfileTrace {
 
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsDialTransforms {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -4287,7 +4251,6 @@ function Get-CmsDialTransforms {
     return (Open-CmsAPI $nodeLocation).dialTransforms.dialTransform
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsDialTransform {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -4425,7 +4388,6 @@ function Remove-CmsDialTransform {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallBrandingProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -4466,7 +4428,6 @@ function Get-CmsCallBrandingProfiles {
     return (Open-CmsAPI $nodeLocation).callBrandingProfiles.callBrandingProfile
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallBrandingProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -4558,7 +4519,6 @@ function Remove-CmsCallBrandingProfile {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsDtmfProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -4599,7 +4559,6 @@ function Get-CmsDtmfProfiles {
     return (Open-CmsAPI $nodeLocation).dtmfProfiles.dtmfProfile
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsDtmfProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -5055,7 +5014,6 @@ function Remove-CmsDtmfProfile {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsIvrs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -5106,7 +5064,6 @@ function Get-CmsIvrs {
     return (Open-CmsAPI $nodeLocation).ivrs.ivr
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsIvr {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -5257,7 +5214,6 @@ function Remove-CmsIvr {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsIvrBrandingProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -5308,7 +5264,6 @@ function Get-CmsIvrBrandingProfiles {
     return (Open-CmsAPI $nodeLocation).ivrBrandingProfiles.ivrBrandingProfile
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsIvrBrandingProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -5378,7 +5333,6 @@ function Remove-CmsIvrBrandingProfile {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsParticipants {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -5443,7 +5397,6 @@ function Get-CmsParticipants {
     return (Open-CmsAPI $nodeLocation).participants.participant
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsParticipant {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -5463,7 +5416,6 @@ function Get-CmsParticipant {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsParticipantCallLegs {
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -5474,7 +5426,6 @@ function Get-CmsParticipantCallLegs {
 
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsUsers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -5525,7 +5476,6 @@ function Get-CmsUsers {
     return (Open-CmsAPI $nodeLocation).users.user
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsUser {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -5545,7 +5495,6 @@ function Get-CmsUser {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsUsercoSpaces {
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -5556,7 +5505,6 @@ function Get-CmsUsercoSpaces {
 
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsUserProfiles {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -5597,7 +5545,6 @@ function Get-CmsUserProfiles {
     return (Open-CmsAPI $nodeLocation).userProfiles.userProfile
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsUserProfile {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -5847,17 +5794,16 @@ function Remove-CmsUserProfile {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSystemStatus {
     return (Open-CmsAPI "api/v1/system/status").status
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
+
 function Get-CmsSystemAlarms {
     return (Open-CmsAPI "api/v1/system/alarms").alarms.alarm
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
+
 function Get-CmsSystemAlarm {
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -5867,7 +5813,6 @@ function Get-CmsSystemAlarm {
     return (Open-CmsAPI "api/v1/system/alarms/$Identity").alarm
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSystemDatabaseStatus {
     return (Open-CmsAPI "api/v1/system/database").database
 }
@@ -6000,7 +5945,6 @@ function Remove-CmsLegacyCdrRecieverUri {
     Set-CmsLegacyCdrRecieverUri
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsGlobalProfile {
     return (Open-CmsAPI "api/v1/system/profiles").profiles
 }
@@ -6114,7 +6058,6 @@ function Set-CmsGlobalProfile {
     Get-CmsGlobalProfile
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsTurnServers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -6152,7 +6095,6 @@ function Get-CmsTurnServers {
     return (Open-CmsAPI $nodeLocation).turnServers.turnServer
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsTurnServer {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -6355,7 +6297,6 @@ function Remove-CmsTurnServer {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsWebBridges {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -6406,7 +6347,6 @@ function Get-CmsWebBridges {
     return (Open-CmsAPI $nodeLocation).webBridges.webBridge
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsWebBridge {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -6658,7 +6598,6 @@ function Update-CmsWebBridgeCustomization {
     Open-CmsAPI "/api/v1/webBridges/$Identity/updateCustomization" -POST -ReturnResponse | Out-Null
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallBridges {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -6682,7 +6621,6 @@ function Get-CmsCallBridges {
     return (Open-CmsAPI $nodeLocation).callBridges.callBridge
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsCallBridge {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -6781,7 +6719,6 @@ function Remove-CmsCallBridge {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsXmppServer {
     return (Open-CmsAPI "api/v1/system/configuration/xmpp").xmpp
 }
@@ -6878,7 +6815,6 @@ function Set-CmsCallBridgeCluster {
     Get-CmsCallBridgeCluster
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSystemDiagnostics {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -6929,7 +6865,6 @@ function Get-CmsSystemDiagnostics {
     return (Open-CmsAPI $nodeLocation).diagnostics.diagnostic
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSystemDiagnostic {
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -6939,7 +6874,6 @@ function Get-CmsSystemDiagnostic {
     return (Open-CmsAPI "api/v1/system/diagnostics/$Identity").diagnostic
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsSystemDiagnosticContent {
     Param (
         [parameter(Mandatory=$true,Position=1)]
@@ -6949,7 +6883,6 @@ function Get-CmsSystemDiagnosticContent {
     return (Open-CmsAPI "api/v1/system/diagnostics/$Identity/contents").diagnostic
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsLdapServers {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -6987,7 +6920,6 @@ function Get-CmsLdapServers {
     return (Open-CmsAPI $nodeLocation).ldapServers.ldapServer
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsLdapServer {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -7113,7 +7045,6 @@ function Remove-CmsLdapServer {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsLdapMappings {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -7151,7 +7082,7 @@ function Get-CmsLdapMappings {
     return (Open-CmsAPI $nodeLocation).ldapMappings.ldapMapping
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
+
 function Get-CmsLdapMapping {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -7363,7 +7294,7 @@ function Remove-CmsLdapMapping {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
+
 function Get-CmsLdapSources {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -7414,7 +7345,7 @@ function Get-CmsLdapSources {
     return (Open-CmsAPI $nodeLocation).ldapSources.ldapSource
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
+
 function Get-CmsLdapSource {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -7554,7 +7485,7 @@ function Remove-CmsLdapSource {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
+
 function Get-CmsLdapSyncs {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -7578,7 +7509,7 @@ function Get-CmsLdapSyncs {
     return (Open-CmsAPI $nodeLocation).ldapSyncs.ldapSync
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
+
 function Get-CmsLdapSync {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -7649,7 +7580,7 @@ function Remove-CmsLdapSync {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
+
 function Get-CmsExternalDirectorySearchLocations {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -7687,7 +7618,7 @@ function Get-CmsExternalDirectorySearchLocations {
     return (Open-CmsAPI $nodeLocation).directorySearchLocations.directorySearchLocation
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
+
 function Get-CmsExternalDirectorySearchLocation {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -7962,7 +7893,6 @@ function Remove-CmsExternalDirectorySearchLocation {
     }
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsTenants {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -8000,7 +7930,6 @@ function Get-CmsTenants {
     return (Open-CmsAPI $nodeLocation).tenants.tenant
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsTenant {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
@@ -8302,7 +8231,6 @@ function New-CmsAccessQuery {
     return (Open-CmsAPI $nodeLocation -POST -Data $data -ReturnResponse).accessQuery
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsRecorders {
     [CmdletBinding(DefaultParameterSetName="NoOffset")]
     Param (
@@ -8332,7 +8260,6 @@ function Get-CmsRecorders {
     return (Open-CmsAPI $nodeLocation).recorders.recorder
 }
 
-# .ExternalHelp PsCms.psm1-Help.xml
 function Get-CmsRecorder {
     [CmdletBinding(DefaultParameterSetName="getAll")]
     Param (
