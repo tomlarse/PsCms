@@ -39,7 +39,7 @@ The module used to be called PsAcano, and all commands were prepended with Acano
 
 To install, simply run
 ```posh
-iex (New-Object Net.WebClient).DownloadString("https://gist.githubusercontent.com/tomlarse/5f43bbe0e763cea379ca/raw/06b3eb610c47ebb99a9c91924c7944817af410e1/installmodule")
+iex (New-Object Net.WebClient).DownloadString("https://gist.githubusercontent.com/tomlarse/5f43bbe0e763cea379ca/raw/14a4bd13faa113f0fc134ea90d51a49ad1529755/installmodule")
 ```
 to install the latest release.
 
