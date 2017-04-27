@@ -984,8 +984,6 @@ function New-CmsSpaceAccessMethod {
         $data += "scope=$Scope"
     }
 
-    $data
-
     [string]$NewcoSpaceAccessMethod = Open-CmsAPI $nodeLocation -POST -Data $data
     
     Get-CmsSpaceAccessMethod $Identity -coSpaceAccessMethodID $NewcoSpaceAccessMethod.Replace(" ","") ## For some reason POST returns a string starting and ending with a whitespace
