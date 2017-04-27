@@ -936,16 +936,15 @@ function New-CmsSpaceAccessMethod {
     $modifiers = 0
 
     if ($Uri -ne "") {
-        $data += "?uri=$Uri"
+        $data += "uri=$Uri"
         $modifiers++
     }
 
     if ($CallId -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
         }
+
         $data += "callId=$CallId"
         $modifiers++
     }
@@ -953,9 +952,8 @@ function New-CmsSpaceAccessMethod {
     if ($Passcode -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
         }
+
         $data += "passcode=$Passcode"
         $modifiers++
     }
@@ -963,9 +961,8 @@ function New-CmsSpaceAccessMethod {
     if ($CallLegProfile -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
-        }
+        } 
+
         $data += "callLegProfile=$CallLegProfile"
         $modifiers++
     }
@@ -973,9 +970,8 @@ function New-CmsSpaceAccessMethod {
     if ($Secret -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
-        }
+        } 
+
         $data += "secret=$Secret"
         $modifiers++
     }
@@ -983,11 +979,12 @@ function New-CmsSpaceAccessMethod {
     if ($Scope -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
-        }
+        } 
+
         $data += "scope=$Scope"
     }
+
+    $data
 
     [string]$NewcoSpaceAccessMethod = Open-CmsAPI $nodeLocation -POST -Data $data
     
@@ -1021,16 +1018,15 @@ function Set-CmsSpaceAccessMethod {
     $modifiers = 0
 
     if ($Uri -ne "") {
-        $nodeLocation += "?uri=$Uri"
+        $data += "uri=$Uri"
         $modifiers++
     }
 
     if ($CallId -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
-        }
+        } 
+
         $data += "callId=$CallId"
         $modifiers++
     }
@@ -1038,9 +1034,8 @@ function Set-CmsSpaceAccessMethod {
     if ($Passcode -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
-        }
+        } 
+
         $data += "passcode=$Passcode"
         $modifiers++
     }
@@ -1048,9 +1043,8 @@ function Set-CmsSpaceAccessMethod {
     if ($CallLegProfile -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
-        }
+        } 
+
         $data += "callLegProfile=$CallLegProfile"
         $modifiers++
     }
@@ -1058,9 +1052,8 @@ function Set-CmsSpaceAccessMethod {
     if ($Secret -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
-        }
+        } 
+
         $data += "secret=$Secret"
         $modifiers++
     }
@@ -1068,9 +1061,8 @@ function Set-CmsSpaceAccessMethod {
     if ($RegenerateSecret) {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
-        }
+        } 
+
         $data += "regenerateSecret=true"
         $modifiers++
     }
@@ -1078,9 +1070,8 @@ function Set-CmsSpaceAccessMethod {
     if ($Scope -ne "") {
         if ($modifiers -gt 0) {
             $data += "&"
-        } else {
-            $data += "?"
-        }
+        } 
+        
         $data += "scope=$Scope"
     }
 
